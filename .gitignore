@@ -1,0 +1,47 @@
+# Built artifacts
+*.apk
+*.aar
+*.ap_
+*.aab
+
+# Files برای فایل‌های جنریت شده بیلد
+**/build/
+build/
+
+# Gradle files
+.gradle/
+/build
+/captures
+/kotlin-profile/
+
+# IntelliJ IDEA and Android Studio templates
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Keystore files & Security (بسیار مهم برای امنیت کلیدها)
+*.jks
+*.keystore
+*.p12
+*.properties
+!gradle.properties #
+
+# Local configuration files (تنظیمات محلی سیستم خودت)
+local.properties
+secrets.properties
+
+# OS Data Files (فایل‌های مزاحم سیستم‌عامل مک و ویندوز)
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Android Studio Navigation Editor settings
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+# CMake outputs
+.externalNativeBuild/
+.cxx/
