@@ -1,11 +1,9 @@
 package com.ahj.onlineshop.feature.authentication.presentation.otp
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahj.onlineshop.app.base.MyApp
 import com.ahj.onlineshop.core.common.dispathers.CoroutineDispatchers
-import com.ahj.onlineshop.core.common.notification.NotificationConfig
 import com.ahj.onlineshop.core.common.notification.NotificationImpl
 import com.ahj.onlineshop.feature.authentication.domain.usecase.SendOtpUseCase
 import com.ahj.onlineshop.feature.authentication.domain.usecase.VerifyUseCase

@@ -3,8 +3,6 @@ package com.ahj.onlineshop.feature.authentication.presentation.splash
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,12 +20,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.ui.component.InsertButton
-import com.ahj.onlineshop.core.common.ui.component.authFeature.DrawCircleBackground
 import com.ahj.onlineshop.core.common.ui.component.Progress
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
-import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertBody
+import com.ahj.onlineshop.core.common.ui.component.authFeature.DrawCircleBackground
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertLogo
-import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTitle
 
 
 @Composable

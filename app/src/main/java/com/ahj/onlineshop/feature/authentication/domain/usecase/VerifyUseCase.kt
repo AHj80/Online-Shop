@@ -5,7 +5,6 @@ import javax.inject.Inject
 
 
 class VerifyUseCase @Inject constructor(
-    private val repository: UserRepository
 ) {
 
     operator fun invoke(input: String, server: String?): Result<Boolean> {

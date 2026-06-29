@@ -1,6 +1,5 @@
 package com.ahj.onlineshop.feature.authentication.presentation.login
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahj.onlineshop.core.datastore.SessionManager

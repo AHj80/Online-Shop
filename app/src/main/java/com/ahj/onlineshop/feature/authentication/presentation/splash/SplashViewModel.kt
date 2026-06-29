@@ -1,7 +1,6 @@
 package com.ahj.onlineshop.feature.authentication.presentation.splash
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahj.onlineshop.core.common.internetmanager.networkManager

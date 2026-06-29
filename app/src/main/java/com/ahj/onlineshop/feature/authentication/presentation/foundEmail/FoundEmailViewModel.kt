@@ -2,7 +2,6 @@ package com.ahj.onlineshop.feature.authentication.presentation.foundEmail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ahj.onlineshop.feature.authentication.domain.model.LoginModel
 import com.ahj.onlineshop.feature.authentication.domain.usecase.FoundEmailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
