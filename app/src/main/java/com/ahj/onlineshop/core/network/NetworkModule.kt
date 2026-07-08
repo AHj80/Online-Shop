@@ -41,7 +41,7 @@ object NetworkModule {
         Retrofit.Builder()
             .baseUrl("https://6a327f06c6ca2aee43852527.mockapi.io/onlineshop/")
             .client(okHttpClient)
-            .addConverterFactory(json.asConverterFactory(contentType = "application/json".toMediaType() ))
+            .addConverterFactory(json.asConverterFactory(contentType = "application/json".toMediaType()))
             .build()
 
 }

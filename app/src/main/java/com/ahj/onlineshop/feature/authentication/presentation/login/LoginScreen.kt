@@ -49,7 +49,9 @@ fun LoginScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var visibleEye by remember { mutableStateOf(false) }
 
-    DrawCircleBackground {
+    DrawCircleBackground(
+        uiState.loginStatus == LoginStatus.LOADING
+    ) {
 
 
         Column(

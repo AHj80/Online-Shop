@@ -53,7 +53,9 @@ fun ResetPasswordScreen(
     }
     var visibleEye by remember { mutableStateOf(false) }
 
-    DrawCircleBackground {
+    DrawCircleBackground(
+        uiState.status == ResetPasswordStatus.LOADING
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

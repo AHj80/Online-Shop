@@ -23,6 +23,13 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         textDirection = TextDirection.Rtl
     ),
+    titleSmall = TextStyle(
+        fontSize = 13.sp,
+        fontFamily = iranSans,
+        fontWeight = FontWeight.Bold,
+        textDirection = TextDirection.Rtl
+    ),
+
     bodyMedium = TextStyle(
         fontSize = 14.sp,
         fontFamily = iranSans,

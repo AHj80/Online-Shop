@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundColor
 
@@ -37,7 +38,7 @@ fun InsertDialog(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxSize()
             ) {
-                Text(text, style = MaterialTheme.typography.bodyMedium)
+                Text(text, style = MaterialTheme.typography.bodyMedium , fontSize = 12.sp)
                 SpacerWith(30)
                 Progress()
             }

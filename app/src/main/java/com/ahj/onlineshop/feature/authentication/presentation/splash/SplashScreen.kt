@@ -38,7 +38,9 @@ fun SplashScreen(
         viewModel.checking()
     }
 
-    DrawCircleBackground {
+    DrawCircleBackground(
+        uiState.statusSplash == StatusSplash.LOADING
+    ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,

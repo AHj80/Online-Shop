@@ -53,7 +53,9 @@ fun EmailOTPScreen(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    DrawCircleBackground {
+    DrawCircleBackground(
+        uiState.status == OTPConfirmStatus.LOADING
+    ) {
 
         Column(
             modifier = Modifier

@@ -24,4 +24,11 @@ sealed class Screens {
     @Serializable
     object HomeScreen : Screens()
 
+    @Serializable
+    object Category: Screens()
+
+    @Serializable
+    data class SubCategory(val parentCategory: String )
+
 }
+

@@ -53,7 +53,7 @@ fun FoundEmailScreen(
     val statePermission by permissionViewModel.permissionStatus.collectAsStateWithLifecycle()
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    DrawCircleBackground {
+    DrawCircleBackground(uiState.foundEmailStatus == FoundEmailStatus.LOADING) {
 
         Column(
             modifier = Modifier

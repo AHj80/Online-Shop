@@ -5,6 +5,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Preview
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -21,11 +25,12 @@ fun InsertTextFieldAuth(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
-    keyboardType : KeyboardType = KeyboardType.Text,
+    keyboardType: KeyboardType = KeyboardType.Text,
     supportingText: String? = null,
-    isError : Boolean = false,
-    visualTransformation: Boolean =true,
-    trailingIcon: @Composable () -> Unit = {}
+    isError: Boolean = false,
+    visualTransformation: Boolean = true,
+    trailingIcon: @Composable () -> Unit = {},
+    leadingIcon:@Composable ()-> Unit = {}
 ) {
 
     TextField(
@@ -41,28 +46,30 @@ fun InsertTextFieldAuth(
             unfocusedIndicatorColor = Color.Transparent,
             errorContainerColor = Color.White,
             cursorColor = ButtonColor_Tow,
-            selectionColors = TextSelectionColors(ButtonColor_Tow , ButtonColor_Tow)
+            selectionColors = TextSelectionColors(ButtonColor_Tow, ButtonColor_Tow)
         ),
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType ),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 30.dp)
-            /*.border(
-                width = 1.dp,
-                if (errorStroke) Color.Red else Color.Transparent,
-                RoundedCornerShape(5.dp)
-            )*/,
-        placeholder = { InsertBody(placeholder , 0) },
+        /*.border(
+            width = 1.dp,
+            if (errorStroke) Color.Red else Color.Transparent,
+            RoundedCornerShape(5.dp)
+        )*/,
+        placeholder = { InsertBody(placeholder, 0) },
         singleLine = true,
         supportingText = {
             supportingText?.let {
-                InsertBody(it , padding = 0)
+                InsertBody(it, padding = 0)
             }
         },
         isError = isError,
         visualTransformation = if (visualTransformation) {
             VisualTransformation.None
         } else PasswordVisualTransformation(),
-        trailingIcon = { trailingIcon() }
+        trailingIcon = { trailingIcon() },
+        leadingIcon = { leadingIcon() },
+        textStyle = MaterialTheme.typography.titleSmall
     )
 }

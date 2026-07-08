@@ -35,7 +35,7 @@ fun Progress() {
     LottieAnimation(
         composition = composition,
         iterations = Int.MAX_VALUE,
-        modifier = Modifier.size(25.dp),
+        modifier = Modifier.size(15.dp),
         contentScale = ContentScale.Crop,
         dynamicProperties = dynamicLottieColor
     )

@@ -56,7 +56,9 @@ fun RegisterScreen(
     }
     var visibleEye by remember { mutableStateOf(false) }
 
-    DrawCircleBackground {
+    DrawCircleBackground(
+        uiState.registerStatus == RegisterStatus.LOADING
+    ) {
 
         Column(
             modifier = Modifier
