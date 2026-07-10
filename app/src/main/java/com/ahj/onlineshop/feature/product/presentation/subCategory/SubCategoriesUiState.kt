@@ -1,4 +1,4 @@
-package com.ahj.onlineshop.feature.product.presentation.selectedCategory
+package com.ahj.onlineshop.feature.product.presentation.subCategory
 
 import com.ahj.onlineshop.feature.product.domain.model.CategoryModel
 import com.ahj.onlineshop.feature.product.domain.model.ProductModel
@@ -11,5 +11,6 @@ data class SubCategoriesUiState(
     val subCategories : List<SubCategoryModel> = emptyList(),
     val message : String? = null,
     val selected: String = "",
-    val stateText : String = ""
+    val stateText : String = "",
+
 )

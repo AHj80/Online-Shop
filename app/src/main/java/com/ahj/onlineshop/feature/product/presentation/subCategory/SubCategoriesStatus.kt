@@ -1,4 +1,4 @@
-package com.ahj.onlineshop.feature.product.presentation.selectedCategory
+package com.ahj.onlineshop.feature.product.presentation.subCategory
 
 enum class SubCategoriesStatus {
     IDLE,

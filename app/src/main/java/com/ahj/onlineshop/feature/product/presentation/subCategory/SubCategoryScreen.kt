@@ -1,12 +1,11 @@
-package com.ahj.onlineshop.feature.product.presentation.selectedCategory
+package com.ahj.onlineshop.feature.product.presentation.subCategory
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,7 +27,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -38,7 +36,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.ahj.onlineshop.R
+import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
@@ -46,18 +46,18 @@ import com.ahj.onlineshop.core.common.ui.component.SpacerWith
 import com.ahj.onlineshop.core.common.ui.component.authFeature.DrawCircleBackground
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTextFieldAuth
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTitle
-import com.ahj.onlineshop.core.common.ui.component.productFeature.CategoriesSample
 import com.ahj.onlineshop.core.common.ui.component.productFeature.InsertCategoryGrid
 import com.ahj.onlineshop.core.common.ui.component.productFeature.ShowAll
+import com.ahj.onlineshop.core.common.ui.component.productFeature.TopCategory
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundCardColor
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_One
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
 import com.ahj.onlineshop.core.common.utils.toPersianDigit
-import com.ahj.onlineshop.feature.product.domain.model.CategoryModel
 
 
 @Composable
 fun SubCategoryScreen(
+    navController: NavController,
     viewModel: SubCategoriesViewModel = hiltViewModel(),
     parentCategory: String
 ) {
@@ -67,39 +67,33 @@ fun SubCategoryScreen(
     val title = uiState.categories.find { it.categoryType == uiState.selected }
 
 
+
+
     LaunchedEffect(parentCategory) {
-        viewModel.subCategories(parentCategory)
-        viewModel.selectedCategory(parentCategory)
+       viewModel.checkCategory(parentCategory)
     }
 
     DrawCircleBackground(false) {
 
-        LazyColumn(
+        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .blur(if (uiState.status == SubCategoriesStatus.LOADING) 10.dp else 0.dp),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            item {
-                LazyRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    items(uiState.categories.size) {
-                        val data = uiState.categories[it]
-                        val selected = data.categoryType == uiState.selected
-                        TopCategory(data, selected) {
-                            viewModel.selectedCategory(data.categoryType)
-                        }
-                    }
+
+                TopCategory(
+                    uiState.categories,
+                    uiState.selected,
+                ) {  tab ->
+
+                    viewModel.selectedCategory(tab.categoryType)
                 }
                 SpacerHeight(20)
-            }
 
 
-            item {
+
+
                 title?.let {
                     InsertTitle("پوشاک ${it.title}")
                 }
@@ -117,24 +111,30 @@ fun SubCategoryScreen(
                         )
                     }
                 )
-            }
 
-
-
-
-            item {
                 when (uiState.status) {
                     SubCategoriesStatus.LOADING -> {
                         InsertDialog({}, "درحال برقراری ارتباط")
                     }
 
                     SubCategoriesStatus.ERROR -> {
-                        ErrorRefreshing(uiState.message ){viewModel.selectedCategory(uiState.selected)}
+                        ErrorRefreshing(uiState.message) {
+                            viewModel.selectedCategory(
+                                uiState.selected,
+                            )
+                        }
                     }
 
                     else -> {
 
-                        InsertCategoryGrid(uiState.subCategories)
+                        InsertCategoryGrid(uiState.subCategories) { categoryType ->
+                            navController.navigate(
+                                Screens.ProductScreen(
+                                    categoryType.categoryType,
+                                    uiState.selected,
+                                )
+                            )
+                        }
                         SpacerHeight(20)
 
                         ShowAll("پرفروش ترین ها")
@@ -308,8 +308,6 @@ fun SubCategoryScreen(
 
                     }
                 }
-            }
-
 
         }
 
@@ -320,34 +318,3 @@ fun SubCategoryScreen(
 }
 
 
-@Composable
-fun TopCategory(
-    categoryModel: CategoryModel,
-    isSelected: Boolean,
-    clickable: () -> Unit
-) {
-
-    Card(
-        modifier = Modifier
-            .size(if (isSelected) 70.dp else 50.dp)
-            .padding(horizontal = 3.dp)
-            .clickable { clickable() },
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        border = if (isSelected) BorderStroke(2.dp, Color.Red) else null
-    ) {
-
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                painter = painterResource(categoryModel.image),
-                null,
-                modifier = Modifier
-                    .size(if (isSelected) 50.dp else 30.dp)
-            )
-        }
-    }
-
-}

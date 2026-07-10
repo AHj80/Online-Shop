@@ -64,122 +64,142 @@ object OfflineData {
             id = 1,
             title = "تی شرت",
             parentCategory = CategoryType.MAN,
-            image = R.drawable.sub_man_tshirt
+            image = R.drawable.sub_man_tshirt,
+            categoryType = ProductCategoryType.MAN_TSHIRT
         ),
         SubCategoryModel(
             id = 2,
-            title = "رسمی",
+            title = "بلوز و پیراهن",
             parentCategory = CategoryType.MAN,
-            image = R.drawable.sub_man_clothes
+            image = R.drawable.sub_man_clothes,
+            categoryType = ProductCategoryType.MAN_CLOTHES
         ),
         SubCategoryModel(
             id = 3,
             title = "اسپرت",
             parentCategory = CategoryType.MAN,
-            image = R.drawable.sub_man_sport
+            image = R.drawable.sub_man_sport,
+            categoryType = ProductCategoryType.MAN_SPORT
         ),
         SubCategoryModel(
             id = 4,
             title = "جوراب",
             parentCategory = CategoryType.MAN,
-            image = R.drawable.sub_man_socks
+            image = R.drawable.sub_man_socks,
+            categoryType = ProductCategoryType.MAN_SOCKS
         ),
         SubCategoryModel(
             id = 5,
             title = "کفش",
             parentCategory = CategoryType.MAN,
-            image = R.drawable.sub_man_shoes
+            image = R.drawable.sub_man_shoes,
+            categoryType = ProductCategoryType.MAN_SHOES
         ),
         SubCategoryModel(
             id = 6,
             title = "سرهمی",
             parentCategory = CategoryType.NEWBORN,
-            image = R.drawable.sub_newborn
+            image = R.drawable.sub_newborn,
+            categoryType = ProductCategoryType.NEWBORN
         ),
         SubCategoryModel(
             id = 7,
             title = "کفش",
             parentCategory = CategoryType.NEWBORN,
-            image = R.drawable.sub_newborn_shoes
+            image = R.drawable.sub_newborn_shoes,
+            categoryType = ProductCategoryType.NEWBORN_SHOES
         ),
         SubCategoryModel(
             id = 8,
             title = "رسمی",
             parentCategory = CategoryType.GIRL,
-            image = R.drawable.sub_girl_rasmi
+            image = R.drawable.sub_girl_rasmi,
+            categoryType = ProductCategoryType.GIRL_RASMI
         ),
         SubCategoryModel(
             id = 9,
             title = "مجلسی",
             parentCategory = CategoryType.GIRL,
-            image = R.drawable.sub_girl_tshirt
+            image = R.drawable.sub_girl_tshirt,
+            categoryType = ProductCategoryType.GIRL_TSHIRT
         ),
 
         SubCategoryModel(
             id = 10,
             title = "کفش دخترانه",
             parentCategory = CategoryType.GIRL,
-            image = R.drawable.sub_girl_shoes
+            image = R.drawable.sub_girl_shoes,
+            categoryType = ProductCategoryType.GIRL_SHOES
         ),
         SubCategoryModel(
             id = 11,
             title = "کفش مردانه ",
             parentCategory = CategoryType.SHOES,
-            image = R.drawable.sub_man_shoes
+            image = R.drawable.sub_man_shoes,
+            categoryType = ProductCategoryType.MAN_SHOES
         ),
         SubCategoryModel(
             id = 12,
             title = "کفش زنانه",
             parentCategory = CategoryType.SHOES,
-            image = R.drawable.sub_woman_shoes
+            image = R.drawable.sub_woman_shoes,
+            categoryType = ProductCategoryType.WOMAN_SHOES
         ),
         SubCategoryModel(
             id = 13,
             title = "کفش پسرانه",
             parentCategory = CategoryType.SHOES,
-            image = R.drawable.sub_boy_shoes
+            image = R.drawable.sub_boy_shoes,
+            categoryType = ProductCategoryType.BOY_SHOES
         ),
         SubCategoryModel(
             id = 14,
             title = "کفش نوزادی",
             parentCategory = CategoryType.SHOES,
-            image = R.drawable.sub_newborn_shoes
+            image = R.drawable.sub_newborn_shoes,
+            categoryType = ProductCategoryType.NEWBORN_SHOES
         ),
         SubCategoryModel(
             id = 15,
             title = "تی شرت",
             parentCategory = CategoryType.BOY,
-            image = R.drawable.sub_boy_tshirt
+            image = R.drawable.sub_boy_tshirt,
+            categoryType = ProductCategoryType.BOY_TSHIRT
         ),
         SubCategoryModel(
             id = 16,
             title = "رسمی",
             parentCategory = CategoryType.BOY,
-            image = R.drawable.sub_boy_rasmi
+            image = R.drawable.sub_boy_rasmi,
+            categoryType = ProductCategoryType.BOY_RASMI
         ),
         SubCategoryModel(
             id = 17,
             title = "کفش",
             parentCategory = CategoryType.BOY,
-            image = R.drawable.sub_boy_shoes
+            image = R.drawable.sub_boy_shoes,
+            categoryType = ProductCategoryType.BOY_SHOES
         ),
         SubCategoryModel(
             id = 18,
             title = "کفش",
             parentCategory = CategoryType.WOMAN,
-            image = R.drawable.sub_woman_shoes
+            image = R.drawable.sub_woman_shoes,
+            categoryType = ProductCategoryType.WOMAN_SHOES
         ),
         SubCategoryModel(
             id = 19,
             title = "مجلسی",
             parentCategory = CategoryType.WOMAN,
-            image = R.drawable.sub_woman_rasmi
+            image = R.drawable.sub_woman_rasmi,
+            categoryType = ProductCategoryType.WOMAN_RASMI
         ),
         SubCategoryModel(
             id = 20,
             title = "خانگی",
             parentCategory = CategoryType.WOMAN,
-            image = R.drawable.sub_woman_clothes
+            image = R.drawable.sub_woman_clothes,
+            categoryType = ProductCategoryType.WOMAN_CLOTHES
         ),
 
 
@@ -188,11 +208,46 @@ object OfflineData {
 
 }
 
-object CategoryType{
+object CategoryType {
     const val MAN = "man"
     const val WOMAN = "woman"
     const val GIRL = "girl"
     const val BOY = "boy"
     const val SHOES = "shoes"
     const val NEWBORN = "newborn"
+}
+
+object ProductCategoryType {
+
+    const val MAN_TSHIRT = "man_tshirt"
+
+    const val MAN_CLOTHES = "man_clothes"
+
+    const val MAN_SPORT = "man_sport"
+
+    const val MAN_SOCKS = "man_socks"
+
+    const val MAN_SHOES = "man_shoes"
+
+    const val NEWBORN = "newborn"
+
+    const val NEWBORN_SHOES = "newborn_shoes"
+
+    const val GIRL_RASMI = "girl_rasmi"
+
+    const val GIRL_TSHIRT = "girl_tshirt"
+
+    const val GIRL_SHOES = "girl_shoes"
+
+    const val WOMAN_SHOES = "woman_shoes"
+
+    const val BOY_SHOES = "boy_shoes"
+
+    const val BOY_TSHIRT = "boy_tshirt"
+
+    const val BOY_RASMI = "boy_rasmi"
+
+    const val WOMAN_RASMI = "woman_rasmi"
+
+    const val WOMAN_CLOTHES = "woman_clothes"
 }

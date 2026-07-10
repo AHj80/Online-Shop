@@ -14,39 +14,40 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.SubcomposeAsyncImage
-import com.ahj.onlineshop.core.common.ui.component.InsertDialog
-import com.ahj.onlineshop.core.common.ui.component.Progress
+import coil3.compose.AsyncImage
+import com.ahj.onlineshop.R
 import com.ahj.onlineshop.core.common.ui.component.SpacerWith
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundCardColor
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_One
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
+import com.ahj.onlineshop.core.common.utils.formatPriceToPersian
 import com.ahj.onlineshop.core.common.utils.toPersianDigit
 import com.ahj.onlineshop.feature.product.domain.model.ProductModel
 
 @Composable
-fun ProductItemSample(productModel: ProductModel){
+fun ProductItemSample(productModel: ProductModel, onClick: () -> Unit = {}) {
 
     Card(
         colors = CardDefaults.cardColors(BackgroundCardColor),
         shape = RoundedCornerShape(23.dp),
         elevation = CardDefaults.elevatedCardElevation(3.dp),
         modifier = Modifier
-            .padding(20.dp)
+            .padding(5.dp)
             .width(195.dp)
-            .height(250.dp)
+            .height(220.dp)
+            .clickable { onClick() }
 
     ) {
 
@@ -57,12 +58,12 @@ fun ProductItemSample(productModel: ProductModel){
                     .fillMaxSize()
                     .padding(top = 10.dp)
             ) {
-                SubcomposeAsyncImage(
-                  model = productModel.image[0],
+                AsyncImage(
+                    model = productModel.image[0],
                     contentDescription = null,
-                    loading = {Progress()},
-                    modifier = Modifier.size(130.dp),
-                    contentScale = ContentScale.Crop
+                    modifier = Modifier.size(100.dp),
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(R.drawable.loading_coil)
                 )
             }
 
@@ -101,14 +102,15 @@ fun ProductItemSample(productModel: ProductModel){
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(90.dp)
-                            .padding(horizontal = 15.dp),
+                            .padding(horizontal = 10.dp),
                         colors = CardDefaults.cardColors(Color.White),
                         elevation = CardDefaults.elevatedCardElevation(4.dp)
                     ) {
                         Text(
                             productModel.title,
-                            style = MaterialTheme.typography.titleSmall,
-                            modifier = Modifier.padding(10.dp)
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(10.dp),
+                            fontSize = 12.sp
                         )
 
                         Box(
@@ -123,33 +125,26 @@ fun ProductItemSample(productModel: ProductModel){
                                 ) {
 
                                 Text(
-                                    productModel.price.toString().toPersianDigit(),
+                                    productModel.price.formatPriceToPersian().toPersianDigit(),
                                     style = MaterialTheme.typography.titleSmall,
-                                    fontSize = 9.sp,
-                                    color = Color.DarkGray
+                                    fontSize = 8.sp,
+                                    color = Color.DarkGray,
+                                    textDecoration = TextDecoration.LineThrough
                                 )
 
 
                                 SpacerWith(10)
                                 Text(
-                                    "${productModel.finalPrice.toString().toPersianDigit()}تومان",
+                                    "${
+                                        productModel.finalPrice.formatPriceToPersian()
+                                            .toPersianDigit()
+                                    } تومان",
                                     style = MaterialTheme.typography.titleSmall,
-                                    fontSize = 11.sp
+                                    fontSize = 9.sp
                                 )
 
                             }
-                            Box(
-                                modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.BottomStart
-                            ) {
-                                HorizontalDivider(
-                                    thickness = 1.5.dp,
-                                    modifier = Modifier
-                                        .width(45.dp)
-                                        .rotate(-5f)
-                                        .padding(bottom = 6.dp)
-                                )
-                            }
+
                         }
                     }
                 }
@@ -174,11 +169,11 @@ fun ProductItemSample(productModel: ProductModel){
                             shape = CircleShape
                         )
                         .size(30.dp)
-                        .clickable{},
+                        .clickable {},
                     contentAlignment = Alignment.Center
 
                 ) {
-                    Text("+", color = Color.White , fontSize = 20.sp)
+                    Text("+", color = Color.White, fontSize = 20.sp)
                 }
             }
         }

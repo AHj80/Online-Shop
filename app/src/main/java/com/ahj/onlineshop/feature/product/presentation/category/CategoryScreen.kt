@@ -52,9 +52,10 @@ fun CategoryScreen(
             ) {
                 items(uiState.category.size) {
                     CategoriesSample(uiState.category[it]) {
+
                         navController.navigate(
                             Screens.SubCategory(
-                                uiState.category[it].categoryType
+                                uiState.category[it].categoryType,
                             )
                         )
                     }

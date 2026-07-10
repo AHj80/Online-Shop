@@ -9,7 +9,7 @@ import com.ahj.onlineshop.feature.product.domain.model.BannerModel
 import com.ahj.onlineshop.feature.product.domain.model.CategoryModel
 import com.ahj.onlineshop.feature.product.domain.model.HomeDataModel
 import com.ahj.onlineshop.feature.product.domain.model.ProductModel
-import com.ahj.onlineshop.feature.product.domain.model.SubCategoriesData
+import com.ahj.onlineshop.feature.product.domain.model.ShopData
 import com.ahj.onlineshop.feature.product.domain.model.SubCategoryModel
 import com.ahj.onlineshop.feature.product.domain.repository.ProductRepository
 import kotlinx.coroutines.async
@@ -66,7 +66,7 @@ class ProductRepositoryImpl @Inject constructor(
     override suspend fun getSubCategories(): Result<List<SubCategoryModel>> =
         apiHelperOffline.safeData { OfflineData.listSubCategory }
 
-    override suspend fun getSubCategoriesData(): Result<SubCategoriesData> =
+    override suspend fun getShopData(): Result<ShopData> =
         apiHelperOffline.safeData {
             coroutineScope {
                 val productReq = async { getProductData() }
@@ -77,7 +77,7 @@ class ProductRepositoryImpl @Inject constructor(
                 val categoryRes = categoryReq.await().getOrThrow()
                 val subCategoryRes = subCategoryReq.await().getOrThrow()
 
-                SubCategoriesData(
+                ShopData(
                     categoryRes,
                     subCategoryRes,
                     productRes

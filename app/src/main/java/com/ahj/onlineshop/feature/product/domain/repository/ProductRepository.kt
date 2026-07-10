@@ -4,7 +4,7 @@ import com.ahj.onlineshop.feature.product.domain.model.BannerModel
 import com.ahj.onlineshop.feature.product.domain.model.CategoryModel
 import com.ahj.onlineshop.feature.product.domain.model.HomeDataModel
 import com.ahj.onlineshop.feature.product.domain.model.ProductModel
-import com.ahj.onlineshop.feature.product.domain.model.SubCategoriesData
+import com.ahj.onlineshop.feature.product.domain.model.ShopData
 import com.ahj.onlineshop.feature.product.domain.model.SubCategoryModel
 
 interface ProductRepository {
@@ -19,6 +19,6 @@ interface ProductRepository {
 
     suspend fun getSubCategories(): Result<List<SubCategoryModel>>
 
-    suspend fun getSubCategoriesData(): Result<SubCategoriesData>
+    suspend fun getShopData(): Result<ShopData>
 
 }

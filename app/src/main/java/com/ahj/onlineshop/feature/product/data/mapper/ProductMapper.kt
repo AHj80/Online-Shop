@@ -12,6 +12,8 @@ fun ProductDto.toModel(): ProductModel{
         category = this.category,
         price = this.price,
         discount = this.discount,
-        rating = this.rating
+        rating = this.rating,
+        sales = this.sales,
+        categoryType = this.categoryType
     )
 }

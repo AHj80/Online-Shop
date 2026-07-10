@@ -19,16 +19,21 @@ sealed class Screens {
     data class EmailOTP(val id: String) : Screens()
 
     @Serializable
-    data class ResetPassword(val id: String): Screens()
+    data class ResetPassword(val id: String) : Screens()
 
     @Serializable
     object HomeScreen : Screens()
 
     @Serializable
-    object Category: Screens()
+    object Category : Screens()
 
     @Serializable
-    data class SubCategory(val parentCategory: String )
+    data class SubCategory(val parentCategory: String)
 
+    @Serializable
+    data class ProductScreen(
+        val subCategoryType: String,
+        val parentCategory: String,
+    )
 }
 

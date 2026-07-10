@@ -13,5 +13,7 @@ data class ProductDto(
     val price: Long,
     val discount: Int,
     val rating: String,
-    val categoryType: String
+    val categoryType: String,
+    val sales: Int,
+
 )

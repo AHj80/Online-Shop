@@ -9,7 +9,8 @@ data class ProductModel(
     val price: Long,
     val discount: Int,
     val rating: String,
-    val sales : Int = 0
+    val sales : Int = 0,
+    val categoryType: String
 ) {
     val finalPrice: Long
         get() = if (discount > 0){

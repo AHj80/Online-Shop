@@ -20,7 +20,7 @@ import com.ahj.onlineshop.feature.authentication.presentation.resetPassword.Rese
 import com.ahj.onlineshop.feature.authentication.presentation.splash.SplashScreen
 import com.ahj.onlineshop.feature.product.presentation.category.CategoryScreen
 import com.ahj.onlineshop.feature.product.presentation.home.HomeScreen
-import com.ahj.onlineshop.feature.product.presentation.selectedCategory.SubCategoryScreen
+import com.ahj.onlineshop.feature.product.presentation.subCategory.SubCategoryScreen
 
 
 @Composable
@@ -86,12 +86,18 @@ fun SetupUI() {
                 CategoryScreen(navController)
             }
 
-            composable <Screens.SubCategory>{
+            composable<Screens.SubCategory> {
                 val input = it.toRoute<Screens.SubCategory>()
-                SubCategoryScreen(parentCategory = input.parentCategory)
+                SubCategoryScreen(
+                    navController = navController,
+                    parentCategory = input.parentCategory,
+
+                )
             }
 
-            composable {  }
+            composable<Screens.ProductScreen> {
+
+            }
         }
 
     }

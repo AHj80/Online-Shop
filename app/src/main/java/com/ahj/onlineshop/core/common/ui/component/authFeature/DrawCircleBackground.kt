@@ -14,7 +14,7 @@ import com.ahj.onlineshop.core.common.ui.theme.BackgroundCircleColor
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundColor
 
 @Composable
-fun DrawCircleBackground(blur: Boolean, setUi: @Composable BoxScope.() -> Unit) {
+fun DrawCircleBackground(blur: Boolean = false, setUi: @Composable BoxScope.() -> Unit) {
 
     Box(
         modifier = Modifier

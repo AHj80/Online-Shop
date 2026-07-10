@@ -11,7 +11,8 @@ import androidx.navigation.toRoute
 import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.ui.theme.OnlineShopTheme
 import com.ahj.onlineshop.feature.product.presentation.category.CategoryScreen
-import com.ahj.onlineshop.feature.product.presentation.selectedCategory.SubCategoryScreen
+import com.ahj.onlineshop.feature.product.presentation.product.ListProductScreen
+import com.ahj.onlineshop.feature.product.presentation.subCategory.SubCategoryScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,24 +25,36 @@ class MainActivity : ComponentActivity() {
         setContent {
             OnlineShopTheme {
 
-                    val navController = rememberNavController() // 🎯 تنها یک نمونه اصلی در کل اپلیکیشن
+                val navController = rememberNavController()
 
-                    NavHost(
-                        navController = navController,
-                        startDestination = Screens.Category
-                    ) {
-                        composable<Screens.Category> {
-                            CategoryScreen(navController = navController)
-                        }
-
-                        composable<Screens.SubCategory> {
-                            val parentCat = it.toRoute<Screens.SubCategory>()
-
-                            SubCategoryScreen(
-                                parentCategory = parentCat.parentCategory
-                            )
-                        }
+                NavHost(
+                    navController = navController,
+                    startDestination = Screens.Category
+                ) {
+                    composable<Screens.Category> {
+                        CategoryScreen(navController = navController)
                     }
+
+                    composable<Screens.SubCategory> {
+                        val parentCat = it.toRoute<Screens.SubCategory>()
+
+                        SubCategoryScreen(
+                            navController = navController,
+                            parentCategory = parentCat.parentCategory
+                        )
+                    }
+
+                    composable<Screens.ProductScreen> {
+                        val parentCat = it.toRoute<Screens.ProductScreen>()
+
+                        ListProductScreen(
+                            parentCat.subCategoryType,
+                            parentCat.parentCategory,
+                        )
+                    }
+
+
+                }
 
             }
         }

@@ -8,4 +8,5 @@ data class CategoryUiState(
     val category: List<CategoryModel> = emptyList(),
     val banner: List<BannerModel> = emptyList(),
     val message: String? =  null,
+    val selectedCategory: Int = 0
 )

@@ -5,21 +5,25 @@ import com.ahj.onlineshop.feature.product.domain.repository.ProductRepository
 import javax.inject.Inject
 
 
-class GetSubCategoriesUseCase @Inject constructor(
+class GetProductByFilterUseCase @Inject constructor(
     private val repository: ProductRepository
 ) {
 
-    suspend operator fun invoke(parentCategory: String): Result<ShopData> =
+    suspend operator fun invoke(
+        subCategory: String,
+        parentCategory: String
+    ): Result<ShopData> =
 
         repository.getShopData().map { data ->
-            val resultSubCategory =
-                data.subCategories.filter { it.parentCategory == parentCategory }
-            val resultBestSales = data.product.filter { it.sales > 10 }
+            val product = data.product.filter { it.categoryType == subCategory }
+            val subCategory = data.subCategories.filter { it.parentCategory == parentCategory }
 
             ShopData(
                 data.categories,
-                resultSubCategory,
-                resultBestSales
+                subCategory,
+                product
             )
+
         }
+
 }

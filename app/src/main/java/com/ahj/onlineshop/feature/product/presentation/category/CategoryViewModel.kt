@@ -2,7 +2,6 @@ package com.ahj.onlineshop.feature.product.presentation.category
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ahj.onlineshop.feature.product.domain.usecase.GetBannerUseCase
 import com.ahj.onlineshop.feature.product.domain.usecase.GetCategoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,4 +49,6 @@ class CategoryViewModel @Inject constructor(
                 }
         }
     }
+
+
 }

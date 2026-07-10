@@ -21,20 +21,23 @@ val Typography = Typography(
         fontSize = 20.sp,
         fontFamily = iranSans,
         fontWeight = FontWeight.Bold,
-        textDirection = TextDirection.Rtl
+        textDirection = TextDirection.Rtl,
+        lineHeight = 20.sp
     ),
     titleSmall = TextStyle(
         fontSize = 13.sp,
         fontFamily = iranSans,
         fontWeight = FontWeight.Bold,
-        textDirection = TextDirection.Rtl
+        textDirection = TextDirection.Rtl,
+        lineHeight = 20.sp
     ),
 
     bodyMedium = TextStyle(
         fontSize = 14.sp,
         fontFamily = iranSans,
         textDirection = TextDirection.Rtl,
-        textAlign = TextAlign.Justify
+        textAlign = TextAlign.Justify,
+        lineHeight = 20.sp
     ),
 
     )

@@ -2,8 +2,8 @@ package com.ahj.onlineshop.feature.product.domain.model
 
 
 
-data class SubCategoriesData(
+data class ShopData(
     val categories : List<CategoryModel> = emptyList(),
     val subCategories: List<SubCategoryModel> = emptyList(),
-    val bestSales: List<ProductModel> = emptyList()
+    val product: List<ProductModel> = emptyList()
 )

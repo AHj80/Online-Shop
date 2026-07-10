@@ -1,4 +1,4 @@
-package com.ahj.onlineshop.feature.product.presentation.selectedCategory
+package com.ahj.onlineshop.feature.product.presentation.subCategory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,15 +22,17 @@ class SubCategoriesViewModel @Inject constructor(
 
     fun subCategories(parentCategory: String) {
         viewModelScope.launch {
+
             _uiState.update { it.copy(status = SubCategoriesStatus.LOADING, message = null) }
 
             getSubCategoriesUseCase(parentCategory)
                 .onSuccess { data ->
+
                     _uiState.update {
                         it.copy(
                             status = SubCategoriesStatus.SUCCESS,
                             categories = data.categories,
-                            product = data.bestSales,
+                            product = data.product,
                             subCategories = data.subCategories
                         )
                     }
@@ -46,7 +48,7 @@ class SubCategoriesViewModel @Inject constructor(
         }
     }
 
-    fun selectedCategory(categoryType: String){
+    fun selectedCategory(categoryType: String) {
 
         _uiState.update {
             it.copy(
@@ -58,6 +60,13 @@ class SubCategoriesViewModel @Inject constructor(
 
     }
 
-    fun updateText(text: String)= _uiState.update { it.copy(stateText = text) }
+    fun updateText(text: String) = _uiState.update { it.copy(stateText = text) }
+
+    fun checkCategory(parentCategory: String){
+        if (_uiState.value.selected.isBlank())
+            selectedCategory(parentCategory)
+        else
+            subCategories(_uiState.value.selected)
+    }
 
 }

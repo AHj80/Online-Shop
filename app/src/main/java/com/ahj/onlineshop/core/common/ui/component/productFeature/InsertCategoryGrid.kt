@@ -11,8 +11,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun InsertCategoryGrid(
-    data : List<CategoryData>
-){
+    data: List<CategoryData>,
+    onClick: (CategoryData) -> Unit = {}
+) {
 
     FlowRow(
         itemVerticalAlignment = Alignment.CenterVertically,
@@ -26,8 +27,8 @@ fun InsertCategoryGrid(
         maxItemsInEachRow = 3
     ) {
 
-        data.forEach { category->
-            CategoriesSample(category)
+        data.forEach { category ->
+            CategoriesSample(category, onClick = { onClick(category) })
         }
     }
 
