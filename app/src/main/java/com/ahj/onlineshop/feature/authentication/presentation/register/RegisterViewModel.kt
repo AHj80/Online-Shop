@@ -46,6 +46,7 @@ class RegisterViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             registerStatus = RegisterStatus.ERROR,
+                            showDialog = true,
                             message = "عملیات همراه با خطا بود :${message.message.toString()}"
                         )
                     }
@@ -70,6 +71,14 @@ class RegisterViewModel @Inject constructor(
             it.copy(
                 showDialog = false,
                 message = null
+            )
+        }
+    }
+
+    fun onDismissAlertDialog() {
+        _uiState.update {
+            it.copy(
+                showDialog = false
             )
         }
     }

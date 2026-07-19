@@ -29,15 +29,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.ahj.onlineshop.R
 import com.ahj.onlineshop.app.navigation.Screens
-import com.ahj.onlineshop.core.common.ui.component.InsertButton
+import com.ahj.onlineshop.core.common.ui.component.InsertButtonPrimary
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
 import com.ahj.onlineshop.core.common.ui.component.SpacerWith
+import com.ahj.onlineshop.core.common.ui.component.authFeature.CustomAlertDialog
 import com.ahj.onlineshop.core.common.ui.component.authFeature.DrawCircleBackground
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertBody
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertLogo
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTextFieldAuth
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTitle
+import com.ahj.onlineshop.feature.authentication.presentation.register.RegisterStatus
 
 
 @Composable
@@ -50,7 +52,7 @@ fun LoginScreen(
     var visibleEye by remember { mutableStateOf(false) }
 
     DrawCircleBackground(
-        uiState.loginStatus == LoginStatus.LOADING
+        uiState.loginStatus == LoginStatus.LOADING || uiState.loginStatus == LoginStatus.ERROR
     ) {
 
 
@@ -128,7 +130,7 @@ fun LoginScreen(
             }
             SpacerHeight(20)
 
-            InsertButton(
+            InsertButtonPrimary(
                 "تایید و ادامه",
                 viewModel.enabledChange(uiState.stateEmail, uiState.statePass)
             ) {
@@ -149,7 +151,7 @@ fun LoginScreen(
 
         LoginStatus.LOADING -> {
 
-            InsertDialog({ viewModel.onDismissDialog() }, "درحال بررسی")
+            InsertDialog(text =  "درحال بررسی")
 
         }
 
@@ -158,7 +160,10 @@ fun LoginScreen(
                 popUpTo(Screens.Login) {inclusive = true  }
             }
         }
-        LoginStatus.ERROR -> {}
+        LoginStatus.ERROR -> {
+            if (uiState.showAlertDialog)
+            CustomAlertDialog("ورود ناموفق بود") { viewModel.onDismissAlertDialog()}
+        }
 
 
     }

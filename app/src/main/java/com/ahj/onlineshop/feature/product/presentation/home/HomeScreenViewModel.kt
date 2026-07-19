@@ -53,6 +53,11 @@ class HomeScreenViewModel @Inject constructor(
 
 
     fun updateText(text: String) =
-        _uiState.update { it.copy(stateText = text) }
+        _uiState.update { it.copy(stateSearch = text) }
+
+    fun changeModalState(state: Boolean){
+        _uiState.update { it.copy(showModal = state) }
+    }
+
 
 }

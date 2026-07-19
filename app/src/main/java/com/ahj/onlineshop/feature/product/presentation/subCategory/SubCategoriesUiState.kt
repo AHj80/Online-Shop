@@ -12,5 +12,6 @@ data class SubCategoriesUiState(
     val message : String? = null,
     val selected: String = "",
     val stateText : String = "",
+    val showModal: Boolean = false
 
 )

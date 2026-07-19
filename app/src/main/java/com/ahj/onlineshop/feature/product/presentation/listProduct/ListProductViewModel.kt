@@ -1,4 +1,4 @@
-package com.ahj.onlineshop.feature.product.presentation.product
+package com.ahj.onlineshop.feature.product.presentation.listProduct
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,17 +21,12 @@ class ListProductViewModel @Inject constructor(
     val uiState: StateFlow<ListProductUiState> = _uiState.asStateFlow()
 
 
-
     fun getData(productType: String, parentCategory: String) {
-
-
 
         viewModelScope.launch {
             _uiState.update { it.copy(status = ListProductStatus.LOADING, message = null) }
             getProductByFilterUseCase(productType, parentCategory)
                 .onSuccess { data ->
-
-
 
                     _uiState.update {
                         it.copy(
@@ -53,14 +48,20 @@ class ListProductViewModel @Inject constructor(
         }
     }
 
-
     fun updateText(text: String) = _uiState.update { it.copy(stateSearch = text) }
 
-
     fun selectedItem(subCategory: String, parentCategory: String) {
-
         _uiState.update { it.copy(selected = subCategory) }
         getData(subCategory, parentCategory)
+    }
+    fun checkCategory(productType: String, parentCategory: String) {
+
+        if (_uiState.value.selected.isBlank()) {
+            selectedItem(productType , parentCategory)
+        } else {
+            getData(_uiState.value.selected, parentCategory)
+        }
+
 
     }
 }

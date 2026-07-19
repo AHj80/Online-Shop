@@ -33,14 +33,12 @@ class LoginViewModel @Inject constructor(
                     loginStatus = LoginStatus.LOADING,
                     isError = false,
                     message = null,
-                    showDialog = true
                 )
             }
             loginUseCase(loginModel)
                 .onSuccess { statusChecking ->
                     _uiState.update {
                         it.copy(
-                            showDialog = false,
                             loginModel = statusChecking,
                             loginStatus = LoginStatus.SUCCESS,
                             isError = false,
@@ -52,7 +50,7 @@ class LoginViewModel @Inject constructor(
                 .onFailure { error ->
                     _uiState.update {
                         it.copy(
-                            showDialog = false,
+                            showAlertDialog = true,
                             message = "خطا:${error.message.toString()}",
                             isError = true,
                             loginStatus = LoginStatus.ERROR
@@ -81,17 +79,22 @@ class LoginViewModel @Inject constructor(
     fun enabledChange(email: String, pass: String): Boolean {
         val email = email.length > 9 && email.isNotBlank() && email.contains("@gmail.com")
         val pass = pass.length >= 8 && pass.isNotBlank()
-        if (email && pass)
-            return true
-        else
-           return false
+        return email && pass
     }
 
     fun onDismissDialog() {
         _uiState.update {
             it.copy(
-                showDialog = false,
+                showAlertDialog = false,
                 message = null
+            )
+        }
+    }
+
+    fun onDismissAlertDialog() {
+        _uiState.update {
+            it.copy(
+                showAlertDialog = false,
             )
         }
     }

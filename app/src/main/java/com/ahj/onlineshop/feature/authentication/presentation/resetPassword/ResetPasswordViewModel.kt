@@ -36,7 +36,8 @@ class ResetPasswordViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             status = ResetPasswordStatus.ERROR,
-                            message = error.message
+                            message = error.message,
+                            showAlertDialog = true
                         )
                     }
                 }
@@ -72,4 +73,7 @@ class ResetPasswordViewModel @Inject constructor(
                 message = null
             )
         }
+
+    fun onDismiss() = _uiState.update { it.copy(showAlertDialog = false) }
+
 }

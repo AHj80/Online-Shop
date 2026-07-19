@@ -1,4 +1,4 @@
-package com.ahj.onlineshop.feature.product.presentation.product
+package com.ahj.onlineshop.feature.product.presentation.listProduct
 
 import com.ahj.onlineshop.feature.product.domain.model.CategoryModel
 import com.ahj.onlineshop.feature.product.domain.model.ProductModel

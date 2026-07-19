@@ -2,7 +2,6 @@ package com.ahj.onlineshop.core.common.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -14,25 +13,25 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_One
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow_Disable
 
 
 @Composable
-fun InsertButton(
+fun InsertButtonSecondary(
+    modifier : Modifier = Modifier,
     text : String,
+    fontSize: Int = 14,
     enabled : Boolean = true,
-    padding : Int = 30,
     click:()-> Unit
 ){
 
-    Button(
 
+    Button(
         click,
-        Modifier
-            .fillMaxWidth()
-            .padding(horizontal = padding.dp)
+        modifier
             .background(
                 Brush.horizontalGradient(
                     if (enabled)
@@ -55,10 +54,12 @@ fun InsertButton(
     ) {
         Text(
             text,
+            fontSize = fontSize.sp,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleSmall,
             modifier = Modifier
                 .fillMaxWidth(),
         )
     }
+
 }

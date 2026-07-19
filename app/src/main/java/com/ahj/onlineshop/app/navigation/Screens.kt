@@ -31,9 +31,12 @@ sealed class Screens {
     data class SubCategory(val parentCategory: String)
 
     @Serializable
-    data class ProductScreen(
+    data class ListProductScreen(
         val subCategoryType: String,
         val parentCategory: String,
     )
+
+    @Serializable
+    data class DetailProduct(val id: String , val categoryType: String)
 }
 

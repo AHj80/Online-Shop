@@ -97,7 +97,8 @@ class OTPConfirmViewModel @Inject constructor(
                     it.copy(
                         status = OTPConfirmStatus.ERROR,
                         message = msg.message,
-                        result = false
+                        result = false,
+                        showAlertDialog = true
                     )
                 }
             }
@@ -132,7 +133,7 @@ class OTPConfirmViewModel @Inject constructor(
         text.isNotBlank() && text.length == 4
 
     fun onDismiss(){
-        _uiState.update { it.copy(onDismiss = false , message = null) }
+        _uiState.update { it.copy(showAlertDialog = false) }
     }
 
 

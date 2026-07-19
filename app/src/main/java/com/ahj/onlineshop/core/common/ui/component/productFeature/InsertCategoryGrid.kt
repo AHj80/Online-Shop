@@ -2,6 +2,7 @@ package com.ahj.onlineshop.core.common.ui.component.productFeature
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,7 +27,6 @@ fun InsertCategoryGrid(
         ),
         maxItemsInEachRow = 3
     ) {
-
         data.forEach { category ->
             CategoriesSample(category, onClick = { onClick(category) })
         }

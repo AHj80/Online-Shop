@@ -14,10 +14,10 @@ import com.ahj.onlineshop.core.common.ui.theme.BackgroundCircleColor
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundColor
 
 @Composable
-fun DrawCircleBackground(blur: Boolean = false, setUi: @Composable BoxScope.() -> Unit) {
+fun DrawCircleBackground( blur: Boolean = false,modifier: Modifier = Modifier ,setUi: @Composable BoxScope.() -> Unit) {
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(color = BackgroundColor)
             .blur(if (blur) 10.dp else 0.dp),

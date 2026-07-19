@@ -69,4 +69,8 @@ class SubCategoriesViewModel @Inject constructor(
             subCategories(_uiState.value.selected)
     }
 
+    fun changeModalState(state: Boolean){
+        _uiState.update { it.copy(showModal = state) }
+    }
+
 }

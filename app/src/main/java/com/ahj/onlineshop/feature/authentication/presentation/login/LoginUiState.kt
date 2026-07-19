@@ -11,5 +11,5 @@ data class LoginUiState(
     val isError : Boolean = false,
     val message : String? = null,
     val enable : Boolean = false,
-    val showDialog : Boolean = false
+    val showAlertDialog : Boolean = false
 )

@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ahj.onlineshop.app.navigation.Screens
-import com.ahj.onlineshop.core.common.ui.component.InsertButton
+import com.ahj.onlineshop.core.common.ui.component.InsertButtonPrimary
 import com.ahj.onlineshop.core.common.ui.component.Progress
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
 import com.ahj.onlineshop.core.common.ui.component.authFeature.DrawCircleBackground
@@ -38,9 +38,7 @@ fun SplashScreen(
         viewModel.checking()
     }
 
-    DrawCircleBackground(
-        uiState.statusSplash == StatusSplash.LOADING
-    ) {
+    DrawCircleBackground {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -84,7 +82,7 @@ fun SplashScreen(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    InsertButton("بررسی مجدد"  , padding = 90) {
+                    InsertButtonPrimary("بررسی مجدد"  , padding = 90) {
                         viewModel.checking()
                         viewModel.tryAgain()
                     }

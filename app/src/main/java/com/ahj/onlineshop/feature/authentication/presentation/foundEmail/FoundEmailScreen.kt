@@ -23,9 +23,10 @@ import androidx.navigation.NavController
 import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.permissionManager.PermissionStatus
 import com.ahj.onlineshop.core.common.permissionManager.PermissionViewModel
-import com.ahj.onlineshop.core.common.ui.component.InsertButton
+import com.ahj.onlineshop.core.common.ui.component.InsertButtonPrimary
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
+import com.ahj.onlineshop.core.common.ui.component.authFeature.CustomAlertDialog
 import com.ahj.onlineshop.core.common.ui.component.authFeature.DrawCircleBackground
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertBody
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTextFieldAuth
@@ -53,7 +54,9 @@ fun FoundEmailScreen(
     val statePermission by permissionViewModel.permissionStatus.collectAsStateWithLifecycle()
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    DrawCircleBackground(uiState.foundEmailStatus == FoundEmailStatus.LOADING) {
+    DrawCircleBackground(
+        blur = uiState.foundEmailStatus == FoundEmailStatus.LOADING || uiState.foundEmailStatus == FoundEmailStatus.ERROR
+    ) {
 
         Column(
             modifier = Modifier
@@ -80,7 +83,7 @@ fun FoundEmailScreen(
             )
             SpacerHeight(30)
 
-            InsertButton(
+            InsertButtonPrimary(
                 "تایید",
                 enabled = viewModel.checking(uiState.stateEmail)
             ) {
@@ -96,7 +99,7 @@ fun FoundEmailScreen(
     when (uiState.foundEmailStatus) {
 
         FoundEmailStatus.LOADING -> {
-            InsertDialog({ viewModel.onDismissDialog() }, "در حال بررسی")
+            InsertDialog(text =  "در حال بررسی")
         }
 
         FoundEmailStatus.SUCCESS -> {
@@ -110,7 +113,12 @@ fun FoundEmailScreen(
 
         }
 
-        FoundEmailStatus.ERROR -> {}
+        FoundEmailStatus.ERROR -> {
+            uiState.showDialog
+            CustomAlertDialog("عملیات همراه با خطا بود") {
+                viewModel.onDismissDialog()
+            }
+        }
 
         FoundEmailStatus.IDLE -> {}
 

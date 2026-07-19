@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProductDto(
-    val id: String? = null,
+    val id: String,
     val title: String,
     val desc: String,
     val image: List<String>,
@@ -15,5 +15,7 @@ data class ProductDto(
     val rating: String,
     val categoryType: String,
     val sales: Int,
+    val comments: List<CommentDto>,
+    val features: List<String>
 
 )

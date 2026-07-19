@@ -14,7 +14,7 @@ class GetSubCategoriesUseCase @Inject constructor(
         repository.getShopData().map { data ->
             val resultSubCategory =
                 data.subCategories.filter { it.parentCategory == parentCategory }
-            val resultBestSales = data.product.filter { it.sales > 10 }
+            val resultBestSales = data.product.filter { it.sales > 150 }
 
             ShopData(
                 data.categories,

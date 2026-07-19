@@ -1,12 +1,13 @@
 package com.ahj.onlineshop.feature.product.data.repository
 
 import com.ahj.onlineshop.core.common.utils.ApiHelper
-import com.ahj.onlineshop.core.common.utils.ApiHelperOffline
+import com.ahj.onlineshop.core.common.utils.ApiHelperAsync
 import com.ahj.onlineshop.feature.product.data.local.offlineData.OfflineData
 import com.ahj.onlineshop.feature.product.data.mapper.toModel
 import com.ahj.onlineshop.feature.product.data.remote.ProductApiService
 import com.ahj.onlineshop.feature.product.domain.model.BannerModel
 import com.ahj.onlineshop.feature.product.domain.model.CategoryModel
+import com.ahj.onlineshop.feature.product.domain.model.DetailProductData
 import com.ahj.onlineshop.feature.product.domain.model.HomeDataModel
 import com.ahj.onlineshop.feature.product.domain.model.ProductModel
 import com.ahj.onlineshop.feature.product.domain.model.ShopData
@@ -20,30 +21,50 @@ import javax.inject.Inject
 class ProductRepositoryImpl @Inject constructor(
     private val apiHelper: ApiHelper,
     private val productApiService: ProductApiService,
-    private val apiHelperOffline: ApiHelperOffline
+    private val apiHelperAsync: ApiHelperAsync
 ) : ProductRepository {
-
-
     override suspend fun getProductData(): Result<List<ProductModel>> =
         apiHelper.safeData { productApiService.getProductsData() }
             .map { listData -> listData?.map { it.toModel() } ?: emptyList() }
 
 
+    override suspend fun getProductById(id: String): Result<ProductModel> =
+
+        apiHelper.safeData { productApiService.getProductById(id) }
+            .map {
+                it?.firstOrNull()?.toModel() ?: ProductModel.empty()
+            }
+
+
+    override suspend fun getDetailProductData(id: String): Result<DetailProductData> =
+
+        apiHelperAsync.safeData {
+            coroutineScope {
+                val productReq = async { getProductById(id) }
+                val listProductReq = async { getProductData() }
+
+                val productRes = productReq.await().getOrThrow()
+                val listProductRes = listProductReq.await().getOrThrow()
+
+                 DetailProductData(productRes, listProductRes)
+            }
+        }
+
+
     override suspend fun getCategories(): Result<List<CategoryModel>> =
-        apiHelperOffline.safeData {
+        apiHelperAsync.safeData {
             OfflineData.category
         }
 
 
     override suspend fun getBanner(): Result<List<BannerModel>> =
-        apiHelperOffline.safeData {
+        apiHelperAsync.safeData {
             OfflineData.listBanner
         }
 
-
     override suspend fun getHomeData(): Result<HomeDataModel> =
 
-        apiHelperOffline.safeData {
+        apiHelperAsync.safeData {
             coroutineScope {
                 val productReq = async { getProductData() }
                 val bannerReq = async { getBanner() }
@@ -64,10 +85,10 @@ class ProductRepositoryImpl @Inject constructor(
         }
 
     override suspend fun getSubCategories(): Result<List<SubCategoryModel>> =
-        apiHelperOffline.safeData { OfflineData.listSubCategory }
+        apiHelperAsync.safeData { OfflineData.listSubCategory }
 
     override suspend fun getShopData(): Result<ShopData> =
-        apiHelperOffline.safeData {
+        apiHelperAsync.safeData {
             coroutineScope {
                 val productReq = async { getProductData() }
                 val categoryReq = async { getCategories() }

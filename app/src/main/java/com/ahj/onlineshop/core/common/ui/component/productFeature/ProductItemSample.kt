@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -40,14 +41,16 @@ import com.ahj.onlineshop.feature.product.domain.model.ProductModel
 fun ProductItemSample(productModel: ProductModel, onClick: () -> Unit = {}) {
 
     Card(
-        colors = CardDefaults.cardColors(BackgroundCardColor),
-        shape = RoundedCornerShape(23.dp),
-        elevation = CardDefaults.elevatedCardElevation(3.dp),
+        elevation = CardDefaults.elevatedCardElevation(5.dp),
         modifier = Modifier
+            .clip(RoundedCornerShape(30.dp))
+            .clickable { onClick() }
             .padding(5.dp)
             .width(195.dp)
-            .height(220.dp)
-            .clickable { onClick() }
+            .height(220.dp),
+
+        colors = CardDefaults.cardColors(BackgroundCardColor)
+
 
     ) {
 
@@ -67,29 +70,30 @@ fun ProductItemSample(productModel: ProductModel, onClick: () -> Unit = {}) {
                 )
             }
 
-            Box(
-                contentAlignment = Alignment.TopStart,
-                modifier = Modifier
-                    .padding(top = 20.dp)
-                    .background(
-                        Brush.horizontalGradient(
-                            listOf(
-                                ButtonColor_One,
-                                ButtonColor_Tow
-                            )
-                        ), shape = RoundedCornerShape(bottomEnd = 21.dp, topEnd = 21.dp)
+            if (productModel.discount != 0)
+                Box(
+                    contentAlignment = Alignment.TopStart,
+                    modifier = Modifier
+                        .padding(top = 20.dp)
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(
+                                    ButtonColor_One,
+                                    ButtonColor_Tow
+                                )
+                            ), shape = RoundedCornerShape(bottomEnd = 21.dp, topEnd = 21.dp)
+                        )
+
+                ) {
+
+                    Text(
+                        "${productModel.discount.toPersianDigit()}%",
+                        modifier = Modifier.padding(5.dp),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White,
+                        fontSize = 12.sp
                     )
-
-            ) {
-
-                Text(
-                    "${productModel.discount.toPersianDigit()}%",
-                    modifier = Modifier.padding(5.dp),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White,
-                    fontSize = 12.sp
-                )
-            }
+                }
 
             Box(
                 contentAlignment = Alignment.BottomCenter,
@@ -124,6 +128,7 @@ fun ProductItemSample(productModel: ProductModel, onClick: () -> Unit = {}) {
 
                                 ) {
 
+                                if (productModel.discount !=0)
                                 Text(
                                     productModel.price.formatPriceToPersian().toPersianDigit(),
                                     style = MaterialTheme.typography.titleSmall,

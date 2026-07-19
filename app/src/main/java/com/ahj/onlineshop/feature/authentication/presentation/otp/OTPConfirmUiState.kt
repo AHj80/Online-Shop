@@ -7,5 +7,5 @@ data class OTPConfirmUiState(
     val stateOTP : String = "",
     val timer : Int = 0,
     val reSendCode : Boolean = true,
-    val onDismiss : Boolean = false
+    val showAlertDialog : Boolean = false
 )

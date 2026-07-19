@@ -40,7 +40,8 @@ class FoundEmailViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             foundEmailStatus = FoundEmailStatus.ERROR,
-                            message = error.message
+                            message = error.message,
+                            showDialog = true
                         )
                     }
                 }
@@ -56,8 +57,7 @@ class FoundEmailViewModel @Inject constructor(
     fun onDismissDialog() {
         _uiState.update {
             it.copy(
-                showDialog = false,
-                message = null
+                showDialog = false
             )
         }
     }

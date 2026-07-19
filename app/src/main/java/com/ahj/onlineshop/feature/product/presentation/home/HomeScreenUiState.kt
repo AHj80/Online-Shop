@@ -9,7 +9,8 @@ data class HomeScreenUiState(
     val status: HomeScreenStatus = HomeScreenStatus.IDLE,
     val data: List<ProductModel> = emptyList(),
     val message: String? = null,
-    val stateText: String = "",
+    val stateSearch: String = "",
     val categories: List<CategoryModel> = emptyList(),
     val banner: List<BannerModel> = emptyList(),
+    val showModal: Boolean = false
 )

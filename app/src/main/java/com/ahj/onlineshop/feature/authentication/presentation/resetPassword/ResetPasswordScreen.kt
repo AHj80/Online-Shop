@@ -26,9 +26,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.ahj.onlineshop.R
 import com.ahj.onlineshop.app.navigation.Screens
-import com.ahj.onlineshop.core.common.ui.component.InsertButton
+import com.ahj.onlineshop.core.common.ui.component.InsertButtonPrimary
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
+import com.ahj.onlineshop.core.common.ui.component.authFeature.CustomAlertDialog
 import com.ahj.onlineshop.core.common.ui.component.authFeature.DrawCircleBackground
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTextFieldAuth
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTitle
@@ -54,7 +55,7 @@ fun ResetPasswordScreen(
     var visibleEye by remember { mutableStateOf(false) }
 
     DrawCircleBackground(
-        uiState.status == ResetPasswordStatus.LOADING
+        uiState.status == ResetPasswordStatus.LOADING || uiState.status == ResetPasswordStatus.ERROR
     ) {
         Column(
             modifier = Modifier
@@ -104,7 +105,7 @@ fun ResetPasswordScreen(
             )
             SpacerHeight(50)
 
-            InsertButton(
+            InsertButtonPrimary(
                 text = "ثبت تغییرات",
                 enabled = validating
             ) {
@@ -115,7 +116,7 @@ fun ResetPasswordScreen(
 
         when (uiState.status) {
             ResetPasswordStatus.LOADING -> {
-                InsertDialog({}, "در حال بررسی")
+                InsertDialog(text =  "در حال بررسی")
             }
 
             ResetPasswordStatus.SUCCESS -> {
@@ -124,7 +125,10 @@ fun ResetPasswordScreen(
                 }
             }
 
-            ResetPasswordStatus.ERROR -> {}
+            ResetPasswordStatus.ERROR -> {
+                if (uiState.showAlertDialog)
+                    CustomAlertDialog("عملیات همراه با خطا بود") {viewModel.onDismiss() }
+            }
 
             ResetPasswordStatus.IDELE -> {}
 

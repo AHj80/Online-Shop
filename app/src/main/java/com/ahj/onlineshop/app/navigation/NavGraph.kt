@@ -19,7 +19,9 @@ import com.ahj.onlineshop.feature.authentication.presentation.register.RegisterS
 import com.ahj.onlineshop.feature.authentication.presentation.resetPassword.ResetPasswordScreen
 import com.ahj.onlineshop.feature.authentication.presentation.splash.SplashScreen
 import com.ahj.onlineshop.feature.product.presentation.category.CategoryScreen
+import com.ahj.onlineshop.feature.product.presentation.detailProduct.DetailProductScreen
 import com.ahj.onlineshop.feature.product.presentation.home.HomeScreen
+import com.ahj.onlineshop.feature.product.presentation.listProduct.ListProductScreen
 import com.ahj.onlineshop.feature.product.presentation.subCategory.SubCategoryScreen
 
 
@@ -42,7 +44,7 @@ fun SetupUI() {
         topBar = {
             val authScreens = screenNonScaffold.any { currentDes?.hasRoute(it) == true }
             if (!authScreens)
-                CustomTopAppBar(navController)
+                CustomTopAppBar(navController, backStack = { navController.popBackStack() })
         }
     ) { innerPadding ->
 
@@ -92,11 +94,21 @@ fun SetupUI() {
                     navController = navController,
                     parentCategory = input.parentCategory,
 
+                    )
+            }
+
+            composable<Screens.ListProductScreen> {
+                val input = it.toRoute<Screens.ListProductScreen>()
+                ListProductScreen(
+                    navController,
+                    subCategoryType = input.subCategoryType,
+                    parentCategory = input.parentCategory
                 )
             }
 
-            composable<Screens.ProductScreen> {
-
+            composable<Screens.DetailProduct> {
+                val input = it.toRoute<Screens.DetailProduct>()
+                DetailProductScreen(navController = navController,id = input.id, categoryType = input.categoryType )
             }
         }
 

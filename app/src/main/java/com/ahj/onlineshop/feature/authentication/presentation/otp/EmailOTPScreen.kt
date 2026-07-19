@@ -31,10 +31,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.ahj.onlineshop.app.navigation.Screens
-import com.ahj.onlineshop.core.common.ui.component.InsertButton
+import com.ahj.onlineshop.core.common.ui.component.InsertButtonPrimary
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
 import com.ahj.onlineshop.core.common.ui.component.SpacerWith
+import com.ahj.onlineshop.core.common.ui.component.authFeature.CustomAlertDialog
 import com.ahj.onlineshop.core.common.ui.component.authFeature.DrawCircleBackground
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertBody
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertLogo
@@ -54,7 +55,7 @@ fun EmailOTPScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     DrawCircleBackground(
-        uiState.status == OTPConfirmStatus.LOADING
+        uiState.status == OTPConfirmStatus.LOADING || uiState.status == OTPConfirmStatus.ERROR
     ) {
 
         Column(
@@ -118,7 +119,7 @@ fun EmailOTPScreen(
             }
             SpacerHeight(30)
 
-            InsertButton(
+            InsertButtonPrimary(
                 "ادامه",
                 enabled = viewModel.enabledChange(uiState.stateOTP)
             ) {
@@ -165,7 +166,12 @@ fun EmailOTPScreen(
 
         when (uiState.status) {
             OTPConfirmStatus.IDLE -> {}
-            OTPConfirmStatus.ERROR -> {}
+            OTPConfirmStatus.ERROR -> {
+                if (uiState.showAlertDialog)
+                CustomAlertDialog("عملیات همراه با خطا بود") {
+                    viewModel.onDismiss()
+                }
+            }
             OTPConfirmStatus.SUCCESS -> {
 
                 navController.navigate(Screens.ResetPassword(id)){
@@ -173,7 +179,8 @@ fun EmailOTPScreen(
                 }
             }
             OTPConfirmStatus.LOADING -> {
-                InsertDialog({ viewModel.onDismiss() }, "لطفا منتظر بمانید")
+
+                InsertDialog(text =  "لطفا منتظر بمانید")
             }
         }
 

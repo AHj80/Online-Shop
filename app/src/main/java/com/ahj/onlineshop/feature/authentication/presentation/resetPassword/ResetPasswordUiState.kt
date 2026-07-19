@@ -7,5 +7,6 @@ data class ResetPasswordUiState(
     val message: String? = null,
     val statePass: String = "",
     val statePassConfirm : String = "",
-    val isError: Boolean = false
+    val isError: Boolean = false,
+    val showAlertDialog : Boolean = false
 )

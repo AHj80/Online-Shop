@@ -18,7 +18,7 @@ import com.airbnb.lottie.compose.rememberLottieDynamicProperty
 
 
 @Composable
-fun Progress() {
+fun Progress(size: Int = 15) {
 
     val composition by rememberLottieComposition(
         spec = LottieCompositionSpec.RawRes(
@@ -35,7 +35,7 @@ fun Progress() {
     LottieAnimation(
         composition = composition,
         iterations = Int.MAX_VALUE,
-        modifier = Modifier.size(15.dp),
+        modifier = Modifier.size(size.dp),
         contentScale = ContentScale.Crop,
         dynamicProperties = dynamicLottieColor
     )

@@ -1,5 +1,9 @@
 package com.ahj.onlineshop.core.common.ui.component.productFeature
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -69,17 +74,24 @@ fun CustomTopAppBar(
             }
         },
         actions = {
-            if (currentDestination?.hasRoute<Screens.HomeScreen>() == false){
-                IconButton(
-                    {backStack()}, modifier = Modifier
-                        .padding(end = 10.dp)
-                        .size(30.dp)
+
+            currentDestination?.hasRoute<Screens.HomeScreen>()?.let {
+                AnimatedVisibility(
+                    visible = !it,
+                    enter = expandHorizontally(animationSpec = tween(300)),
+                    exit = shrinkHorizontally(animationSpec = tween(300))
                 ) {
-                    Icon(
-                        Icons.AutoMirrored.Default.ArrowForward,
-                        null,
-                        modifier = Modifier.size(70.dp)
-                    )
+                    IconButton(
+                        {backStack()}, modifier = Modifier
+                            .padding(end = 10.dp)
+                            .size(30.dp)
+                    ) {
+                        Icon(
+                            Icons.AutoMirrored.Default.ArrowForward,
+                            null,
+                            modifier = Modifier.size(70.dp)
+                        )
+                    }
                 }
             }
         },
@@ -130,6 +142,7 @@ fun CustomTopAppBar(
                     )
                 }
             }
-        }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
     )
 }

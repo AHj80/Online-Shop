@@ -29,13 +29,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.ahj.onlineshop.R
 import com.ahj.onlineshop.app.navigation.Screens
-import com.ahj.onlineshop.core.common.ui.component.InsertButton
+import com.ahj.onlineshop.core.common.ui.component.InsertButtonPrimary
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
 import com.ahj.onlineshop.core.common.ui.component.authFeature.DrawCircleBackground
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertLogo
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTextFieldAuth
 import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTitle
+import com.ahj.onlineshop.core.common.ui.component.authFeature.CustomAlertDialog
 
 @Composable
 fun RegisterScreen(
@@ -57,7 +58,7 @@ fun RegisterScreen(
     var visibleEye by remember { mutableStateOf(false) }
 
     DrawCircleBackground(
-        uiState.registerStatus == RegisterStatus.LOADING
+        uiState.registerStatus == RegisterStatus.LOADING || uiState.registerStatus ==RegisterStatus.ERROR
     ) {
 
         Column(
@@ -127,7 +128,7 @@ fun RegisterScreen(
             )
             SpacerHeight(30)
 
-            InsertButton(
+            InsertButtonPrimary(
                 text = "ثبت نام",
                 enabled = isEnabled
             ) {
@@ -143,11 +144,22 @@ fun RegisterScreen(
         when(uiState.registerStatus){
 
             RegisterStatus.LOADING ->{
-                InsertDialog({viewModel.onDismissDialog()} ,"درحال بررسی")
+                InsertDialog( text = "درحال بررسی")
             }
-            else -> {
-
+            RegisterStatus.SUCCESS ->  {
+                navController.navigate(Screens.Login){
+                    popUpTo(Screens.Login){
+                        inclusive = true
+                    }
+                }
             }
+            RegisterStatus.ERROR -> {
+                if (uiState.showDialog)
+                    CustomAlertDialog("ثبت نام ناموفق بود"){
+                        viewModel.onDismissAlertDialog()
+                    }
+            }
+            RegisterStatus.IDLE -> {}
         }
     }
 }
