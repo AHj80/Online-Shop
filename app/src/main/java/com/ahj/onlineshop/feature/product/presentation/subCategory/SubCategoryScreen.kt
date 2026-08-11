@@ -26,14 +26,14 @@ import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
 import com.ahj.onlineshop.core.common.ui.component.Progress
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
-import com.ahj.onlineshop.core.common.ui.component.authFeature.DrawCircleBackground
-import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTextFieldAuth
-import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTitle
-import com.ahj.onlineshop.core.common.ui.component.productFeature.InsertCategoryGrid
-import com.ahj.onlineshop.core.common.ui.component.productFeature.ProductItemSample
-import com.ahj.onlineshop.core.common.ui.component.productFeature.ShowAll
-import com.ahj.onlineshop.core.common.ui.component.productFeature.ShowBestSell
-import com.ahj.onlineshop.core.common.ui.component.productFeature.TopCategory
+import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
+import com.ahj.onlineshop.feature.authentication.component.InsertTextFieldAuth
+import com.ahj.onlineshop.feature.authentication.component.InsertTitle
+import com.ahj.onlineshop.feature.product.component.InsertCategoryGrid
+import com.ahj.onlineshop.feature.product.component.ProductItemSample
+import com.ahj.onlineshop.feature.product.component.ShowAll
+import com.ahj.onlineshop.feature.product.component.ShowBestSell
+import com.ahj.onlineshop.feature.product.component.TopCategory
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
 
 
@@ -141,7 +141,7 @@ fun SubCategoryScreen(
                         ShowBestSell(
                             data = uiState.product,
                             { state -> viewModel.changeModalState(state) },
-                            { currentProduct->
+                            { currentProduct ->
                                 navController.navigate(
                                     Screens.DetailProduct(
                                         currentProduct.id,
@@ -149,7 +149,9 @@ fun SubCategoryScreen(
                                     )
                                 )
                             }
-                        )
+                        ) {
+
+                        }
                     SpacerHeight(20)
 
                     LazyRow(
@@ -159,13 +161,18 @@ fun SubCategoryScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         items(uiState.product.size) {
-                            ProductItemSample(uiState.product[it]) {
-                                navController.navigate(
-                                    Screens.DetailProduct(
-                                        uiState.product[it].id,
-                                        uiState.product[it].categoryType
+                            ProductItemSample(
+                                uiState.product[it],
+                                onClick = {
+                                    navController.navigate(
+                                        Screens.DetailProduct(
+                                            uiState.product[it].id,
+                                            uiState.product[it].categoryType
+                                        )
                                     )
-                                )
+                                }
+                            ) {
+                                viewModel.addToCart(uiState.product[it])
                             }
                         }
                     }

@@ -45,14 +45,15 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import coil3.compose.AsyncImage
 import com.ahj.onlineshop.R
 import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
-import com.ahj.onlineshop.core.common.ui.component.authFeature.DrawCircleBackground
-import com.ahj.onlineshop.core.common.ui.component.productFeature.AddToCart
-import com.ahj.onlineshop.core.common.ui.component.productFeature.TabProductItem
+import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
+import com.ahj.onlineshop.feature.product.component.AddToCart
+import com.ahj.onlineshop.feature.product.component.TabProductItem
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundCardColor
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_One
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
@@ -90,15 +91,19 @@ fun DetailProductScreen(
                 AddToCart(
                     uiState.product.price.formatPriceToPersian(),
                     uiState.product.finalPrice.formatPriceToPersian(),
-                    quantity = uiState.quantity,
                     discount = uiState.product.discount,
-                    increase = {
-                        viewModel.increaseQuantity()
-                    },
-                    decrease = {
-                        viewModel.decreaseQuantity()
-                    }
-                )
+                    statusButton = uiState.inCart
+                ) {
+                    if (uiState.inCart)
+                        navController.navigate(Screens.Cart){
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    else viewModel.addToCart(uiState.product)
+                }
             }
         }
     ) { innerPadding ->
@@ -289,14 +294,17 @@ fun DetailProductScreen(
                                             uiState.product,
                                             selected = uiState.selectedTab,
                                             similarProduct = uiState.similarProduct,
-                                            tabSelection = { viewModel.changeTab(it) }
-                                        ) { currentProduct->
-                                            navController.navigate(
-                                                Screens.DetailProduct(
-                                                    currentProduct.id,
-                                                    currentProduct.categoryType
+                                            tabSelection = { viewModel.changeTab(it) },
+                                            similarOnClick = { currentProduct ->
+                                                navController.navigate(
+                                                    Screens.DetailProduct(
+                                                        currentProduct.id,
+                                                        currentProduct.categoryType
+                                                    )
                                                 )
-                                            )
+                                            }
+                                        ) {
+                                            viewModel.addToCart(it)
                                         }
 
 

@@ -9,5 +9,6 @@ data class DetailProductUiState(
     val similarProduct : List<ProductModel> = emptyList(),
     val message: String? = null,
     val selectedTab: Int = 0,
-    val quantity: Int = 1
+    val quantity: Int = 1,
+    val inCart : Boolean = true
 )

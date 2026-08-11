@@ -82,14 +82,6 @@ class LoginViewModel @Inject constructor(
         return email && pass
     }
 
-    fun onDismissDialog() {
-        _uiState.update {
-            it.copy(
-                showAlertDialog = false,
-                message = null
-            )
-        }
-    }
 
     fun onDismissAlertDialog() {
         _uiState.update {

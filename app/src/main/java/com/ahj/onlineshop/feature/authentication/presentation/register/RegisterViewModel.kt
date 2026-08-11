@@ -24,7 +24,7 @@ class RegisterViewModel @Inject constructor(
 
     fun sendRegisterData(email: String, pass: String) {
 
-        val registerModel = RegisterModel(email = email, password = pass, )
+        val registerModel = RegisterModel(email = email, password = pass )
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -66,14 +66,6 @@ class RegisterViewModel @Inject constructor(
         return email && passMatch
     }
 
-    fun onDismissDialog() {
-        _uiState.update {
-            it.copy(
-                showDialog = false,
-                message = null
-            )
-        }
-    }
 
     fun onDismissAlertDialog() {
         _uiState.update {

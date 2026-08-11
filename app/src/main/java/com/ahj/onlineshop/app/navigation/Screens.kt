@@ -33,10 +33,23 @@ sealed class Screens {
     @Serializable
     data class ListProductScreen(
         val subCategoryType: String,
-        val parentCategory: String,
+        val parentCategory: String
     )
 
     @Serializable
-    data class DetailProduct(val id: String , val categoryType: String)
+    data class DetailProduct(val id: String, val categoryType: String)
+
+    @Serializable
+    object Cart : Screens()
+
+    @Serializable
+    object CartConfirmAddress: Screens()
+
+    @Serializable
+    object EditAddressScreen : Screens()
+
+    @Serializable
+    object UserProfile : Screens()
+
 }
 

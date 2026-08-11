@@ -2,6 +2,8 @@ package com.ahj.onlineshop.feature.product.presentation.listProduct
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ahj.onlineshop.feature.product.domain.model.ProductModel
+import com.ahj.onlineshop.feature.product.domain.usecase.AddToCartUseCase
 import com.ahj.onlineshop.feature.product.domain.usecase.GetProductByFilterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListProductViewModel @Inject constructor(
-    private val getProductByFilterUseCase: GetProductByFilterUseCase
+    private val getProductByFilterUseCase: GetProductByFilterUseCase,
+    private val addToCartUseCase: AddToCartUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ListProductUiState())
@@ -61,7 +64,11 @@ class ListProductViewModel @Inject constructor(
         } else {
             getData(_uiState.value.selected, parentCategory)
         }
+    }
 
-
+    fun addToCart(productModel: ProductModel){
+        viewModelScope.launch {
+            addToCartUseCase(productModel)
+        }
     }
 }

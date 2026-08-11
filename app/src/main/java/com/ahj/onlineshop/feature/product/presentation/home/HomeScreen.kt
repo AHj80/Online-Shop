@@ -25,14 +25,15 @@ import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
-import com.ahj.onlineshop.core.common.ui.component.authFeature.DrawCircleBackground
-import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTextFieldAuth
-import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTitle
-import com.ahj.onlineshop.core.common.ui.component.productFeature.CategoriesSample
-import com.ahj.onlineshop.core.common.ui.component.productFeature.InsertBanner
-import com.ahj.onlineshop.core.common.ui.component.productFeature.ProductItemSample
-import com.ahj.onlineshop.core.common.ui.component.productFeature.ShowAll
-import com.ahj.onlineshop.core.common.ui.component.productFeature.ShowBestSell
+import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
+import com.ahj.onlineshop.feature.authentication.component.InsertTextFieldAuth
+import com.ahj.onlineshop.feature.authentication.component.InsertTitle
+import com.ahj.onlineshop.feature.product.component.CategoriesSample
+import com.ahj.onlineshop.feature.product.component.InsertBanner
+import com.ahj.onlineshop.feature.product.component.ProductItemSample
+import com.ahj.onlineshop.feature.product.component.SearchProduct
+import com.ahj.onlineshop.feature.product.component.ShowAll
+import com.ahj.onlineshop.feature.product.component.ShowBestSell
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
 
 
@@ -45,8 +46,11 @@ fun HomeScreen(
 
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     val pagerState = rememberPagerState { uiState.banner.size }
+
+    val resultSearch =
+        uiState.data.filter { it.title.contains(uiState.stateSearch, ignoreCase = true) }
+
 
     DrawCircleBackground(
         blur = uiState.status == HomeScreenStatus.LOADING
@@ -59,6 +63,7 @@ fun HomeScreen(
             }
 
             HomeScreenStatus.SUCCESS -> {
+
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -87,6 +92,18 @@ fun HomeScreen(
                                 )
                             }
                         )
+                        SearchProduct(resultSearch, uiState.stateSearch) { index ->
+                            val currentProduct = resultSearch[index]
+                            navController.navigate(
+                                Screens.DetailProduct(
+                                    currentProduct.id,
+                                    currentProduct.categoryType
+                                )
+                            )
+                        }
+
+                        SpacerHeight(10)
+
                     }
 
                     item {
@@ -125,7 +142,9 @@ fun HomeScreen(
                                         )
                                     )
                                 }
-                            )
+                            ){ currentProduct ->
+                                viewModel.addToCart(currentProduct)
+                            }
 
                         SpacerHeight(10)
                     }
@@ -138,16 +157,20 @@ fun HomeScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            items(uiState.data.size) {
+                            val limitedItems = uiState.data.take(6)
+                            items(limitedItems.size) {
                                 ProductItemSample(
-                                    uiState.data[it]
-                                ) {
-                                    navController.navigate(
-                                        Screens.DetailProduct(
-                                            uiState.data[it].id,
-                                            uiState.data[it].categoryType
+                                    uiState.data[it],
+                                    onClick = {
+                                        navController.navigate(
+                                            Screens.DetailProduct(
+                                                uiState.data[it].id,
+                                                uiState.data[it].categoryType
+                                            )
                                         )
-                                    )
+                                    }
+                                ) {
+                                    viewModel.addToCart(uiState.data[it])
                                 }
                             }
                         }
@@ -155,6 +178,8 @@ fun HomeScreen(
 
 
                 }
+
+
             }
 
             else -> {

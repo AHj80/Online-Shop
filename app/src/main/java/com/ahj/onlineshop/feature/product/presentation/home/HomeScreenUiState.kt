@@ -12,5 +12,6 @@ data class HomeScreenUiState(
     val stateSearch: String = "",
     val categories: List<CategoryModel> = emptyList(),
     val banner: List<BannerModel> = emptyList(),
-    val showModal: Boolean = false
+    val showModal: Boolean = false,
+    val expanded: Boolean = false
 )

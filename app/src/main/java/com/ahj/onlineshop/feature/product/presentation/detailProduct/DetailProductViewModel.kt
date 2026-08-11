@@ -2,6 +2,9 @@ package com.ahj.onlineshop.feature.product.presentation.detailProduct
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ahj.onlineshop.feature.product.domain.model.ProductModel
+import com.ahj.onlineshop.feature.product.domain.usecase.AddToCartUseCase
+import com.ahj.onlineshop.feature.product.domain.usecase.GetCartDataByIdUseCase
 import com.ahj.onlineshop.feature.product.domain.usecase.GetDetailProductUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +17,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailProductViewModel @Inject constructor(
-    private val getDetailProductUseCase: GetDetailProductUseCase
+    private val getDetailProductUseCase: GetDetailProductUseCase,
+    private val addToCartUseCase: AddToCartUseCase,
+    private val getCartDataByIdUseCase: GetCartDataByIdUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DetailProductUiState())
@@ -23,6 +28,7 @@ class DetailProductViewModel @Inject constructor(
     fun getProduct(id: String, categoryType: String) {
 
         viewModelScope.launch {
+            checkingCartStatus(id)
             _uiState.update { it.copy(status = DetailProductStatus.LOADING, message = null) }
             getDetailProductUseCase(id, categoryType)
                 .onSuccess { data ->
@@ -33,15 +39,55 @@ class DetailProductViewModel @Inject constructor(
                             status = DetailProductStatus.SUCCESS
                         )
                     }
+
                 }
                 .onFailure { error ->
-                    _uiState.update { it.copy(
-                        status = DetailProductStatus.ERROR,
-                        message = error.message,
-                    ) }
+                    _uiState.update {
+                        it.copy(
+                            status = DetailProductStatus.ERROR,
+                            message = error.message,
+                        )
+                    }
                 }
         }
+
+
     }
+
+    fun checkingCartStatus(id: String) {
+
+        viewModelScope.launch {
+            getCartDataByIdUseCase(id).collect { inCart ->
+                _uiState.update {
+                    it.copy(
+                        inCart = inCart
+                    )
+                }
+
+            }
+        }
+    }
+
+    fun addToCart(product: ProductModel) {
+        viewModelScope.launch {
+            addToCartUseCase(product)
+                .onSuccess {
+                    _uiState.update {
+                        it.copy(
+                            message = "محصول به سبد خرید اضافه گردید",
+                            inCart = true
+                        )
+                    }
+
+                }
+                .onFailure { error ->
+                    _uiState.update { it.copy(message = error.message) }
+
+                }
+
+        }
+    }
+
 
     fun increaseQuantity() {
         if (_uiState.value.quantity < 4) _uiState.update { it.copy(quantity = _uiState.value.quantity + 1) }

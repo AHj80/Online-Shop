@@ -1,6 +1,6 @@
 package com.ahj.onlineshop.feature.product.domain.model
 
-import com.ahj.onlineshop.core.common.ui.component.productFeature.CategoryData
+import com.ahj.onlineshop.feature.product.component.CategoryData
 
 data class CategoryModel(
     override val id: Int,

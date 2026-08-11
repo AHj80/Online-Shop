@@ -17,9 +17,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
-import com.ahj.onlineshop.core.common.ui.component.authFeature.DrawCircleBackground
-import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTitle
-import com.ahj.onlineshop.core.common.ui.component.productFeature.CategoriesSample
+import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
+import com.ahj.onlineshop.feature.authentication.component.InsertTitle
+import com.ahj.onlineshop.feature.product.component.CategoriesSample
 
 
 @Composable
@@ -51,8 +51,9 @@ fun CategoryScreen(
                     .padding(10.dp)
             ) {
                 items(uiState.category.size) {
-                    CategoriesSample(uiState.category[it]) {
-
+                    CategoriesSample(
+                        uiState.category[it]
+                    ) {
                         navController.navigate(
                             Screens.SubCategory(
                                 uiState.category[it].categoryType,

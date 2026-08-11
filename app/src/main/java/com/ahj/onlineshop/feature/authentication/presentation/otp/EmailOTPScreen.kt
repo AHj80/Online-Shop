@@ -35,14 +35,15 @@ import com.ahj.onlineshop.core.common.ui.component.InsertButtonPrimary
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
 import com.ahj.onlineshop.core.common.ui.component.SpacerWith
-import com.ahj.onlineshop.core.common.ui.component.authFeature.CustomAlertDialog
-import com.ahj.onlineshop.core.common.ui.component.authFeature.DrawCircleBackground
-import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertBody
-import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertLogo
-import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTextFieldAuth
-import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTitle
+import com.ahj.onlineshop.feature.authentication.component.CustomAlertDialog
+import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
+import com.ahj.onlineshop.feature.authentication.component.InsertBody
+import com.ahj.onlineshop.feature.authentication.component.InsertLogo
+import com.ahj.onlineshop.feature.authentication.component.InsertTextFieldAuth
+import com.ahj.onlineshop.feature.authentication.component.InsertTitle
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundCircleColor
 import com.ahj.onlineshop.core.common.utils.toPersianDigit
+import java.util.Locale
 
 
 @Composable
@@ -107,7 +108,7 @@ fun EmailOTPScreen(
                         ) {
                             val minutes = uiState.timer / 60
                             val seconds = uiState.timer % 60
-                            val formattedTime = String.format(java.util.Locale.US, "%02d:%02d", minutes, seconds)
+                            val formattedTime = String.format(Locale.US, "%02d:%02d", minutes, seconds)
                             Text(
                                 formattedTime.toPersianDigit(),
                                 style = MaterialTheme.typography.titleLarge,

@@ -4,9 +4,11 @@ import com.ahj.onlineshop.feature.product.domain.model.BannerModel
 import com.ahj.onlineshop.feature.product.domain.model.CategoryModel
 import com.ahj.onlineshop.feature.product.domain.model.DetailProductData
 import com.ahj.onlineshop.feature.product.domain.model.HomeDataModel
+import com.ahj.onlineshop.feature.product.domain.model.AddCartModel
 import com.ahj.onlineshop.feature.product.domain.model.ProductModel
 import com.ahj.onlineshop.feature.product.domain.model.ShopData
 import com.ahj.onlineshop.feature.product.domain.model.SubCategoryModel
+import kotlinx.coroutines.flow.Flow
 
 interface ProductRepository {
 
@@ -25,5 +27,9 @@ interface ProductRepository {
     suspend fun getProductById(id: String): Result<ProductModel>
 
     suspend fun getDetailProductData(id: String): Result<DetailProductData>
+
+    suspend fun addProductToCart(product: ProductModel): Result<Long>
+
+     fun getCartDataById(id: String): Flow<AddCartModel?>
 
 }

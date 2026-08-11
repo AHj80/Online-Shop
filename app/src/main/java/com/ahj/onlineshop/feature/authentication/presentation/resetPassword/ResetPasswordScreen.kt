@@ -29,10 +29,10 @@ import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.ui.component.InsertButtonPrimary
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
-import com.ahj.onlineshop.core.common.ui.component.authFeature.CustomAlertDialog
-import com.ahj.onlineshop.core.common.ui.component.authFeature.DrawCircleBackground
-import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTextFieldAuth
-import com.ahj.onlineshop.core.common.ui.component.authFeature.InsertTitle
+import com.ahj.onlineshop.feature.authentication.component.CustomAlertDialog
+import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
+import com.ahj.onlineshop.feature.authentication.component.InsertTextFieldAuth
+import com.ahj.onlineshop.feature.authentication.component.InsertTitle
 import com.ahj.onlineshop.core.common.utils.toPersianDigit
 
 
