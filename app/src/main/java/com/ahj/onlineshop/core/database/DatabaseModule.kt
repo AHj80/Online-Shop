@@ -2,8 +2,10 @@ package com.ahj.onlineshop.core.database
 
 import android.content.Context
 import androidx.room.Room
-import com.ahj.onlineshop.core.common.sharedData.address.data.local.db.AddressDao
-import com.ahj.onlineshop.core.common.sharedData.product.local.db.ProductDao
+import com.ahj.onlineshop.core.sharedData.address.data.local.db.AddressDao
+import com.ahj.onlineshop.core.sharedData.favorite.data.local.db.FavoriteDao
+import com.ahj.onlineshop.core.sharedData.product.local.db.ProductDao
+import com.ahj.onlineshop.core.sharedData.shoppingExperience.data.db.UserExperienceDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,5 +39,13 @@ object DatabaseModule {
     fun provideAddressDao(myDatabase: MyDatabase): AddressDao =
         myDatabase.addressDao()
 
+    @Singleton
+    @Provides
+    fun provideFavoriteDao(myDatabase: MyDatabase): FavoriteDao =
+        myDatabase.favoriteDao()
 
+    @Provides
+    @Singleton
+    fun provideUserExperienceDao(myDatabase: MyDatabase): UserExperienceDao =
+        myDatabase.experienceDao()
 }

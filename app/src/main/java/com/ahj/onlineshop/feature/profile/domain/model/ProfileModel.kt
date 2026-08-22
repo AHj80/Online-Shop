@@ -13,7 +13,7 @@ data class ProfileModel(
     val gender: String
 ) {
     companion object {
-        fun empty() =
+        fun defaultValue() =
             ProfileModel(
                 "",
                 "",

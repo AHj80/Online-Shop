@@ -13,17 +13,19 @@ import androidx.compose.runtime.Composable
 @Composable
 fun CustomAnimate(
     state: Boolean,
+    enter: Int = 600,
+    exit: Int = 600,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
 
     AnimatedVisibility(
         visible = state,
         enter = expandVertically(
-            animationSpec = tween(600)
-        ) + fadeIn(tween(600)),
+            animationSpec = tween(enter)
+        ) + fadeIn(tween(enter)),
         exit = shrinkVertically(
-            animationSpec = tween(600)
-        ) + fadeOut(animationSpec = tween(600)),
+            animationSpec = tween(exit)
+        ) + fadeOut(animationSpec = tween(exit)),
     ) {
         content()
     }

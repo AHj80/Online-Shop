@@ -27,6 +27,8 @@ import com.ahj.onlineshop.feature.product.presentation.detailProduct.DetailProdu
 import com.ahj.onlineshop.feature.product.presentation.home.HomeScreen
 import com.ahj.onlineshop.feature.product.presentation.listProduct.ListProductScreen
 import com.ahj.onlineshop.feature.product.presentation.subCategory.SubCategoryScreen
+import com.ahj.onlineshop.feature.profile.presentation.favorites.FavoriteScreen
+import com.ahj.onlineshop.feature.profile.presentation.userExperience.UserExperiencesScreen
 import com.ahj.onlineshop.feature.profile.presentation.userProfile.UserProfileScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,6 +41,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             OnlineShopTheme {
+
                 val navController = rememberNavController()
                 val screenBottomBar = listOf(
                     Screens.HomeScreen::class,
@@ -81,10 +84,6 @@ class MainActivity : ComponentActivity() {
                             EditAddressScreen(navController)
                         }
 
-                        composable<Screens.UserProfile> {
-                            UserProfileScreen()
-                        }
-
 
 
                         composable<Screens.SubCategory> {
@@ -113,10 +112,53 @@ class MainActivity : ComponentActivity() {
                                 categoryType = input.categoryType
                             )
                         }
+
+                        composable<Screens.UserProfile> {
+                            UserProfileScreen(navController)
+                        }
+
+                        composable<Screens.EditProfile> { }
+
+                        composable<Screens.FavoriteScreen> {
+                            FavoriteScreen(navController)
+                        }
+
+                        composable<Screens.ShoppingExperience> {
+                            UserExperiencesScreen()
+                        }
+
+                        composable <Screens.ProfileAddress>{
+
+                        }
                     }
                 }
 
+                /*val navController = rememberNavController()
+                NavHost(
+                    navController = navController,
+                    startDestination = Screens.DetailProduct("1" , "man_sport")
+                ){
+                    composable<Screens.UserProfile> {
+                        UserProfileScreen(navController)
+                    }
 
+                    composable<Screens.EditProfile> { }
+
+                    composable<Screens.FavoriteScreen> {
+                        FavoriteScreen()
+                    }
+
+
+                    composable<Screens.DetailProduct> {
+                        val input = it.toRoute<Screens.DetailProduct>()
+                        DetailProductScreen(
+                            navController = navController,
+                            id = "1",
+                            categoryType = "man_sport"
+                        )
+                    }
+
+                }*/
 
             }
         }

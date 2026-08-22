@@ -1,6 +1,6 @@
 package com.ahj.onlineshop.feature.profile.data.mapper
 
-import com.ahj.onlineshop.core.common.sharedData.profile.data.local.remote.dto.ProfileDto
+import com.ahj.onlineshop.core.sharedData.favorite.data.local.remote.dto.ProfileDto
 import com.ahj.onlineshop.feature.profile.domain.model.ProfileModel
 
 

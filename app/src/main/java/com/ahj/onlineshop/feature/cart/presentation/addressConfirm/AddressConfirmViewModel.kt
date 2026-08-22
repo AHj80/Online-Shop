@@ -2,8 +2,7 @@ package com.ahj.onlineshop.feature.cart.presentation.addressConfirm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ahj.onlineshop.core.common.sharedData.address.domain.model.AddressModel
-import com.ahj.onlineshop.core.common.sharedData.address.domain.useCase.GetAddressByIdUseCase
+import com.ahj.onlineshop.core.sharedData.address.domain.useCase.GetAddressByIdUseCase
 import com.ahj.onlineshop.core.datastore.SessionManager
 import com.ahj.onlineshop.feature.cart.domain.model.CartAddressModel
 import com.ahj.onlineshop.feature.cart.domain.useCase.GetCartDataUseCase

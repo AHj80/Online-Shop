@@ -5,7 +5,8 @@ import com.ahj.onlineshop.feature.profile.domain.model.ProfileModel
 
 data class UserProfileUiState(
     val status: UserProfileStatus = UserProfileStatus.IDLE,
-    val profile: ProfileModel = ProfileModel.empty(),
+    val profile: ProfileModel = ProfileModel.defaultValue(),
     val message: String? = null,
-    val avatar: Uri? = null
+    val avatar: Uri? = null,
+    val userId: String =""
 )

@@ -2,12 +2,11 @@ package com.ahj.onlineshop.feature.profile.data.repository
 
 import com.ahj.onlineshop.core.common.utils.ApiHelper
 import com.ahj.onlineshop.core.common.utils.RunCatching
-import com.ahj.onlineshop.core.common.sharedData.address.data.local.db.AddressDao
+import com.ahj.onlineshop.core.sharedData.address.data.local.db.AddressDao
 import com.ahj.onlineshop.feature.profile.data.mapper.toModel
-import com.ahj.onlineshop.core.common.sharedData.profile.data.local.remote.ProfileApiService
+import com.ahj.onlineshop.core.sharedData.favorite.data.local.remote.ProfileApiService
 import com.ahj.onlineshop.feature.profile.domain.model.ProfileModel
 import com.ahj.onlineshop.feature.profile.domain.repository.ProfileRepository
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
@@ -23,10 +22,8 @@ class ProfileRepositoryImpl @Inject constructor(
         apiHelper.safeData {
             profileApiService.getProfileData(userId = id)
         }.map {
-            it?.toModel()?: ProfileModel.empty()
+            it?.toModel()?: ProfileModel.defaultValue()
         }
-
-
 
 
 }

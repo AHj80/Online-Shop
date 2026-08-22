@@ -2,12 +2,12 @@ package com.ahj.onlineshop.feature.cart.presentation.changeAddress
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ahj.onlineshop.core.common.sharedData.address.domain.model.AddressModel
-import com.ahj.onlineshop.core.common.sharedData.address.domain.useCase.DeleteAddressUseCase
-import com.ahj.onlineshop.core.common.sharedData.address.domain.useCase.EditAddressUseCase
-import com.ahj.onlineshop.core.common.sharedData.address.domain.useCase.GetAddressByIdUseCase
-import com.ahj.onlineshop.core.common.sharedData.address.domain.useCase.GetAllAddressUseCase
-import com.ahj.onlineshop.core.common.sharedData.address.domain.useCase.InsertAddressUseCase
+import com.ahj.onlineshop.core.sharedData.address.domain.model.AddressModel
+import com.ahj.onlineshop.core.sharedData.address.domain.useCase.DeleteAddressUseCase
+import com.ahj.onlineshop.core.sharedData.address.domain.useCase.EditAddressUseCase
+import com.ahj.onlineshop.core.sharedData.address.domain.useCase.GetAddressByIdUseCase
+import com.ahj.onlineshop.core.sharedData.address.domain.useCase.GetAllAddressUseCase
+import com.ahj.onlineshop.core.sharedData.address.domain.useCase.InsertAddressUseCase
 import com.ahj.onlineshop.core.datastore.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

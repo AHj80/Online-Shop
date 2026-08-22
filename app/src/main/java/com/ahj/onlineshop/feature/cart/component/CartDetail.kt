@@ -24,6 +24,7 @@ fun CartDetail(
     discount: Long,
     address: Boolean = false,
     text: String,
+    enabled: Boolean = true,
     onClick : ()-> Unit
 ) {
 
@@ -47,7 +48,7 @@ fun CartDetail(
             TextCart("مبلغ نهایی", finalPrice.formatPriceToPersian())
         }
         SpacerHeight(10)
-        InsertButtonPrimary(text) { onClick()}
+        InsertButtonPrimary(text , enabled =enabled ) { onClick()}
     }
 
 }

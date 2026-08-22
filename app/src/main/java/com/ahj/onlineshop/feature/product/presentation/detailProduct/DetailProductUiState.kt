@@ -10,5 +10,9 @@ data class DetailProductUiState(
     val message: String? = null,
     val selectedTab: Int = 0,
     val quantity: Int = 1,
-    val inCart : Boolean = true
+    val inCart : Boolean = true,
+    val isFavorite: Boolean = false,
+    val stateTextComment: String = "",
+    val rate: Int = 0
+
 )

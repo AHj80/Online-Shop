@@ -1,6 +1,6 @@
 package com.ahj.onlineshop.feature.cart.presentation.changeAddress
 
-import com.ahj.onlineshop.core.common.sharedData.address.domain.model.AddressModel
+import com.ahj.onlineshop.core.sharedData.address.domain.model.AddressModel
 
 data class EditAddressUiState(
     val status: EditAddressStatus = EditAddressStatus.LOADING,

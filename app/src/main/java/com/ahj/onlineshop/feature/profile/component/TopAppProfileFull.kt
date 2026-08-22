@@ -25,9 +25,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.ahj.onlineshop.R
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundCardColor
@@ -36,7 +39,16 @@ import com.ahj.onlineshop.feature.profile.domain.model.ProfileModel
 
 
 @Composable
-fun TopAppProfileFull(profileModel: ProfileModel, image: Uri?, cameraOnClick: () -> Unit) {
+fun TopAppProfileFull(
+    profileModel: ProfileModel,
+    image: Uri?,
+    editOnClick: () -> Unit,
+    cameraOnClick: () -> Unit
+) {
+
+
+    val context = LocalContext.current
+
     Card(
         shape = RoundedCornerShape(bottomEnd = 40.dp, bottomStart = 40.dp),
         colors = CardDefaults.cardColors(containerColor = ButtonColor_Tow),
@@ -94,22 +106,27 @@ fun TopAppProfileFull(profileModel: ProfileModel, image: Uri?, cameraOnClick: ()
                             Icon(
                                 Icons.Default.Person,
                                 null,
-                                tint = Color.White
+                                tint = Color.White,
+                                modifier = Modifier.size(60.dp)
                             )
                         else
                             AsyncImage(
-                                model = image,
+                                model = ImageRequest.Builder(context)
+                                    .data(image)
+                                    .crossfade(true)
+                                    .build(),
                                 null,
                                 modifier = Modifier
                                     .size(90.dp)
                                     .clip(CircleShape),
-                                contentScale = ContentScale.Crop
-                            )
+                                contentScale = ContentScale.Crop,
+
+                                )
 
                     }
 
                     IconButton({
-
+                        editOnClick()
                     }) {
                         Icon(
                             painter = painterResource(R.drawable.feature_profile_edit),

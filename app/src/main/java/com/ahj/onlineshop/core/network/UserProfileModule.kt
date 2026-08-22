@@ -1,6 +1,6 @@
 package com.ahj.onlineshop.core.network
 
-import com.ahj.onlineshop.core.common.sharedData.profile.data.local.remote.ProfileApiService
+import com.ahj.onlineshop.core.sharedData.favorite.data.local.remote.ProfileApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

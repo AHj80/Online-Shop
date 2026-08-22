@@ -1,5 +1,6 @@
 package com.ahj.onlineshop.feature.cart.presentation.addressConfirm
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -90,7 +91,9 @@ fun AddressConfirmScreen(
                 }
 
                 AddressConfirmStatus.SUCCESS -> {
-                    AddressItem(uiState.address)
+                    uiState.address?.let {
+                        AddressItem(it)
+                    }
                     SpacerHeight(10)
                     CustomOutlinedButton("به آدرس دیگری برود") {
                         navController.navigate(Screens.EditAddressScreen)
@@ -112,15 +115,20 @@ fun AddressConfirmScreen(
                 }
             }
 
+            val data = uiState.data
+            val address = uiState.address
             Spacer(Modifier.weight(1f))
-            CartDetail(
-                uiState.data.cartPrice,
-                uiState.data.cartFinalPrice,
-                uiState.data.cartDiscount,
-                true,
-                "پرداخت نهایی"
-            ) {
+            if (data != null && address != null){
+                CartDetail(
+                    data.cartPrice,
+                    data.cartFinalPrice,
+                    data.cartDiscount,
+                    true,
+                    "پرداخت نهایی",
+                    enabled = address.receiver.isNotBlank()
+                ) {
 
+                }
             }
         }
     }

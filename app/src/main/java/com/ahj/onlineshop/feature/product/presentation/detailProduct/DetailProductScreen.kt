@@ -1,5 +1,6 @@
 package com.ahj.onlineshop.feature.product.presentation.detailProduct
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
@@ -21,8 +23,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.BookmarkRemove
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.BookmarkAdd
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -49,16 +52,17 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import coil3.compose.AsyncImage
 import com.ahj.onlineshop.R
 import com.ahj.onlineshop.app.navigation.Screens
+import com.ahj.onlineshop.core.common.ui.component.CustomAnimate
 import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
-import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
-import com.ahj.onlineshop.feature.product.component.AddToCart
-import com.ahj.onlineshop.feature.product.component.TabProductItem
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundCardColor
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_One
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
 import com.ahj.onlineshop.core.common.utils.formatPriceToPersian
 import com.ahj.onlineshop.core.common.utils.toPersianDigit
+import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
+import com.ahj.onlineshop.feature.product.component.AddToCart
+import com.ahj.onlineshop.feature.product.component.TabProductItem
 
 
 @Composable
@@ -69,10 +73,11 @@ fun DetailProductScreen(
     navController: NavController
 ) {
 
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(id, categoryType) {
         viewModel.getProduct(id, categoryType)
     }
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val listTab = listOf(
         "توضیحات",
         "ویژگی ها",
@@ -95,7 +100,7 @@ fun DetailProductScreen(
                     statusButton = uiState.inCart
                 ) {
                     if (uiState.inCart)
-                        navController.navigate(Screens.Cart){
+                        navController.navigate(Screens.Cart) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }
@@ -105,7 +110,8 @@ fun DetailProductScreen(
                     else viewModel.addToCart(uiState.product)
                 }
             }
-        }
+        },
+        modifier = Modifier.imePadding()
     ) { innerPadding ->
 
 
@@ -241,11 +247,41 @@ fun DetailProductScreen(
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.Center
                                     ) {
-                                        IconButton({}) {
-                                            Icon(
-                                                Icons.Default.BookmarkBorder, null
+
+
+                                        IconButton({
+
+                                            viewModel.addFavorite(
+                                                uiState.isFavorite,
+                                                uiState.product.id.toInt(),
+                                                uiState.product.categoryType,
+                                                uiState.product.title,
+                                                uiState.product.image[0],
                                             )
+                                        }) {
+
+                                            CustomAnimate(uiState.isFavorite) {
+
+                                                Icon(
+                                                    Icons.Filled.BookmarkRemove,
+                                                    null,
+                                                    modifier = Modifier.size(30.dp)
+                                                )
+                                            }
+
+                                            CustomAnimate(!uiState.isFavorite) {
+
+                                                Icon(
+                                                    Icons.Outlined.BookmarkAdd,
+                                                    null,
+                                                    modifier = Modifier.size(30.dp)
+                                                )
+                                            }
+
                                         }
+
+
+
 
                                         Text(
                                             uiState.product.rating.toPersianDigit(),
@@ -302,7 +338,20 @@ fun DetailProductScreen(
                                                         currentProduct.categoryType
                                                     )
                                                 )
+                                            },
+                                            stateTextComment = uiState.stateTextComment,
+                                            stateTextChange = { viewModel.changeStateComment(it) },
+                                            rate = { viewModel.changeRate(it) },
+                                            sendComment = {
+                                                viewModel.sendComment(
+                                                    uiState.product.id.toInt(),
+                                                    uiState.product.title,
+                                                    uiState.product.image[0],
+                                                    uiState.stateTextComment,
+                                                    rate = uiState.rate
+                                                )
                                             }
+
                                         ) {
                                             viewModel.addToCart(it)
                                         }
@@ -317,7 +366,6 @@ fun DetailProductScreen(
 
                         }
                     }
-
 
                 }
 

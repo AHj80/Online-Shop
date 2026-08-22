@@ -1,6 +1,6 @@
 package com.ahj.onlineshop.feature.product.data.mapper
 
-import com.ahj.onlineshop.core.common.sharedData.product.local.db.ProductEntity
+import com.ahj.onlineshop.core.sharedData.product.local.db.ProductEntity
 import com.ahj.onlineshop.feature.product.data.remote.dto.CommentDto
 import com.ahj.onlineshop.feature.product.data.remote.dto.ProductDto
 import com.ahj.onlineshop.feature.product.domain.model.CommentModel

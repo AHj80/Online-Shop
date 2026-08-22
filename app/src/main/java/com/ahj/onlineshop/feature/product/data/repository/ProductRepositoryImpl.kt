@@ -3,7 +3,7 @@ package com.ahj.onlineshop.feature.product.data.repository
 import com.ahj.onlineshop.core.common.utils.ApiHelper
 import com.ahj.onlineshop.core.common.utils.ApiHelperAsync
 import com.ahj.onlineshop.core.common.utils.RunCatching
-import com.ahj.onlineshop.core.common.sharedData.product.local.db.ProductDao
+import com.ahj.onlineshop.core.sharedData.product.local.db.ProductDao
 import com.ahj.onlineshop.feature.product.data.local.offlineData.OfflineData
 import com.ahj.onlineshop.feature.product.data.mapper.toEntity
 import com.ahj.onlineshop.feature.product.data.mapper.toAddCartModel

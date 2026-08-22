@@ -1,6 +1,6 @@
 package com.ahj.onlineshop.feature.cart.data.mapper
 
-import com.ahj.onlineshop.core.common.sharedData.product.local.db.ProductEntity
+import com.ahj.onlineshop.core.sharedData.product.local.db.ProductEntity
 import com.ahj.onlineshop.feature.cart.domain.model.CartModel
 
 

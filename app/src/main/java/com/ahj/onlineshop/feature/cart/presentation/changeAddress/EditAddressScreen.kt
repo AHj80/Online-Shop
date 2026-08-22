@@ -1,11 +1,14 @@
 package com.ahj.onlineshop.feature.cart.presentation.changeAddress
 
+import android.widget.Space
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsEndWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -87,6 +90,7 @@ fun EditAddressScreen(
                             }
                         )
 
+
                     }
 
                     item {
@@ -97,7 +101,9 @@ fun EditAddressScreen(
                         }
                     }
 
+
                     item {
+                        if (uiState.data.isNotEmpty())
                         InsertButtonPrimary("انتخاب آدرس و ادامه خرید") { navController.popBackStack() }
                     }
 

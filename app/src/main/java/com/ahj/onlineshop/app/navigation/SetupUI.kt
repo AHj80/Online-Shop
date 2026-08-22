@@ -19,12 +19,15 @@ import com.ahj.onlineshop.feature.authentication.presentation.otp.EmailOTPScreen
 import com.ahj.onlineshop.feature.authentication.presentation.register.RegisterScreen
 import com.ahj.onlineshop.feature.authentication.presentation.resetPassword.ResetPasswordScreen
 import com.ahj.onlineshop.feature.authentication.presentation.splash.SplashScreen
+import com.ahj.onlineshop.feature.cart.presentation.addressConfirm.AddressConfirmScreen
 import com.ahj.onlineshop.feature.cart.presentation.cart.CartScreen
+import com.ahj.onlineshop.feature.cart.presentation.changeAddress.EditAddressScreen
 import com.ahj.onlineshop.feature.product.presentation.category.CategoryScreen
 import com.ahj.onlineshop.feature.product.presentation.detailProduct.DetailProductScreen
 import com.ahj.onlineshop.feature.product.presentation.home.HomeScreen
 import com.ahj.onlineshop.feature.product.presentation.listProduct.ListProductScreen
 import com.ahj.onlineshop.feature.product.presentation.subCategory.SubCategoryScreen
+import com.ahj.onlineshop.feature.profile.presentation.favorites.FavoriteScreen
 import com.ahj.onlineshop.feature.profile.presentation.userProfile.UserProfileScreen
 
 
@@ -131,7 +134,7 @@ fun SetupUI() {
             }
 
             composable<Screens.UserProfile> {
-                UserProfileScreen()
+                UserProfileScreen(navController)
             }
 
             composable<Screens.Cart> {
@@ -139,6 +142,18 @@ fun SetupUI() {
             }
 
             composable<Screens.CartConfirmAddress> {
+                AddressConfirmScreen(navController)
+            }
+
+            composable <Screens.EditAddressScreen>{
+                EditAddressScreen(navController)
+            }
+
+            composable <Screens.FavoriteScreen>{
+                FavoriteScreen(navController)
+            }
+
+            composable <Screens.ShoppingExperience>{
 
             }
         }

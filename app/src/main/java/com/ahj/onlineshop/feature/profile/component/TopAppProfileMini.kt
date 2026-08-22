@@ -30,9 +30,10 @@ import coil3.compose.AsyncImage
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
 import com.ahj.onlineshop.core.common.ui.component.SpacerWith
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
+import com.ahj.onlineshop.feature.profile.domain.model.ProfileModel
 
 @Composable
-fun TopAppProfileMini(image: Uri?, ) {
+fun TopAppProfileMini(image: Uri?, profile: ProfileModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -83,17 +84,17 @@ fun TopAppProfileMini(image: Uri?, ) {
             }
             SpacerWith(20)
             Column {
-                /*Text(
-                    profileAddressModel.name,
+                Text(
+                    profile.name,
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.White
                 )
                 SpacerHeight(20)
                 Text(
-                    profileAddressModel.phone,
+                    profile.phone,
                     style = MaterialTheme.typography.titleSmall,
                     color = Color.White
-                )*/
+                )
             }
         }
     }

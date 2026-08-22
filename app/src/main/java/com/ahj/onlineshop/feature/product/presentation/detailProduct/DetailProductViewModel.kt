@@ -1,7 +1,14 @@
 package com.ahj.onlineshop.feature.product.presentation.detailProduct
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ahj.onlineshop.core.sharedData.favorite.domain.model.FavoriteModel
+import com.ahj.onlineshop.core.sharedData.favorite.domain.useCase.AddFavoriteUseCase
+import com.ahj.onlineshop.core.sharedData.favorite.domain.useCase.CheckingFavoriteUseCase
+import com.ahj.onlineshop.core.sharedData.favorite.domain.useCase.DeleteFavoriteUseCase
+import com.ahj.onlineshop.core.sharedData.shoppingExperience.domain.model.UserExperienceModel
+import com.ahj.onlineshop.core.sharedData.shoppingExperience.domain.useCase.AddExperienceUseCase
 import com.ahj.onlineshop.feature.product.domain.model.ProductModel
 import com.ahj.onlineshop.feature.product.domain.usecase.AddToCartUseCase
 import com.ahj.onlineshop.feature.product.domain.usecase.GetCartDataByIdUseCase
@@ -19,7 +26,11 @@ import javax.inject.Inject
 class DetailProductViewModel @Inject constructor(
     private val getDetailProductUseCase: GetDetailProductUseCase,
     private val addToCartUseCase: AddToCartUseCase,
-    private val getCartDataByIdUseCase: GetCartDataByIdUseCase
+    private val getCartDataByIdUseCase: GetCartDataByIdUseCase,
+    private val checkingFavoriteUseCase: CheckingFavoriteUseCase,
+    private val addFavoriteUseCase: AddFavoriteUseCase,
+    private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
+    private val addExperienceUseCase: AddExperienceUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DetailProductUiState())
@@ -39,6 +50,7 @@ class DetailProductViewModel @Inject constructor(
                             status = DetailProductStatus.SUCCESS
                         )
                     }
+                    isFavorite(data.productData.id.toInt())
 
                 }
                 .onFailure { error ->
@@ -89,17 +101,75 @@ class DetailProductViewModel @Inject constructor(
     }
 
 
-    fun increaseQuantity() {
-        if (_uiState.value.quantity < 4) _uiState.update { it.copy(quantity = _uiState.value.quantity + 1) }
-        else
-            _uiState.update { it.copy(message = "تعداد درخواست شده بیش از میزان موجودی میباشد") }
-    }
-
-    fun decreaseQuantity() {
-        if (_uiState.value.quantity > 0)
-            _uiState.update { it.copy(quantity = (_uiState.value.quantity - 1).coerceAtLeast(1)) }
-    }
-
     fun changeTab(index: Int) = _uiState.update { it.copy(selectedTab = index) }
+
+    fun isFavorite(id: Int) {
+        viewModelScope.launch {
+            checkingFavoriteUseCase(id).collect { result ->
+                result
+                    .onSuccess { result ->
+                        _uiState.update { it.copy(isFavorite = result) }
+                    }
+                    .onFailure { error ->
+                        _uiState.update { it.copy(message = error.message) }
+                    }
+            }
+
+        }
+    }
+
+    fun addFavorite(
+        statusFavorite: Boolean,
+        id: Int,
+        categoryType: String,
+        title: String,
+        image: String
+    ) {
+
+        viewModelScope.launch {
+            if (statusFavorite) {
+                deleteFavoriteUseCase(FavoriteModel(id, categoryType, image, title))
+                    .onFailure { error ->
+                        _uiState.update { it.copy(message = error.message) }
+                    }
+
+            } else {
+                addFavoriteUseCase(FavoriteModel(id, categoryType, image, title))
+                    .onFailure { error ->
+                        _uiState.update { it.copy(message = error.message) }
+                    }
+            }
+        }
+
+    }
+
+    fun sendComment(id: Int, title: String, image: String, comment: String, rate: Int) {
+
+        viewModelScope.launch {
+
+            addExperienceUseCase(UserExperienceModel(id, title, image, comment , rate))
+                .onSuccess {
+                    _uiState.update {
+                        it.copy(
+                            stateTextComment = "",
+                            message = "نظر شما با موفقیت ارسال و پس از تایید نمایش داده خواهد شد"
+                        )
+                    }
+                    Log.i("test1" , "su")
+                }
+                .onFailure { error ->
+                    _uiState.update { it.copy(message = error.message) }
+                    Log.i("test1" , "fa")
+                }
+
+
+        }
+
+    }
+
+    fun changeRate (rate: Int) = _uiState.update { it.copy(rate = rate) }
+
+    fun changeStateComment(text: String) = _uiState.update { it.copy(stateTextComment = text) }
+
 
 }
