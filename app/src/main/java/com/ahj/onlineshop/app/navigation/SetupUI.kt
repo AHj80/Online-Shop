@@ -33,6 +33,7 @@ import com.ahj.onlineshop.feature.product.presentation.home.HomeScreen
 import com.ahj.onlineshop.feature.product.presentation.listProduct.ListProductScreen
 import com.ahj.onlineshop.feature.product.presentation.subCategory.SubCategoryScreen
 import com.ahj.onlineshop.feature.profile.presentation.changePassword.ChangePasswordScreen
+import com.ahj.onlineshop.feature.profile.presentation.editProfile.EditUserProfileScreen
 import com.ahj.onlineshop.feature.profile.presentation.favorites.FavoriteScreen
 import com.ahj.onlineshop.feature.profile.presentation.notification.NotificationScreen
 import com.ahj.onlineshop.feature.profile.presentation.userAddress.ProfileAddressScreen
@@ -158,6 +159,9 @@ fun SetupUI(viewModel: MainViewModel = hiltViewModel()) {
 
             composable<Screens.UserProfile> {
                 UserProfileScreen(navController)
+            }
+            composable <Screens.EditProfile>{
+                EditUserProfileScreen()
             }
 
             composable<Screens.Cart> {

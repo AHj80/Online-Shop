@@ -86,6 +86,7 @@ class ChangePasswordViewModel @Inject constructor(
         }
     }
 
+
     fun oldPassChange(text: String) {
 
         val filterSpace = text.replace(" " , "")

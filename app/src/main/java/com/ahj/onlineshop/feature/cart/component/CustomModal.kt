@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -28,9 +27,7 @@ import com.ahj.onlineshop.core.common.ui.component.InsertButtonPrimary
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundColor
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
-import com.ahj.onlineshop.feature.authentication.component.InsertBody
 import com.ahj.onlineshop.feature.authentication.component.InsertTextFieldAuth
-import com.ahj.onlineshop.feature.authentication.component.InsertTitle
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)

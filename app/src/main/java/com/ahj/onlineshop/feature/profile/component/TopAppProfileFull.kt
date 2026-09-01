@@ -36,7 +36,6 @@ import com.ahj.onlineshop.R
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundCardColor
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
-import com.ahj.onlineshop.core.sharedData.userProfile.domain.model.ProfileModel
 import com.ahj.onlineshop.core.sharedData.userProfile.domain.model.UserInformationModel
 
 

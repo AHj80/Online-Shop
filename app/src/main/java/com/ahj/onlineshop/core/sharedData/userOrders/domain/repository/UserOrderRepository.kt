@@ -1,6 +1,5 @@
 package com.ahj.onlineshop.core.sharedData.userOrders.domain.repository
 
-import com.ahj.onlineshop.core.sharedData.userOrders.domain.model.OrderItemModel
 import com.ahj.onlineshop.core.sharedData.userOrders.domain.model.UserOrderModel
 import kotlinx.coroutines.flow.Flow
 
