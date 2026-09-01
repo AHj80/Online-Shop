@@ -56,6 +56,10 @@ object OfflineData {
         BannerModel(
             id = 2,
             R.drawable.banner_sport
+        ),
+        BannerModel(
+            id = 3,
+            R.drawable.banner_sport
         )
     )
 

@@ -1,14 +1,13 @@
 package com.ahj.onlineshop.feature.cart.presentation.changeAddress
 
-import android.widget.Space
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsEndWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,11 +43,35 @@ fun EditAddressScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
 
-    DrawCircleBackground {
+    DrawCircleBackground{
 
         when (uiState.status) {
             EditAddressStatus.LOADING -> {
                 InsertDialog({}, "در حال دریافت داده")
+            }
+
+            EditAddressStatus.EMPTY -> {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+
+                    uiState.message?.let {
+                        Text(
+                            it,
+                            style = MaterialTheme.typography.titleSmall,
+                            color = Color.LightGray
+                        )
+                    }
+
+                    CustomOutlinedButton("اضافه کردن آدرس جدید") {
+                        viewModel.resetInput()
+                        viewModel.changeModal(true)
+
+                    }
+                }
+
             }
 
             EditAddressStatus.SUCCESS -> {
@@ -77,7 +101,7 @@ fun EditAddressScreen(
                                     placementSpec = spring(stiffness = Spring.StiffnessLow)
                                 ),
                             selected = viewModel.getAddressDefault(uiState.data[it].id),
-                            selectedBorder = uiState.addressDefault == uiState.data[it].id ,
+                            selectedBorder = uiState.addressDefault == uiState.data[it].id,
                             {
                                 viewModel.savingDefault(uiState.data[it].id)
                             },
@@ -104,51 +128,54 @@ fun EditAddressScreen(
 
                     item {
                         if (uiState.data.isNotEmpty())
-                        InsertButtonPrimary("انتخاب آدرس و ادامه خرید") { navController.popBackStack() }
+                            InsertButtonPrimary("انتخاب آدرس و ادامه خرید") { navController.popBackStack() }
                     }
 
-                }
-                if (uiState.modal) {
-                    CustomModal(
-                        uiState.stateReceiver,
-                        {
-                            viewModel.updateTextReceiver(it)
-                        },
-                        uiState.stateAddress,
-                        {
-                            viewModel.updateTextAddress(it)
-                        },
-                        uiState.statePhone,
-                        {
-                            viewModel.updateTextPhone(it)
-                        },
-                        uiState.statePostalCode,
-                        {
-                            viewModel.updateTextPostalCode(it)
-                        },
-                        { viewModel.changeModal(false) },
-                        {
-                            viewModel.saveAddress(
-                                id = uiState.currentId,
-                                receiver = uiState.stateReceiver,
-                                fullAddress = uiState.stateAddress,
-                                phone = uiState.statePhone,
-                                postalCode = uiState.statePostalCode
-                            )
-                            viewModel.changeModal(false)
-                        },
-                        closeButton = { viewModel.changeModal(false) },
-                        enabled = viewModel.checkingEnabled()
-                    )
                 }
 
             }
 
-            else -> {
+            EditAddressStatus.ERROR -> {
                 ErrorRefreshing(uiState.message) {
                     viewModel.getAllAddress()
                 }
             }
+
+
+
+        }
+        if (uiState.modal) {
+            CustomModal(
+                uiState.stateReceiver,
+                {
+                    viewModel.updateTextReceiver(it)
+                },
+                uiState.stateAddress,
+                {
+                    viewModel.updateTextAddress(it)
+                },
+                uiState.statePhone,
+                {
+                    viewModel.updateTextPhone(it)
+                },
+                uiState.statePostalCode,
+                {
+                    viewModel.updateTextPostalCode(it)
+                },
+                { viewModel.changeModal(false) },
+                {
+                    viewModel.saveAddress(
+                        id = uiState.currentId,
+                        receiver = uiState.stateReceiver,
+                        fullAddress = uiState.stateAddress,
+                        phone = uiState.statePhone,
+                        postalCode = uiState.statePostalCode
+                    )
+                    viewModel.changeModal(false)
+                },
+                closeButton = { viewModel.changeModal(false) },
+                enabled = viewModel.checkingEnabled()
+            )
         }
 
     }

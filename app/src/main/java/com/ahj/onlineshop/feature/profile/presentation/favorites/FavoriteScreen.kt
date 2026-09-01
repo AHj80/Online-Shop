@@ -44,7 +44,7 @@ fun FavoriteScreen(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            CustomAnimate(uiState.profile != null , 50 ,50) {
+            CustomAnimate(uiState.profile != null , 200 ,200) {
 
                 uiState.profile?.let {
                     TopAppProfileMini(uiState.avatar, it)

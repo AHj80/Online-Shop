@@ -1,6 +1,5 @@
 package com.ahj.onlineshop.feature.product.presentation.detailProduct
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -42,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,6 +59,7 @@ import com.ahj.onlineshop.core.common.ui.theme.BackgroundCardColor
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_One
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
 import com.ahj.onlineshop.core.common.utils.formatPriceToPersian
+import com.ahj.onlineshop.core.common.utils.shareText
 import com.ahj.onlineshop.core.common.utils.toPersianDigit
 import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
 import com.ahj.onlineshop.feature.product.component.AddToCart
@@ -85,6 +86,8 @@ fun DetailProductScreen(
         "محصولات مشابه"
     )
     val statePager = rememberPagerState { uiState.product.image.size }
+
+    val context = LocalContext.current
 
     Scaffold(
         bottomBar = {
@@ -292,7 +295,9 @@ fun DetailProductScreen(
                                             null,
                                             tint = Color(0XFFFFB800)
                                         )
-                                        IconButton({}) {
+                                        IconButton({
+                                            context.shareText("\nخرید لباس : ${uiState.product.title} همراه با لباس ها دیگر با تخفیف در اپلیکیشن آنلاین شاپ  \n برای نصب اپلیکیشن روی لینک زیر کلیک نمایید : \n")
+                                        }) {
                                             Icon(
                                                 Icons.Outlined.Share, null
                                             )

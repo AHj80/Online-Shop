@@ -58,15 +58,14 @@ fun RegisterScreen(
     var visibleEye by remember { mutableStateOf(false) }
 
     DrawCircleBackground(
-        uiState.registerStatus == RegisterStatus.LOADING || uiState.registerStatus ==RegisterStatus.ERROR
+        uiState.registerStatus == RegisterStatus.LOADING || uiState.registerStatus == RegisterStatus.ERROR
     ) {
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .imePadding()
-                .verticalScroll(rememberScrollState())
-                .blur(if (uiState.registerStatus == RegisterStatus.LOADING) 10.dp else 0.dp ),
+                .verticalScroll(rememberScrollState()),
 
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -157,6 +156,7 @@ fun RegisterScreen(
                 if (uiState.showDialog)
                     CustomAlertDialog("ثبت نام ناموفق بود"){
                         viewModel.onDismissAlertDialog()
+
                     }
             }
             RegisterStatus.IDLE -> {}

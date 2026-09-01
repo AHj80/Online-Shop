@@ -28,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -35,12 +36,13 @@ import com.ahj.onlineshop.R
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundCardColor
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
-import com.ahj.onlineshop.feature.profile.domain.model.ProfileModel
+import com.ahj.onlineshop.core.sharedData.userProfile.domain.model.ProfileModel
+import com.ahj.onlineshop.core.sharedData.userProfile.domain.model.UserInformationModel
 
 
 @Composable
 fun TopAppProfileFull(
-    profileModel: ProfileModel,
+    profileModel: UserInformationModel,
     image: Uri?,
     editOnClick: () -> Unit,
     cameraOnClick: () -> Unit
@@ -102,14 +104,17 @@ fun TopAppProfileFull(
                             )
                         }
 
-                        if (image == null)
+                        if (image == null){
+
                             Icon(
                                 Icons.Default.Person,
                                 null,
                                 tint = Color.White,
                                 modifier = Modifier.size(60.dp)
                             )
-                        else
+                        }
+                        else{
+
                             AsyncImage(
                                 model = ImageRequest.Builder(context)
                                     .data(image)
@@ -122,6 +127,7 @@ fun TopAppProfileFull(
                                 contentScale = ContentScale.Crop,
 
                                 )
+                        }
 
                     }
 
@@ -138,17 +144,23 @@ fun TopAppProfileFull(
             }
             SpacerHeight(20)
 
-            Text(
-                profileModel.name,
-                style = MaterialTheme.typography.titleSmall,
-                color = Color.White
-            )
+            profileModel.name?.let {
+                Text(
+                    it,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color.White,
+                    fontSize = 15.sp
+                )
+            }
             SpacerHeight(10)
-            Text(
-                profileModel.phone,
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.White
-            )
+            profileModel.phone?.let {
+                Text(
+                    it,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White
+                )
+            }
+            SpacerHeight(10)
         }
     }
 }

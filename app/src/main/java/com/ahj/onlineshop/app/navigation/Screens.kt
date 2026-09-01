@@ -1,6 +1,5 @@
 package com.ahj.onlineshop.app.navigation
 
-import androidx.navigation.compose.rememberNavController
 import kotlinx.serialization.Serializable
 
 sealed class Screens {
@@ -63,5 +62,14 @@ sealed class Screens {
 
     @Serializable
     object ProfileAddress : Screens()
+
+    @Serializable
+    object ChangePassword: Screens()
+
+    @Serializable
+    object UserOrderScreen: Screens()
+
+    @Serializable
+    object Notification: Screens()
 }
 

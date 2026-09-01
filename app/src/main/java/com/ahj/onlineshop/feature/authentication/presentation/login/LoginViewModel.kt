@@ -87,6 +87,7 @@ class LoginViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 showAlertDialog = false,
+                loginStatus = LoginStatus.IDLE
             )
         }
     }

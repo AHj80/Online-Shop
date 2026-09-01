@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-
 @Dao
 interface ProductDao {
 
@@ -26,6 +25,11 @@ interface ProductDao {
     @Query("UPDATE ProductEntity SET quantity = quantity -1 WHERE id = :id And quantity > 1")
     suspend fun decreaseQuantity(id: String)
 
+    @Query("DELETE FROM ProductEntity")
+    suspend fun deleteAllRecord()
+
     @Delete
     suspend fun deleteProduct(product: ProductEntity)
+
 }
+

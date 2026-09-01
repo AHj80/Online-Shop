@@ -1,6 +1,5 @@
 package com.ahj.onlineshop.feature.cart.presentation.addressConfirm
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -29,6 +27,7 @@ import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
+import com.ahj.onlineshop.feature.authentication.component.CustomAlertDialog
 import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
 import com.ahj.onlineshop.feature.authentication.component.InsertTitle
 import com.ahj.onlineshop.feature.cart.component.AddressItem
@@ -49,7 +48,7 @@ fun AddressConfirmScreen(
     }
 
     DrawCircleBackground(
-        blur = uiState.status == AddressConfirmStatus.LOADING
+        blur = uiState.status == AddressConfirmStatus.LOADING || uiState.resultPaymentDialog
     ) {
         Column(
             modifier = Modifier
@@ -83,7 +82,7 @@ fun AddressConfirmScreen(
 
                     ) {
                         Text(
-                            "اضافه کردن آدرس جدید",
+                            "ثبت یا تغییر آدرس",
                             style = MaterialTheme.typography.titleSmall,
                             color = ButtonColor_Tow
                         )
@@ -91,6 +90,7 @@ fun AddressConfirmScreen(
                 }
 
                 AddressConfirmStatus.SUCCESS -> {
+
                     uiState.address?.let {
                         AddressItem(it)
                     }
@@ -118,7 +118,7 @@ fun AddressConfirmScreen(
             val data = uiState.data
             val address = uiState.address
             Spacer(Modifier.weight(1f))
-            if (data != null && address != null){
+            if (data != null && address != null) {
                 CartDetail(
                     data.cartPrice,
                     data.cartFinalPrice,
@@ -127,10 +127,28 @@ fun AddressConfirmScreen(
                     "پرداخت نهایی",
                     enabled = address.receiver.isNotBlank()
                 ) {
-
+                    viewModel.buyProducts()
                 }
             }
         }
+
+        if (uiState.resultPaymentDialog) {
+            CustomAlertDialog(uiState.paymentText ?: "") {
+                viewModel.changePaymentDialog()
+
+            }
+        }
+
+        LaunchedEffect(uiState.navigating) {
+            if (uiState.navigating){
+                navController.navigate(Screens.HomeScreen) {
+                    popUpTo<Screens.CartConfirmAddress> {
+                        inclusive = true
+                    }
+                }
+            }
+        }
+
     }
 }
 

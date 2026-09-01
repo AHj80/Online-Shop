@@ -21,8 +21,8 @@ import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundCircleColor
 import com.ahj.onlineshop.feature.profile.component.CategorySample
-import com.ahj.onlineshop.feature.profile.component.navigatingUserProfile
 import com.ahj.onlineshop.feature.profile.component.TopAppProfileFull
+import com.ahj.onlineshop.feature.profile.component.navigatingUserProfile
 import com.ahj.onlineshop.feature.profile.data.local.offlineData.OfflineData
 
 
@@ -49,19 +49,23 @@ fun UserProfileScreen(
             .background(BackgroundCircleColor),
 
         ) {
+        uiState.profile?.let {
+
+            TopAppProfileFull(
+                it,
+                image = uiState.avatar,
+                editOnClick = {
+                    navController.navigate(Screens.EditProfile)
+                }
+            ) {
+                photoPickerLauncher.launch("image/*")
+            }
+        }
 
         when (uiState.status) {
 
             UserProfileStatus.SUCCESS -> {
-                TopAppProfileFull(
-                    uiState.profile,
-                    image = uiState.avatar,
-                    editOnClick = {
-                        navController.navigate(Screens.EditProfile)
-                    }
-                ) {
-                    photoPickerLauncher.launch("image/*")
-                }
+
 
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),

@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -239,7 +240,7 @@ private fun Comment(
     stateTextChange: (String) -> Unit,
     sendComment: () -> Unit = {}
 ) {
-    var state by remember { mutableIntStateOf(1) }
+    var state by rememberSaveable { mutableIntStateOf(1) }
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()

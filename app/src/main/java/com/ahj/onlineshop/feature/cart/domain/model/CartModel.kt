@@ -8,6 +8,7 @@ data class CartModel(
     val price: Long,
     val finalPrice: Long,
     val discount: Int,
+    val categoryType: String
 
 ){
     fun empty(): CartModel =
@@ -18,6 +19,7 @@ data class CartModel(
             1,
             0,
             0,
-            0
+            0,
+            categoryType = ""
         )
 }

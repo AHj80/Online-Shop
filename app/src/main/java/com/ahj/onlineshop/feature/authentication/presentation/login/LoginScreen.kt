@@ -150,18 +150,19 @@ fun LoginScreen(
 
         LoginStatus.LOADING -> {
 
-            InsertDialog(text =  "درحال بررسی")
+            InsertDialog(text = "درحال بررسی")
 
         }
 
         LoginStatus.SUCCESS -> {
-            navController.navigate(Screens.HomeScreen){
-                popUpTo(Screens.Login) {inclusive = true  }
+            navController.navigate(Screens.HomeScreen) {
+                popUpTo(Screens.Login) { inclusive = true }
             }
         }
+
         LoginStatus.ERROR -> {
             if (uiState.showAlertDialog)
-            CustomAlertDialog("ورود ناموفق بود") { viewModel.onDismissAlertDialog()}
+                CustomAlertDialog("ورود ناموفق بود") { viewModel.onDismissAlertDialog() }
         }
 
 

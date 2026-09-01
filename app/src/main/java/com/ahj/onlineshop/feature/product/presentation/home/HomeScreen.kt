@@ -25,6 +25,7 @@ import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
+import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
 import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
 import com.ahj.onlineshop.feature.authentication.component.InsertTextFieldAuth
 import com.ahj.onlineshop.feature.authentication.component.InsertTitle
@@ -34,7 +35,6 @@ import com.ahj.onlineshop.feature.product.component.ProductItemSample
 import com.ahj.onlineshop.feature.product.component.SearchProduct
 import com.ahj.onlineshop.feature.product.component.ShowAll
 import com.ahj.onlineshop.feature.product.component.ShowBestSell
-import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,8 +48,6 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val pagerState = rememberPagerState { uiState.banner.size }
 
-    val resultSearch =
-        uiState.data.filter { it.title.contains(uiState.stateSearch, ignoreCase = true) }
 
 
     DrawCircleBackground(
@@ -92,12 +90,11 @@ fun HomeScreen(
                                 )
                             }
                         )
-                        SearchProduct(resultSearch, uiState.stateSearch) { index ->
-                            val currentProduct = resultSearch[index]
+                        SearchProduct(uiState.data, uiState.stateSearch) { product ->
                             navController.navigate(
                                 Screens.DetailProduct(
-                                    currentProduct.id,
-                                    currentProduct.categoryType
+                                    product.id,
+                                    product.categoryType
                                 )
                             )
                         }

@@ -20,6 +20,19 @@ fun navigatingUserProfile(
             1-> {
                 navController.navigate(Screens.FavoriteScreen)
             }
+            2->{
+                navController.navigate(Screens.ProfileAddress)
+            }
+            3->{
+                navController.navigate(Screens.ChangePassword)
+            }
+            4->{
+                navController.navigate(Screens.UserOrderScreen)
+            }
+            5->{
+                navController.navigate(Screens.Notification)
+            }
+
         }
 
 

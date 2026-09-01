@@ -35,6 +35,7 @@ import com.ahj.onlineshop.feature.product.component.ShowAll
 import com.ahj.onlineshop.feature.product.component.ShowBestSell
 import com.ahj.onlineshop.feature.product.component.TopCategory
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
+import com.ahj.onlineshop.feature.product.component.SearchProduct
 
 
 @Composable
@@ -123,6 +124,16 @@ fun SubCategoryScreen(
                             )
                         }
                     )
+
+                    SearchProduct(uiState.product, uiState.stateText) { product ->
+
+                        navController.navigate(
+                            Screens.DetailProduct(
+                                product.id,
+                                product.categoryType
+                            )
+                        )
+                    }
 
                     InsertCategoryGrid(uiState.subCategories) { categoryType ->
                         navController.navigate(

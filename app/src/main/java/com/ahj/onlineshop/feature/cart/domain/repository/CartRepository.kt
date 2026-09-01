@@ -13,4 +13,6 @@ interface CartRepository {
 
     suspend fun deleteProduct(product: CartModel): Result<Boolean>
 
+    suspend fun deleteAllRecord(): Result<Boolean>
+
 }

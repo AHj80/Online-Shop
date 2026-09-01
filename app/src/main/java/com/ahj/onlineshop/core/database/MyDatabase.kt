@@ -10,9 +10,22 @@ import com.ahj.onlineshop.core.sharedData.product.local.db.ProductDao
 import com.ahj.onlineshop.core.sharedData.product.local.db.ProductEntity
 import com.ahj.onlineshop.core.sharedData.shoppingExperience.data.db.UserExperienceDao
 import com.ahj.onlineshop.core.sharedData.shoppingExperience.data.db.UserExperienceEntity
+import com.ahj.onlineshop.core.sharedData.userOrders.data.db.dao.UserOrderDao
+import com.ahj.onlineshop.core.sharedData.userOrders.data.db.entity.OrderItemEntity
+import com.ahj.onlineshop.core.sharedData.userOrders.data.db.entity.UserOrderEntity
+import com.ahj.onlineshop.core.sharedData.userProfile.data.local.db.UserInformationDao
+import com.ahj.onlineshop.core.sharedData.userProfile.data.local.db.UserInformationEntity
 
 @Database(
-    entities = [ProductEntity::class , AddressEntity::class, FavoriteEntity::class , UserExperienceEntity::class],
+    entities = [
+        ProductEntity::class,
+        AddressEntity::class,
+        FavoriteEntity::class,
+        UserExperienceEntity::class,
+        UserOrderEntity::class,
+        OrderItemEntity::class,
+        UserInformationEntity::class
+    ],
     version = 1,
     exportSchema = false
 )
@@ -28,4 +41,8 @@ abstract class MyDatabase : RoomDatabase() {
     abstract fun favoriteDao(): FavoriteDao
 
     abstract fun experienceDao(): UserExperienceDao
+
+    abstract fun userOrdersDao(): UserOrderDao
+
+    abstract fun editUserProfileDao(): UserInformationDao
 }

@@ -6,6 +6,8 @@ import com.ahj.onlineshop.core.sharedData.address.data.local.db.AddressDao
 import com.ahj.onlineshop.core.sharedData.favorite.data.local.db.FavoriteDao
 import com.ahj.onlineshop.core.sharedData.product.local.db.ProductDao
 import com.ahj.onlineshop.core.sharedData.shoppingExperience.data.db.UserExperienceDao
+import com.ahj.onlineshop.core.sharedData.userOrders.data.db.dao.UserOrderDao
+import com.ahj.onlineshop.core.sharedData.userProfile.data.local.db.UserInformationDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,4 +50,17 @@ object DatabaseModule {
     @Singleton
     fun provideUserExperienceDao(myDatabase: MyDatabase): UserExperienceDao =
         myDatabase.experienceDao()
+
+    @Provides
+    @Singleton
+    fun provideUserOrders(myDatabase: MyDatabase): UserOrderDao =
+        myDatabase.userOrdersDao()
+
+
+    @Provides
+    @Singleton
+    fun provideEditUserProfileDao(myDatabase: MyDatabase): UserInformationDao =
+        myDatabase.editUserProfileDao()
+
+
 }

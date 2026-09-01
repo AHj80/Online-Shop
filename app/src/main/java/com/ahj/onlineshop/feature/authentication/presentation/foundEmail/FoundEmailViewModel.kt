@@ -57,7 +57,8 @@ class FoundEmailViewModel @Inject constructor(
     fun onDismissDialog() {
         _uiState.update {
             it.copy(
-                showDialog = false
+                showDialog = false,
+                foundEmailStatus = FoundEmailStatus.IDLE
             )
         }
     }

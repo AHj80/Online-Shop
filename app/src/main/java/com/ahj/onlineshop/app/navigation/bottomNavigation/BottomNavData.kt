@@ -29,4 +29,5 @@ sealed class BottomNavData(
         "پروفایل من",
         R.drawable.user_bottomnav
     )
+
 }

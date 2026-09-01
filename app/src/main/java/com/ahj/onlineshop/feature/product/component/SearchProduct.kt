@@ -32,8 +32,11 @@ import com.ahj.onlineshop.feature.product.domain.model.ProductModel
 fun SearchProduct(
     data: List<ProductModel>,
     stateSearch: String,
-    onClick:(Int)-> Unit
+    onClick:(ProductModel)-> Unit
 ) {
+
+    val resultSearch =
+        data.filter { it.title.contains(stateSearch, ignoreCase = true) }
 
 
     CustomAnimate(stateSearch.isNotBlank()){
@@ -51,7 +54,7 @@ fun SearchProduct(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                items(data.size, key = { data[it].id}) {
+                items(resultSearch.size, key = { resultSearch[it].id}) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -63,17 +66,17 @@ fun SearchProduct(
                                 placementSpec = spring(stiffness = Spring.StiffnessLow)
                             )
                             .clickable{
-                                onClick(it)
+                                onClick(resultSearch[it])
                             }
                     ) {
 
                         Text(
-                            data[it].title,
+                            resultSearch[it].title,
                             style = MaterialTheme.typography.titleSmall
                         )
                         SpacerHeight(10)
                         AsyncImage(
-                            model = data[it].image[0],
+                            model = resultSearch[it].image[0],
                             contentDescription = null,
                             modifier = Modifier.size(70.dp)
                         )
@@ -88,7 +91,7 @@ fun SearchProduct(
 
                 }
                 item {
-                    if (data.isEmpty())
+                    if (resultSearch.isEmpty())
                         Text(
                             "کالایی یافت نشد...!",
                             style = MaterialTheme.typography.titleSmall

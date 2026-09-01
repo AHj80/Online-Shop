@@ -54,7 +54,7 @@ fun UserExperiencesScreen(
 
         Column(modifier = Modifier.fillMaxWidth()) {
 
-            CustomAnimate(uiState.header?.profile != null, enter = 50, exit = 50) {
+            CustomAnimate(uiState.header?.profile != null, enter = 200, exit = 200) {
                 uiState.header?.profile?.let {
                     TopAppProfileMini(uiState.header?.avatar, it)
                 }

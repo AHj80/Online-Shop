@@ -12,5 +12,6 @@ data class ProductEntity(
     val quantity: Int,
     val price: Long,
     val finalPrice: Long,
-    val discount: Int
+    val discount: Int,
+    val categoryType: String
 )

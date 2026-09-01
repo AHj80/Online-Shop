@@ -15,7 +15,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.ahj.onlineshop.core.common.ui.theme.BackgroundCardColor
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
+
 
 @Composable
 fun InsertTextFieldAuth(
@@ -27,6 +29,7 @@ fun InsertTextFieldAuth(
     isError: Boolean = false,
     visualTransformation: Boolean = true,
     singleLine : Boolean = true,
+    readOnly: Boolean = false,
     trailingIcon: @Composable () -> Unit = {},
     leadingIcon:@Composable ()-> Unit = {}
 ) {
@@ -36,15 +39,18 @@ fun InsertTextFieldAuth(
         onValueChange = { onValueChange(it) },
         shape = RoundedCornerShape(10.dp),
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
+            focusedContainerColor = if (readOnly) BackgroundCardColor else Color.White,
+            unfocusedContainerColor = if (readOnly) BackgroundCardColor else Color.White,
             focusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
             errorIndicatorColor = Color.Red,
             unfocusedIndicatorColor = Color.Transparent,
             errorContainerColor = Color.White,
             cursorColor = ButtonColor_Tow,
-            selectionColors = TextSelectionColors(ButtonColor_Tow, ButtonColor_Tow)
+            selectionColors = TextSelectionColors(ButtonColor_Tow, ButtonColor_Tow),
+            unfocusedTextColor = if (readOnly) Color.Gray else Color.Black,
+            focusedTextColor = if (readOnly) Color.Gray else Color.Black
+
         ),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         modifier = Modifier
@@ -63,6 +69,7 @@ fun InsertTextFieldAuth(
         } else PasswordVisualTransformation(),
         trailingIcon = { trailingIcon() },
         leadingIcon = { leadingIcon() },
-        textStyle = MaterialTheme.typography.titleSmall
+        textStyle = MaterialTheme.typography.titleSmall,
+        readOnly = readOnly
     )
 }

@@ -55,5 +55,11 @@ class CartRepositoryImpl @Inject constructor(
             true
         }
 
+    override suspend fun deleteAllRecord(): Result<Boolean> =
+        runCatching.safeData {
+            productDao.deleteAllRecord()
+            true
+        }
+
 
 }

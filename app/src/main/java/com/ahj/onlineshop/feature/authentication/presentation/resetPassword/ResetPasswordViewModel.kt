@@ -74,6 +74,6 @@ class ResetPasswordViewModel @Inject constructor(
             )
         }
 
-    fun onDismiss() = _uiState.update { it.copy(showAlertDialog = false) }
+    fun onDismiss() = _uiState.update { it.copy(showAlertDialog = false , status = ResetPasswordStatus.IDELE) }
 
 }

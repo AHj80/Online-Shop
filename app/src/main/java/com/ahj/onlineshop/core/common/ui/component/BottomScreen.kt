@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.app.navigation.bottomNavigation.BottomNavData
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
 
@@ -43,7 +44,8 @@ fun BottomScreen(navController: NavController) {
         BottomNavData.Category,
         BottomNavData.Cart,
         BottomNavData.Profile,
-    )
+
+        )
 
     NavigationBar(
         containerColor = Color.White
@@ -54,7 +56,26 @@ fun BottomScreen(navController: NavController) {
 
         bottomScreens.forEach { screen ->
 
-            val selected = currentNav?.hasRoute(screen.route::class) == true
+            val selected = when (screen) {
+                BottomNavData.HomeScreen -> {
+                    currentNav?.hasRoute(Screens.HomeScreen::class) == true
+                }
+
+                BottomNavData.Profile -> {
+                    currentNav?.hasRoute(Screens.UserProfile::class) == true
+                }
+
+                BottomNavData.Cart -> {
+                    currentNav?.hasRoute(Screens.Cart::class) == true ||
+                            currentNav?.hasRoute(Screens.CartConfirmAddress::class) == true
+                }
+
+                BottomNavData.Category -> {
+                    currentNav?.hasRoute(Screens.Category::class) == true
+                }
+
+                else -> false
+            }
 
             CompositionLocalProvider(LocalRippleConfiguration provides null) {
 
@@ -73,17 +94,17 @@ fun BottomScreen(navController: NavController) {
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.height(35.dp)
                         ) {
-                                AnimatedVisibility(
-                                    visible = selected,
-                                    enter = expandHorizontally(animationSpec = tween(500)),
-                                    exit = shrinkHorizontally(animationSpec = tween(500))
-                                ) {
-                                    HorizontalDivider(
-                                        thickness = 2.5.dp,
-                                        modifier = Modifier.width(30.dp),
-                                        color = ButtonColor_Tow
-                                    )
-                                }
+                            AnimatedVisibility(
+                                visible = selected,
+                                enter = expandHorizontally(animationSpec = tween(500)),
+                                exit = shrinkHorizontally(animationSpec = tween(500))
+                            ) {
+                                HorizontalDivider(
+                                    thickness = 2.5.dp,
+                                    modifier = Modifier.width(30.dp),
+                                    color = ButtonColor_Tow
+                                )
+                            }
                             SpacerHeight(5)
                             Spacer(Modifier.weight(1f))
                             Icon(

@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class UserExperienceEntity(
     @PrimaryKey
-    val id: Int,
+    val id: Int = 0,
     val title: String,
     val image: String,
     val comment: String,

@@ -6,7 +6,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahj.onlineshop.core.datastore.SessionManager
-import com.ahj.onlineshop.feature.profile.domain.useCase.GetProfileDataUseCase
+import com.ahj.onlineshop.feature.profile.domain.useCase.GetHeaderDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
@@ -22,7 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserProfileViewModel @Inject constructor(
-    private val getProfileDataUseCase: GetProfileDataUseCase,
+    private val getHeaderDataUseCase: GetHeaderDataUseCase,
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
@@ -34,51 +36,55 @@ class UserProfileViewModel @Inject constructor(
     }
 
 
-     fun observeSessionData() {
+    fun observeSessionData() {
         viewModelScope.launch {
 
             sessionManager.setAvatarProfile.collect { avatarString ->
-                _uiState.update { it.copy(avatar = avatarString?.toUri()) }
+                val avatar = if (avatarString.isNullOrBlank()) null else avatarString.toUri()
+                _uiState.update { it.copy(avatar = avatar) }
             }
         }
 
         viewModelScope.launch {
-            sessionManager.saveLogin("1")
             sessionManager.loginUser
                 .filterNotNull()
                 .collectLatest { userId ->
                     if (userId.isNotEmpty()) {
                         _uiState.update { it.copy(userId = userId) }
-                        getProfile(userId)
+                        getProfile()
                     }
                 }
         }
     }
 
 
-    fun getProfile(userId: String) {
-        viewModelScope.launch {
-            _uiState.update { it.copy(status = UserProfileStatus.LOADING , message = null) }
+    fun getProfile() {
 
-            getProfileDataUseCase(userId)
-                .onSuccess { profile ->
-                    _uiState.update {
-                        it.copy(
-                            status = UserProfileStatus.SUCCESS,
-                            profile = profile
-                        )
-                    }
-                }
-                .onFailure { error ->
-                    _uiState.update {
-                        it.copy(
-                            status = UserProfileStatus.ERROR,
-                            message = error.message
-                        )
-                    }
-                }
+        _uiState.update { it.copy(status = UserProfileStatus.LOADING, message = null) }
+
+        getHeaderDataUseCase().onEach { result ->
+
+            result
+            .onSuccess { profile ->
+            _uiState.update {
+                it.copy(
+                    status = UserProfileStatus.SUCCESS,
+                    profile = profile.profile
+                )
+            }
         }
+            .onFailure { error ->
+                _uiState.update {
+                    it.copy(
+                        status = UserProfileStatus.ERROR,
+                        message = error.message
+                    )
+                }
+            }
+        }.launchIn(viewModelScope)
+
     }
+
 
     // ۳. ذخیره عکس جدید
     fun saveNewAvatar(context: Context, uri: Uri) {

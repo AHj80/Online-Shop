@@ -12,7 +12,8 @@ fun CartModel.toCartEntity(quantity: Int = 1): ProductEntity =
         quantity = quantity,
         price = this.price,
         finalPrice = this.finalPrice,
-        discount = this.discount
+        discount = this.discount,
+        categoryType = this.categoryType
     )
 
 fun ProductEntity.toModel(): CartModel =
@@ -23,6 +24,7 @@ fun ProductEntity.toModel(): CartModel =
         quantity = quantity,
         price = this.price,
         finalPrice = this.finalPrice,
-        discount = this.discount
+        discount = this.discount,
+        categoryType = this.categoryType
     )
 

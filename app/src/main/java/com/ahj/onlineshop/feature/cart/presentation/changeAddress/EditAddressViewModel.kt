@@ -9,6 +9,7 @@ import com.ahj.onlineshop.core.sharedData.address.domain.useCase.GetAddressByIdU
 import com.ahj.onlineshop.core.sharedData.address.domain.useCase.GetAllAddressUseCase
 import com.ahj.onlineshop.core.sharedData.address.domain.useCase.InsertAddressUseCase
 import com.ahj.onlineshop.core.datastore.SessionManager
+import com.ahj.onlineshop.feature.profile.presentation.userAddress.ProfileAddressStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,12 +44,22 @@ class EditAddressViewModel @Inject constructor(
         getAllAddressUseCase().onEach { result ->
             result
                 .onSuccess { address ->
-                    _uiState.update {
-                        it.copy(
-                            status = EditAddressStatus.SUCCESS,
-                            message = null,
-                            data = address
-                        )
+                    if (address.isEmpty()){
+                        _uiState.update {
+                            it.copy(
+                                status = EditAddressStatus.EMPTY,
+                                data = emptyList(),
+                                message = "آدرس ثبت شده ای وجود ندارد"
+                            )
+                        }
+                    } else{
+                        _uiState.update {
+                            it.copy(
+                                status = EditAddressStatus.SUCCESS,
+                                data = address,
+                                message = null
+                            )
+                        }
                     }
 
                 }

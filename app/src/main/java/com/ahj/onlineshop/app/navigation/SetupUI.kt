@@ -1,18 +1,23 @@
 package com.ahj.onlineshop.app.navigation
 
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.ahj.onlineshop.app.base.MainViewModel
 import com.ahj.onlineshop.core.common.ui.component.BottomScreen
-import com.ahj.onlineshop.feature.product.component.CustomTopAppBar
+import com.ahj.onlineshop.core.common.ui.component.CustomAnimate
+import com.ahj.onlineshop.core.common.ui.component.CustomTopAppBar
 import com.ahj.onlineshop.feature.authentication.presentation.foundEmail.FoundEmailScreen
 import com.ahj.onlineshop.feature.authentication.presentation.login.LoginScreen
 import com.ahj.onlineshop.feature.authentication.presentation.otp.EmailOTPScreen
@@ -27,12 +32,19 @@ import com.ahj.onlineshop.feature.product.presentation.detailProduct.DetailProdu
 import com.ahj.onlineshop.feature.product.presentation.home.HomeScreen
 import com.ahj.onlineshop.feature.product.presentation.listProduct.ListProductScreen
 import com.ahj.onlineshop.feature.product.presentation.subCategory.SubCategoryScreen
+import com.ahj.onlineshop.feature.profile.presentation.changePassword.ChangePasswordScreen
 import com.ahj.onlineshop.feature.profile.presentation.favorites.FavoriteScreen
+import com.ahj.onlineshop.feature.profile.presentation.notification.NotificationScreen
+import com.ahj.onlineshop.feature.profile.presentation.userAddress.ProfileAddressScreen
+import com.ahj.onlineshop.feature.profile.presentation.userExperience.UserExperiencesScreen
+import com.ahj.onlineshop.feature.profile.presentation.userOrders.UserOrdersScreen
 import com.ahj.onlineshop.feature.profile.presentation.userProfile.UserProfileScreen
 
 
 @Composable
-fun SetupUI() {
+fun SetupUI(viewModel: MainViewModel = hiltViewModel()) {
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -45,22 +57,33 @@ fun SetupUI() {
         Screens.FoundEmail::class,
         Screens.Register::class
     )
+    val screenBottomBar = listOf(
+        Screens.HomeScreen::class,
+        Screens.Category::class,
+        Screens.Cart::class,
+        Screens.UserProfile::class,
+        Screens.CartConfirmAddress::class
+    )
 
     Scaffold(
         topBar = {
             val authScreens = screenNonScaffold.any { currentDes?.hasRoute(it) == true }
             if (!authScreens)
-                CustomTopAppBar(navController, backStack = { navController.popBackStack() })
+                CustomTopAppBar(navController, uiState.data,backStack = { navController.popBackStack() })
         },
         bottomBar = {
-            BottomScreen(navController)
+            val bottomBarVisible =
+                screenBottomBar.any { currentDes?.hasRoute(it) == true }
+            CustomAnimate(bottomBarVisible) { BottomScreen(navController) }
         }
     ) { innerPadding ->
 
         NavHost(
             navController = navController,
             startDestination = Screens.Splash,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .consumeWindowInsets(innerPadding)
+                .padding(innerPadding)
         ) {
 
 
@@ -145,17 +168,32 @@ fun SetupUI() {
                 AddressConfirmScreen(navController)
             }
 
-            composable <Screens.EditAddressScreen>{
+            composable<Screens.EditAddressScreen> {
                 EditAddressScreen(navController)
             }
 
-            composable <Screens.FavoriteScreen>{
+            composable<Screens.FavoriteScreen> {
                 FavoriteScreen(navController)
             }
 
-            composable <Screens.ShoppingExperience>{
-
+            composable<Screens.ShoppingExperience> {
+                UserExperiencesScreen()
             }
+            composable<Screens.ProfileAddress> {
+                ProfileAddressScreen()
+            }
+            composable<Screens.ChangePassword> {
+                ChangePasswordScreen()
+            }
+
+            composable<Screens.UserOrderScreen> {
+                UserOrdersScreen(navController = navController)
+            }
+
+            composable<Screens.Notification> {
+                NotificationScreen()
+            }
+
         }
 
     }

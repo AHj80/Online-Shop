@@ -104,7 +104,7 @@ fun CustomModal(
                 phone,
                 { phoneChange(it) },
                 "شماره تماس",
-                keyboardType = KeyboardType.Phone
+                keyboardType = KeyboardType.NumberPassword
             )
             SpacerHeight(10)
 
@@ -112,7 +112,7 @@ fun CustomModal(
                 postalCode,
                 { postalCodeChange(it) },
                 "کد پستی",
-                keyboardType = KeyboardType.Number
+                keyboardType = KeyboardType.NumberPassword
             )
 
 

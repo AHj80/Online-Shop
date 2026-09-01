@@ -36,7 +36,7 @@ fun CartScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
 
-    DrawCircleBackground() {
+    DrawCircleBackground {
 
         when (uiState.cartStatus) {
             CartStatus.EMPTY -> {

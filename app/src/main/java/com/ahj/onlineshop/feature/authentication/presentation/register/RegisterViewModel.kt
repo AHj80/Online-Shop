@@ -70,7 +70,8 @@ class RegisterViewModel @Inject constructor(
     fun onDismissAlertDialog() {
         _uiState.update {
             it.copy(
-                showDialog = false
+                showDialog = false,
+                registerStatus = RegisterStatus.IDLE
             )
         }
     }

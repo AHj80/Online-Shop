@@ -32,6 +32,7 @@ import com.ahj.onlineshop.feature.authentication.component.InsertTitle
 import com.ahj.onlineshop.feature.product.component.ProductItemSample
 import com.ahj.onlineshop.feature.product.component.TopCategory
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
+import com.ahj.onlineshop.feature.product.component.SearchProduct
 
 
 @Composable
@@ -114,6 +115,16 @@ fun ListProductScreen(
                             )
                         }
                     )
+
+                    SearchProduct(uiState.product, uiState.stateSearch) { product ->
+
+                        navController.navigate(
+                            Screens.DetailProduct(
+                                product.id,
+                                product.categoryType
+                            )
+                        )
+                    }
 
                     subTitle?.let {
                         InsertTitle(it.title)

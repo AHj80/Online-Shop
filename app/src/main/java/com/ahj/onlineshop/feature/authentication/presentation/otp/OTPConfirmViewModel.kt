@@ -133,7 +133,7 @@ class OTPConfirmViewModel @Inject constructor(
         text.isNotBlank() && text.length == 4
 
     fun onDismiss(){
-        _uiState.update { it.copy(showAlertDialog = false) }
+        _uiState.update { it.copy(showAlertDialog = false , status = OTPConfirmStatus.IDLE) }
     }
 
 

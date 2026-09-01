@@ -1,10 +1,9 @@
 package com.ahj.onlineshop.feature.profile.presentation.userExperience
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahj.onlineshop.core.sharedData.shoppingExperience.domain.useCase.GetUserExperienceUseCase
-import com.ahj.onlineshop.feature.profile.domain.model.ExperienceCombinedModel
+import com.ahj.onlineshop.feature.profile.domain.model.ExperienceDataModel
 import com.ahj.onlineshop.feature.profile.domain.useCase.GetHeaderDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,7 +36,7 @@ class UserExperienceViewModel @Inject constructor(
         ) { header, experience ->
             if (header.isSuccess && experience.isSuccess) {
                 Result.success(
-                    ExperienceCombinedModel(
+                    ExperienceDataModel(
                         header.getOrThrow(),
                         experience.getOrThrow()
                     )

@@ -3,7 +3,7 @@ package com.ahj.onlineshop.feature.cart.presentation.changeAddress
 import com.ahj.onlineshop.core.sharedData.address.domain.model.AddressModel
 
 data class EditAddressUiState(
-    val status: EditAddressStatus = EditAddressStatus.LOADING,
+    val status: EditAddressStatus = EditAddressStatus.EMPTY,
     val message: String? = null,
     val data: List<AddressModel> = emptyList(),
     val modal: Boolean = false,

@@ -43,7 +43,8 @@ fun ProductModel.toEntity(quantity: Int = 1): ProductEntity =
         quantity = quantity,
         price = this.price,
         finalPrice = this.finalPrice,
-        discount = this.discount
+        discount = this.discount,
+        this.categoryType
     )
 
 fun ProductEntity.toAddCartModel(): AddCartModel =

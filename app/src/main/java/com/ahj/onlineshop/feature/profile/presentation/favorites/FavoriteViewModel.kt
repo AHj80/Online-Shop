@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ahj.onlineshop.core.sharedData.favorite.domain.model.FavoriteModel
 import com.ahj.onlineshop.core.sharedData.favorite.domain.useCase.DeleteFavoriteUseCase
 import com.ahj.onlineshop.core.sharedData.favorite.domain.useCase.GetAllDataFavoriteUseCase
-import com.ahj.onlineshop.feature.profile.domain.model.FavoriteCombineModel
+import com.ahj.onlineshop.feature.profile.domain.model.FavoriteDataModel
 import com.ahj.onlineshop.feature.profile.domain.useCase.GetHeaderDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,7 +42,7 @@ class FavoriteViewModel @Inject constructor(
         ) { headerRes, favoriteRes ->
             if (headerRes.isSuccess && favoriteRes.isSuccess) {
                 Result.success(
-                    FavoriteCombineModel(
+                    FavoriteDataModel(
                         headerData = headerRes.getOrThrow(),
                         favoriteData = favoriteRes.getOrThrow()
                     )
