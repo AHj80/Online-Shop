@@ -1,16 +1,16 @@
-package com.ahj.onlineshop.feature.cart.domain.useCase
+package com.ahj.onlineshop.core.sharedData.product.domain.useCase
 
+import com.ahj.onlineshop.core.sharedData.product.domain.repository.ProductCartRepository
 import com.ahj.onlineshop.feature.cart.domain.model.CartCalculation
-import com.ahj.onlineshop.feature.cart.domain.repository.CartRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GetCartDataUseCase @Inject constructor(
-    private val cartRepository: CartRepository
+    private val productCartRepository: ProductCartRepository
 ) {
     operator fun invoke(): Flow<Result<CartCalculation>> =
-        cartRepository.getCartData().map { result ->
+        productCartRepository.getCartData().map { result ->
             result.map { list ->
 
                 val price = list.sumOf { item -> item.price * item.quantity }

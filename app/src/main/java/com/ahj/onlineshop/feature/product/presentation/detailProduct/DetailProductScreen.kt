@@ -1,9 +1,5 @@
 package com.ahj.onlineshop.feature.product.presentation.detailProduct
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -55,6 +51,7 @@ import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.ui.component.CustomAnimate
 import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
+import com.ahj.onlineshop.core.common.ui.component.StatusCustomAnimated
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundCardColor
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_One
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
@@ -71,7 +68,8 @@ fun DetailProductScreen(
     viewModel: DetailProductViewModel = hiltViewModel(),
     id: String,
     categoryType: String,
-    navController: NavController
+    navController: NavController,
+    showSnackBar: (String) -> Unit
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -79,30 +77,29 @@ fun DetailProductScreen(
         viewModel.getProduct(id, categoryType)
     }
 
-    val listTab = listOf(
-        "توضیحات",
-        "ویژگی ها",
-        "نظرات",
-        "محصولات مشابه"
-    )
-    val statePager = rememberPagerState { uiState.product.image.size }
+    LaunchedEffect(uiState.message) {
+        uiState.message?.let {
+            showSnackBar(it)
+        }
+        viewModel.resetMessage()
+    }
 
-    val context = LocalContext.current
+
 
     Scaffold(
         bottomBar = {
-            AnimatedVisibility(
-                visible = uiState.status == DetailProductStatus.SUCCESS,
-                enter = fadeIn() + expandVertically(tween(800)),
+            StatusCustomAnimated(uiState.status) {
+                if (it == DetailProductStatus.SUCCESS) {
+                    AddToCart(
+                        uiState.product.price.formatPriceToPersian(),
+                        uiState.product.finalPrice.formatPriceToPersian(),
+                        discount = uiState.product.discount,
+                        statusButton = uiState.inCart,
+                        addOnClick = {
+                            viewModel.addToCart(uiState.product)
+                        }
+                    ) {
 
-                ) {
-                AddToCart(
-                    uiState.product.price.formatPriceToPersian(),
-                    uiState.product.finalPrice.formatPriceToPersian(),
-                    discount = uiState.product.discount,
-                    statusButton = uiState.inCart
-                ) {
-                    if (uiState.inCart)
                         navController.navigate(Screens.Cart) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
@@ -110,7 +107,7 @@ fun DetailProductScreen(
                             launchSingleTop = true
                             restoreState = true
                         }
-                    else viewModel.addToCart(uiState.product)
+                    }
                 }
             }
         },
@@ -128,7 +125,12 @@ fun DetailProductScreen(
                 }
 
                 DetailProductStatus.ERROR -> {
-                    ErrorRefreshing(uiState.message) { viewModel.getProduct(id, categoryType) }
+                    ErrorRefreshing(uiState.messageStatus) {
+                        viewModel.getProduct(
+                            id,
+                            categoryType
+                        )
+                    }
                 }
 
                 else -> {
@@ -148,231 +150,300 @@ fun DetailProductScreen(
                             modifier = Modifier.fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Box(
-                                contentAlignment = Alignment.TopCenter,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 60.dp)
-                            ) {
+                            TopDetail(uiState)
 
-                                HorizontalPager(
-                                    state = statePager
-                                ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth(),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        AsyncImage(
-                                            model = uiState.product.image[it],
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .size(250.dp),
-                                            contentScale = ContentScale.Crop,
-                                            placeholder = painterResource(R.drawable.loading_coil)
-                                        )
-                                    }
-                                }
-                                if (uiState.product.discount != 0)
-                                    Box(
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) {
-                                        Box(
-                                            contentAlignment = Alignment.TopStart,
-                                            modifier = Modifier
-
-                                                .background(
-                                                    Brush.horizontalGradient(
-                                                        listOf(
-                                                            ButtonColor_One,
-                                                            ButtonColor_Tow
-                                                        )
-                                                    ),
-                                                    shape = RoundedCornerShape(
-                                                        bottomEnd = 30.dp,
-                                                        topEnd = 30.dp
-                                                    )
-                                                )
-
-                                        ) {
-
-                                            Text(
-                                                "${uiState.product.discount.toPersianDigit()}%",
-                                                modifier = Modifier.padding(
-                                                    horizontal = 10.dp,
-                                                    vertical = 5.dp
-                                                ),
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                color = Color.White,
-                                                fontSize = 20.sp
+                            BottomDetail(
+                                uiState,
+                                onEvent = { event ->
+                                    if (event is DetailProductUiEvent.OnSimilarClick) {
+                                        navController.navigate(
+                                            Screens.DetailProduct(
+                                                event.id,
+                                                event.categoryType
                                             )
-                                        }
-                                    }
-                            }
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 20.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-
-                                repeat(uiState.product.image.size) {
-                                    val color =
-                                        if (statePager.currentPage == it) ButtonColor_Tow else Color.LightGray
-                                    Box(
-                                        modifier = Modifier
-                                            .padding(horizontal = 3.dp)
-                                            .size(7.dp)
-                                            .background(color, shape = CircleShape)
-                                    )
-                                }
-                            }
-
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                contentAlignment = Alignment.CenterEnd
-
-                            ) {
-                                Card(
-                                    Modifier.height(50.dp),
-                                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                                    shape = RoundedCornerShape(
-                                        topStart = 50.dp,
-                                        bottomStart = 0.dp,
-                                        topEnd = 20.dp
-                                    )
-                                ) {
-                                    Row(
-                                        modifier = Modifier.padding(start = 20.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.Center
-                                    ) {
-
-
-                                        IconButton({
-
-                                            viewModel.addFavorite(
-                                                uiState.isFavorite,
-                                                uiState.product.id.toInt(),
-                                                uiState.product.categoryType,
-                                                uiState.product.title,
-                                                uiState.product.image[0],
-                                            )
-                                        }) {
-
-                                            CustomAnimate(uiState.isFavorite) {
-
-                                                Icon(
-                                                    Icons.Filled.BookmarkRemove,
-                                                    null,
-                                                    modifier = Modifier.size(30.dp)
-                                                )
-                                            }
-
-                                            CustomAnimate(!uiState.isFavorite) {
-
-                                                Icon(
-                                                    Icons.Outlined.BookmarkAdd,
-                                                    null,
-                                                    modifier = Modifier.size(30.dp)
-                                                )
-                                            }
-
-                                        }
-
-
-
-
-                                        Text(
-                                            uiState.product.rating.toPersianDigit(),
-                                            style = MaterialTheme.typography.bodyMedium,
                                         )
-                                        Icon(
-                                            Icons.Default.Star,
-                                            null,
-                                            tint = Color(0XFFFFB800)
-                                        )
-                                        IconButton({
-                                            context.shareText("\nخرید لباس : ${uiState.product.title} همراه با لباس ها دیگر با تخفیف در اپلیکیشن آنلاین شاپ  \n برای نصب اپلیکیشن روی لینک زیر کلیک نمایید : \n")
-                                        }) {
-                                            Icon(
-                                                Icons.Outlined.Share, null
-                                            )
-                                        }
-
+                                    } else {
+                                        viewModel.onEvent(event)
                                     }
                                 }
-                            }
-
-                            Box {
-
-                                Card(
-                                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                                    modifier = Modifier.height(300.dp),
-                                    shape = RoundedCornerShape(
-                                        topStart = 30.dp,
-                                        bottomStart = 30.dp,
-                                        bottomEnd = 30.dp
-                                    )
-                                ) {
-                                    Column(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        verticalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Text(
-                                            uiState.product.title,
-                                            style = MaterialTheme.typography.titleSmall,
-                                            fontSize = 17.sp,
-                                            modifier = Modifier.padding(20.dp)
-                                        )
-
-
-                                        TabProductItem(
-                                            listTab,
-                                            uiState.product,
-                                            selected = uiState.selectedTab,
-                                            similarProduct = uiState.similarProduct,
-                                            tabSelection = { viewModel.changeTab(it) },
-                                            similarOnClick = { currentProduct ->
-                                                navController.navigate(
-                                                    Screens.DetailProduct(
-                                                        currentProduct.id,
-                                                        currentProduct.categoryType
-                                                    )
-                                                )
-                                            },
-                                            stateTextComment = uiState.stateTextComment,
-                                            stateTextChange = { viewModel.changeStateComment(it) },
-                                            rate = { viewModel.changeRate(it) },
-                                            sendComment = {
-                                                viewModel.sendComment(
-                                                    uiState.product.id.toInt(),
-                                                    uiState.product.title,
-                                                    uiState.product.image[0],
-                                                    uiState.stateTextComment,
-                                                    rate = uiState.rate
-                                                )
-                                            }
-
-                                        ) {
-                                            viewModel.addToCart(it)
-                                        }
-
-
-                                    }
-
-                                }
-
-                            }
-
+                            )
 
                         }
                     }
 
                 }
+
+            }
+
+        }
+    }
+
+}
+
+
+@Composable
+private fun TopDetail(
+    uiState: DetailProductUiState,
+
+    ) {
+
+    val statePager = rememberPagerState { uiState.product.image.size }
+    Box(
+        contentAlignment = Alignment.TopCenter,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 60.dp)
+    ) {
+
+        HorizontalPager(
+            state = statePager
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+
+                AsyncImage(
+                    model = uiState.product.image[it],
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(250.dp),
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(R.drawable.loading_coil)
+                )
+
+            }
+        }
+        if (uiState.product.discount != 0)
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Box(
+                    contentAlignment = Alignment.TopStart,
+                    modifier = Modifier
+
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(
+                                    ButtonColor_One,
+                                    ButtonColor_Tow
+                                )
+                            ),
+                            shape = RoundedCornerShape(
+                                bottomEnd = 30.dp,
+                                topEnd = 30.dp
+                            )
+                        )
+
+                ) {
+
+                    Text(
+                        "${uiState.product.discount.toPersianDigit()}%",
+                        modifier = Modifier.padding(
+                            horizontal = 10.dp,
+                            vertical = 5.dp
+                        ),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White,
+                        fontSize = 20.sp
+                    )
+                }
+            }
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 20.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+
+        repeat(uiState.product.image.size) {
+            val color =
+                if (statePager.currentPage == it) ButtonColor_Tow else Color.LightGray
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 3.dp)
+                    .size(7.dp)
+                    .background(color, shape = CircleShape)
+            )
+        }
+    }
+}
+
+
+@Composable
+private fun BottomDetail(
+    uiState: DetailProductUiState,
+    onEvent: (DetailProductUiEvent) -> Unit
+) {
+
+    val listTab = listOf(
+        "توضیحات",
+        "ویژگی ها",
+        "نظرات",
+        "محصولات مشابه"
+    )
+
+
+    val context = LocalContext.current
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.CenterEnd
+
+    ) {
+        Card(
+            Modifier.height(50.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            shape = RoundedCornerShape(
+                topStart = 50.dp,
+                bottomStart = 0.dp,
+                topEnd = 20.dp
+            )
+        ) {
+            Row(
+                modifier = Modifier.padding(start = 20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+
+
+                IconButton({
+
+                    onEvent(
+                        DetailProductUiEvent.FavoriteOnClick(
+                            uiState.isFavorite,
+                            uiState.product.id.toInt(),
+                            uiState.product.title,
+                            uiState.product.image[0],
+                            uiState.product.categoryType,
+                        )
+                    )
+                }) {
+
+                    CustomAnimate(uiState.isFavorite) {
+
+                        Icon(
+                            Icons.Filled.BookmarkRemove,
+                            null,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+
+                    CustomAnimate(!uiState.isFavorite) {
+
+                        Icon(
+                            Icons.Outlined.BookmarkAdd,
+                            null,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+
+                }
+
+
+
+
+                Text(
+                    uiState.product.rating.toPersianDigit(),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                Icon(
+                    Icons.Default.Star,
+                    null,
+                    tint = Color(0XFFFFB800)
+                )
+                IconButton({
+                    context.shareText("\nخرید لباس : ${uiState.product.title} همراه با لباس ها دیگر با تخفیف در اپلیکیشن آنلاین شاپ  \n برای نصب اپلیکیشن روی لینک زیر کلیک نمایید : \n")
+                }) {
+                    Icon(
+                        Icons.Outlined.Share, null
+                    )
+                }
+
+            }
+        }
+    }
+
+    Box {
+
+        Card(
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            modifier = Modifier.height(300.dp),
+            shape = RoundedCornerShape(
+                topStart = 30.dp,
+                bottomStart = 30.dp,
+                bottomEnd = 30.dp
+            )
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    uiState.product.title,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontSize = 17.sp,
+                    modifier = Modifier.padding(20.dp)
+                )
+
+
+                TabProductItem(
+                    listTab,
+                    uiState.product,
+                    selected = uiState.selectedTab,
+                    similarProduct = uiState.similarProduct,
+                    tabSelection = {
+                        onEvent(
+                            DetailProductUiEvent.OnTabChange(it)
+                        )
+                    },
+                    similarOnClick = { currentProduct ->
+                        onEvent(
+                            DetailProductUiEvent.OnSimilarClick(
+                                currentProduct.id,
+                                currentProduct.categoryType
+                            )
+                        )
+                    },
+                    stateTextComment = uiState.stateTextComment,
+                    stateTextChange = {
+                        onEvent(
+                            DetailProductUiEvent.OnCommentChange(it)
+                        )
+                    },
+                    rate = {
+                        onEvent(
+                            DetailProductUiEvent.OnRateChange(it)
+                        )
+                    },
+                    sendComment = {
+
+                        onEvent(
+                            DetailProductUiEvent.OnSendComment(
+                                uiState.product.id.toInt(),
+                                uiState.product.title,
+                                uiState.product.image[0],
+                                uiState.stateTextComment,
+                                uiState.rate
+                            )
+                        )
+                    },
+                    addOnClick = {
+
+                        onEvent(
+                            DetailProductUiEvent.OnAddToCart(
+                                it
+                            )
+                        )
+
+                    }
+                )
+
 
             }
 

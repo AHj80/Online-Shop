@@ -56,4 +56,10 @@ class SessionManager @Inject constructor(
             it[IS_LOGIN] = status ?: ""
         }
     }
+
+    suspend fun logout(){
+        dataStore.edit {
+            it.clear()
+        }
+    }
 }

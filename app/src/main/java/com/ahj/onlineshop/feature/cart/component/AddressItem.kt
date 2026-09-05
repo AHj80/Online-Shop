@@ -30,8 +30,8 @@ fun AddressItem(address: AddressModel, modifier: Modifier = Modifier) {
         ) {
             TextCart("نام گیرنده", address.receiver.toPersianDigit(), currencyUnit = false)
             TextCart("آدرس", address.address.toPersianDigit(),currencyUnit = false)
-            TextCart("شماره همراه", address.phone.toPersianDigit(),currencyUnit = false)
             TextCart("کد پستی", address.postalCode.toPersianDigit(),currencyUnit = false)
+            TextCart("شماره همراه", address.phone.toPersianDigit(),currencyUnit = false)
         }
     }
 

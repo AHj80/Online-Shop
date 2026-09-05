@@ -55,9 +55,9 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -75,20 +75,15 @@ import com.ahj.onlineshop.feature.profile.domain.model.HeaderDataModel
 fun CustomTopAppBar(
     navController: NavController,
     profileData: HeaderDataModel?,
+    currentDestination: NavDestination?,
+    logoutClick: () -> Unit,
     backStack: () -> Unit = {}
 
 ) {
 
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
 
     var stateNotification by remember { mutableStateOf(false) }
     var stateMenu by remember { mutableStateOf(false) }
-
-
-
-
-
 
 
     Column(
@@ -120,10 +115,18 @@ fun CustomTopAppBar(
                 }
             },
             actions = {
+                val bottomScreen = listOf(
+                    Screens.HomeScreen::class,
+                    Screens.Cart::class,
+                    Screens.UserProfile::class,
+                    Screens.Category::class
+                )
+                val showBackStack = currentDestination != null && bottomScreen.any { route ->
+                    currentDestination.hasRoute(route)
+                }
 
-                currentDestination?.hasRoute<Screens.HomeScreen>()?.let {
                     AnimatedVisibility(
-                        visible = !it,
+                        visible = !showBackStack,
                         enter = expandHorizontally(animationSpec = tween(300)),
                         exit = shrinkHorizontally(animationSpec = tween(300))
                     ) {
@@ -139,305 +142,312 @@ fun CustomTopAppBar(
                             )
                         }
                     }
-                }
-            },
 
-            navigationIcon = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(
-                        {
-                            stateMenu = !stateMenu
+                },
 
-                        },
-                        modifier = Modifier
-                            .size(40.dp)
+                navigationIcon = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
+                        IconButton(
+                            {
+                                stateMenu = !stateMenu
 
-
-                        CustomAnimate(stateMenu) {
-                            Icon(
-                                Icons.Default.Close,
-                                null,
-                                tint = Color.Black,
-                                modifier = Modifier.size(30.dp)
-                            )
-                        }
-
-                        CustomAnimate(!stateMenu) {
-                            Icon(
-                                Icons.Default.Menu,
-                                null,
-                                tint = Color.Black,
-                                modifier = Modifier.size(30.dp)
-                            )
-
-                        }
-                    }
-
-                    IconButton(
-                        { stateNotification = !stateNotification },
-                        modifier = Modifier
-                            .size(40.dp)
-                    ) {
-
-                        CustomAnimate(stateNotification) {
-
-                            Icon(
-                                Icons.Outlined.Close,
-                                null,
-                                tint = Color.Black,
-                                modifier = Modifier.size(30.dp)
-                            )
-                        }
-                        CustomAnimate(!stateNotification) {
-                            Icon(
-                                Icons.Outlined.Notifications,
-                                null,
-                                tint = Color.Black,
-                                modifier = Modifier.size(30.dp)
-                            )
-                        }
-                    }
-
-
-                    IconButton(
-                        {
-                            navController.navigate(Screens.UserProfile) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        modifier = Modifier
-                            .size(50.dp)
-                    ) {
-
-                        CustomAsyncImage(profileData?.avatar)
-                    }
-
-                }
-
-            },
-
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
-        )
-
-        Box(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            DropDownMenuNotification(stateNotification) { stateNotification = false }
-            DropDownMenuBar(
-                stateMenu, navController,
-                profileData?.avatar,
-                profileData?.profile?.name,
-                profileData?.profile?.phone,
-
-                ) { stateMenu = false }
-        }
-    }
-
-}
-
-
-@Composable
-private fun DropDownMenuNotification(
-    expanded: Boolean,
-    onDismiss: () -> Unit
-) {
-    DropdownMenu(
-        expanded = expanded,
-        {
-            onDismiss()
-        },
-        containerColor = Color.White,
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp),
-        shadowElevation = 10.dp
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-
-            Text(
-                "در حال حاضر هیچ اعلان فعالی وجود ندارد!",
-                style = MaterialTheme.typography.bodyMedium,
-                fontSize = 10.sp
-            )
-        }
-
-    }
-}
-
-
-@Composable
-private fun DropDownMenuBar(
-    expanded: Boolean,
-    navController: NavController,
-    avatar: Uri?,
-    name: String?,
-    phone: String?,
-    onDismiss: () -> Unit
-) {
-    val listBar = remember {
-        listOf(
-            MenuModel(0, "پروفایل", R.drawable.profile),
-            MenuModel(1, "سفارشات من", R.drawable.user_order),
-            MenuModel(2, "درباره ما", R.drawable.about),
-            MenuModel(3, "ارتباط با ما", R.drawable.tell_us),
-            MenuModel(4, "پشتیبانی", R.drawable.support),
-            MenuModel(5, "قوانین و مقررات", R.drawable.ruls)
-        )
-    }
-    val context = LocalContext.current
-
-    val animate = animateColorAsState(
-        if (expanded) ButtonColor_Tow else Color.White,
-        tween(1000)
-    )
-
-
-
-    DropdownMenu(
-        expanded,
-        onDismiss,
-        containerColor = Color.White,
-        shadowElevation = 10.dp,
-        offset = DpOffset(x = 10.dp, 0.dp),
-        modifier = Modifier
-            .heightIn(max = 350.dp),
-        border = BorderStroke(1.dp, animate.value)
-    ) {
-
-
-        Column {
-            Card(
-                colors = CardDefaults.cardColors(containerColor = BackgroundCircleColor),
-                modifier = Modifier.padding(horizontal = 10.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .padding(5.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    CustomAsyncImage(avatar)
-
-                    Text(
-                        name ?: "",
-                        style = MaterialTheme.typography.titleSmall,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 5.dp)
-                    )
-
-                    Text(
-                        phone?.toPersianDigit() ?: "",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontSize = 10.sp
-                    )
-
-                }
-            }
-            listBar.forEach { menuItems ->
-
-                DropdownMenuItem(
-                    text = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                            modifier = Modifier.padding(end = 80.dp)
+                            },
+                            modifier = Modifier
+                                .size(40.dp)
                         ) {
-                            Icon(
-                                painter = painterResource(menuItems.image),
-                                contentDescription = null,
-                                tint = ButtonColor_Tow,
-                                modifier = Modifier
-                                    .padding(end = 12.dp)
-                                    .size(20.dp)
-                            )
-                            Text(
-                                text = menuItems.title,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    },
-                    onClick = {
-                        onDismiss()
-                        when (menuItems.id) {
 
-                            0 -> {
-                                navController.singleScreen(Screens.UserProfile)
-                            }
 
-                            1 -> {
-                                navController.singleScreen(Screens.UserOrderScreen)
-                            }
-
-                            2 -> {
-                                context.openUrl(
-                                    "https://github.com/AHj80?tab=repositories"
+                            CustomAnimate(stateMenu,100 , 100) {
+                                Icon(
+                                    Icons.Default.Close,
+                                    null,
+                                    tint = Color.Black,
+                                    modifier = Modifier.size(30.dp)
                                 )
                             }
 
-                            3 -> {
-                                context.openUrl(
-                                    "https://t.me/AHj80",
-                                    "org.telegram.messenger"
+                            CustomAnimate(!stateMenu , 100 , 100) {
+                                Icon(
+                                    Icons.Default.Menu,
+                                    null,
+                                    tint = Color.Black,
+                                    modifier = Modifier.size(30.dp)
                                 )
-                            }
 
-                            4 -> {
-                                context.openUrl(
-                                    "https://t.me/AHj80",
-                                    "org.telegram.messenger"
-                                )
                             }
                         }
+
+                        IconButton(
+                            { stateNotification = !stateNotification },
+                            modifier = Modifier
+                                .size(40.dp)
+                        ) {
+
+                            CustomAnimate(stateNotification,100 , 100) {
+
+                                Icon(
+                                    Icons.Outlined.Close,
+                                    null,
+                                    tint = Color.Black,
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            }
+                            CustomAnimate(!stateNotification,100 , 100) {
+                                Icon(
+                                    Icons.Outlined.Notifications,
+                                    null,
+                                    tint = Color.Black,
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            }
+                        }
+
+
+                        IconButton(
+                            {
+                                navController.navigate(Screens.UserProfile) {
+                                    popUpTo(Screens.HomeScreen) {
+                                        saveState = true
+
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
+                            modifier = Modifier
+                                .size(50.dp)
+                        ) {
+
+                            CustomAsyncImage(profileData?.avatar)
+                        }
+
                     }
+
+                },
+
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
                 )
 
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    DropDownMenuNotification(stateNotification) { stateNotification = false }
+                    DropDownMenuBar(
+                        stateMenu, navController,
+                        profileData?.avatar,
+                        profileData?.profile?.name,
+                        profileData?.profile?.phone,
+                        logoutClick = { logoutClick() }
+                    ) { stateMenu = false }
+                }
+            }
+
+    }
+
+
+    @Composable
+    private fun DropDownMenuNotification(
+        expanded: Boolean,
+        onDismiss: () -> Unit
+    ) {
+        DropdownMenu(
+            expanded = expanded,
+            {
+                onDismiss()
+            },
+            containerColor = Color.White,
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp),
+            shadowElevation = 10.dp
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+
+                Text(
+                    "در حال حاضر هیچ اعلان فعالی وجود ندارد!",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontSize = 10.sp
+                )
+            }
+
+        }
+    }
+
+
+    @Composable
+    private fun DropDownMenuBar(
+        expanded: Boolean,
+        navController: NavController,
+        avatar: Uri?,
+        name: String?,
+        phone: String?,
+        logoutClick: () -> Unit,
+        onDismiss: () -> Unit
+    ) {
+        val listBar = remember {
+            listOf(
+                MenuModel(0, "پروفایل", R.drawable.profile),
+                MenuModel(1, "سفارشات من", R.drawable.user_order),
+                MenuModel(2, "درباره ما", R.drawable.about),
+                MenuModel(3, "ارتباط با ما", R.drawable.tell_us),
+                MenuModel(4, "پشتیبانی", R.drawable.support),
+                MenuModel(5, "خروج", R.drawable.logout)
+            )
+        }
+        val context = LocalContext.current
+
+        val animate = animateColorAsState(
+            if (expanded) ButtonColor_Tow else Color.White,
+            tween(1000)
+        )
+
+
+
+        DropdownMenu(
+            expanded,
+            onDismiss,
+            containerColor = Color.White,
+            shadowElevation = 10.dp,
+            offset = DpOffset(x = 10.dp, 0.dp),
+            modifier = Modifier
+                .heightIn(max = 350.dp),
+            border = BorderStroke(1.dp, animate.value)
+        ) {
+
+
+            Column {
+                Card(
+                    colors = CardDefaults.cardColors(containerColor = BackgroundCircleColor),
+                    modifier = Modifier.padding(horizontal = 10.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .padding(5.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CustomAsyncImage(avatar)
+
+                        Text(
+                            name ?: "",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontSize = 10.sp,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(start = 5.dp)
+                        )
+
+                        Text(
+                            phone?.toPersianDigit() ?: "",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontSize = 10.sp
+                        )
+
+                    }
+                }
+                listBar.forEach { menuItems ->
+
+                    DropdownMenuItem(
+                        text = {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                                modifier = Modifier.padding(end = 80.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(menuItems.image),
+                                    contentDescription = null,
+                                    tint = ButtonColor_Tow,
+                                    modifier = Modifier
+                                        .padding(end = 12.dp)
+                                        .size(20.dp)
+                                )
+                                Text(
+                                    text = menuItems.title,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        },
+                        onClick = {
+                            onDismiss()
+                            when (menuItems.id) {
+
+                                0 -> {
+                                    navController.singleScreen(Screens.UserProfile)
+                                }
+
+                                1 -> {
+                                    navController.singleScreen(Screens.UserOrderScreen)
+                                }
+
+                                2 -> {
+                                    context.openUrl(
+                                        "https://github.com/AHj80?tab=repositories"
+                                    )
+                                }
+
+                                3 -> {
+                                    context.openUrl(
+                                        "https://t.me/AHj80",
+                                        "org.telegram.messenger"
+                                    )
+                                }
+
+                                4 -> {
+                                    context.openUrl(
+                                        "https://t.me/AHj80",
+                                        "org.telegram.messenger"
+                                    )
+                                }
+
+                                5 -> {
+                                    logoutClick()
+                                }
+                            }
+                        }
+                    )
+
+                }
             }
         }
     }
-}
 
 
-@Composable
-private fun CustomAsyncImage(avatar: Uri?) {
-    if (avatar != null) {
-        Surface(
-            modifier = Modifier.size(40.dp),
-            shape = CircleShape,
-            shadowElevation = 10.dp,
+    @Composable
+    private fun CustomAsyncImage(avatar: Uri?) {
+        if (avatar != null) {
+            Surface(
+                modifier = Modifier.size(40.dp),
+                shape = CircleShape,
+                shadowElevation = 10.dp,
 
-            ) {
+                ) {
 
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(avatar)
-                    .crossfade(true)
-                    .build(),
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(avatar)
+                        .crossfade(true)
+                        .build(),
+                    null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop,
+                )
+            }
+        } else {
+            Icon(
+                Icons.Default.AccountCircle,
                 null,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop,
+                tint = Color(0xFFFF8563),
+                modifier = Modifier.size(40.dp)
             )
         }
-    } else {
-        Icon(
-            Icons.Default.AccountCircle,
-            null,
-            tint = Color(0xFFFF8563),
-            modifier = Modifier.size(40.dp)
-        )
     }
-}
 

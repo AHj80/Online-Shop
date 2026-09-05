@@ -43,8 +43,7 @@ class EditUserProfileViewModel @Inject constructor(
                     .onSuccess { header ->
                         _uiState.update {
                             it.copy(
-                                header = header,
-
+                                header = header
                                 )
                         }
                         if (!initialData) {

@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,7 +19,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ahj.onlineshop.core.common.ui.component.CustomAnimate
 import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
-import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
 import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
 import com.ahj.onlineshop.feature.authentication.component.InsertTitle
@@ -30,12 +30,18 @@ import com.ahj.onlineshop.feature.profile.component.TopAppProfileMini
 
 @Composable
 fun ProfileAddressScreen(
-    viewModel: ProfileAddressViewModel = hiltViewModel()
+    viewModel: ProfileAddressViewModel = hiltViewModel(),
+    showSnackBar: (String)-> Unit
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-
+    LaunchedEffect(uiState.message) {
+        uiState.message?.let {
+            showSnackBar(it)
+        }
+        viewModel.resetMessage()
+    }
 
     DrawCircleBackground {
 
@@ -54,7 +60,7 @@ fun ProfileAddressScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        uiState.message?.let {
+                        uiState.messageStatus?.let {
                             Text(
                                 it,
                                 style = MaterialTheme.typography.titleSmall,
@@ -71,9 +77,7 @@ fun ProfileAddressScreen(
                 }
 
 
-                ProfileAddressStatus.LOADING -> {
-                    InsertDialog({}, "در حال دریافت داده")
-                }
+                ProfileAddressStatus.LOADING -> {}
 
                 ProfileAddressStatus.SUCCESS -> {
                     LazyColumn(
@@ -123,7 +127,7 @@ fun ProfileAddressScreen(
 
                 ProfileAddressStatus.ERROR -> {
 
-                    ErrorRefreshing(uiState.message) {
+                    ErrorRefreshing(uiState.messageStatus) {
                         viewModel.getAddressData()
                     }
 
@@ -151,13 +155,8 @@ fun ProfileAddressScreen(
                 },
                 { viewModel.changeModal(false) },
                 {
-                    viewModel.saveAddress(
-                        id = uiState.currentId,
-                        receiver = uiState.stateReceiver,
-                        fullAddress = uiState.stateAddress,
-                        phone = uiState.statePhone,
-                        postalCode = uiState.statePostalCode
-                    )
+                    viewModel.saveAddress()
+                    viewModel.savingDefault(uiState.currentId)
                     viewModel.changeModal(false)
                 },
                 closeButton = { viewModel.changeModal(false) },

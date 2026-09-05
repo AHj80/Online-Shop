@@ -38,7 +38,11 @@ import com.ahj.onlineshop.core.common.utils.toPersianDigit
 import com.ahj.onlineshop.feature.product.domain.model.ProductModel
 
 @Composable
-fun ProductItemSample(productModel: ProductModel, onClick: () -> Unit = {} , addOnClick:()-> Unit) {
+fun ProductItemSample(
+    productModel: ProductModel, onClick: () -> Unit = {},
+    addOnClick: () -> Unit
+) {
+
 
     Card(
         elevation = CardDefaults.elevatedCardElevation(5.dp),

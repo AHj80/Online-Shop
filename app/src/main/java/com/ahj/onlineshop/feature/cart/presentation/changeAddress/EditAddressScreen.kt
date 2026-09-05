@@ -13,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,14 +37,20 @@ import com.ahj.onlineshop.feature.cart.component.EditAddressItem
 @Composable
 fun EditAddressScreen(
     navController: NavController,
-    viewModel: EditAddressViewModel = hiltViewModel()
+    viewModel: EditAddressViewModel = hiltViewModel(),
+    showSnackBar: (String)-> Unit
 
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-
-    DrawCircleBackground{
+    LaunchedEffect(uiState.message) {
+        uiState.message?.let {
+            showSnackBar(it)
+        }
+        viewModel.resetMessage()
+    }
+    DrawCircleBackground {
 
         when (uiState.status) {
             EditAddressStatus.LOADING -> {
@@ -57,7 +64,7 @@ fun EditAddressScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
 
-                    uiState.message?.let {
+                    uiState.messageStatus?.let {
                         Text(
                             it,
                             style = MaterialTheme.typography.titleSmall,
@@ -104,6 +111,7 @@ fun EditAddressScreen(
                             selectedBorder = uiState.addressDefault == uiState.data[it].id,
                             {
                                 viewModel.savingDefault(uiState.data[it].id)
+                                viewModel.changeEnabled(true)
                             },
                             {
                                 viewModel.getAddressById(uiState.data[it].id)
@@ -111,6 +119,7 @@ fun EditAddressScreen(
                             },
                             {
                                 viewModel.deleteAddress(uiState.data[it])
+                                viewModel.changeEnabled(false)
                             }
                         )
 
@@ -128,7 +137,10 @@ fun EditAddressScreen(
 
                     item {
                         if (uiState.data.isNotEmpty())
-                            InsertButtonPrimary("انتخاب آدرس و ادامه خرید") { navController.popBackStack() }
+                            InsertButtonPrimary("انتخاب آدرس و ادامه خرید" , enabled = uiState.enabled) {
+                                navController.popBackStack()
+
+                            }
                     }
 
                 }
@@ -136,11 +148,10 @@ fun EditAddressScreen(
             }
 
             EditAddressStatus.ERROR -> {
-                ErrorRefreshing(uiState.message) {
+                ErrorRefreshing(uiState.messageStatus) {
                     viewModel.getAllAddress()
                 }
             }
-
 
 
         }
@@ -164,14 +175,10 @@ fun EditAddressScreen(
                 },
                 { viewModel.changeModal(false) },
                 {
-                    viewModel.saveAddress(
-                        id = uiState.currentId,
-                        receiver = uiState.stateReceiver,
-                        fullAddress = uiState.stateAddress,
-                        phone = uiState.statePhone,
-                        postalCode = uiState.statePostalCode
-                    )
+                    viewModel.saveAddress()
+                    viewModel.savingDefault(uiState.currentId)
                     viewModel.changeModal(false)
+
                 },
                 closeButton = { viewModel.changeModal(false) },
                 enabled = viewModel.checkingEnabled()

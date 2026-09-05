@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahj.onlineshop.feature.cart.domain.model.CartModel
 import com.ahj.onlineshop.feature.cart.domain.useCase.DecreaseQuantityUseCase
-import com.ahj.onlineshop.feature.cart.domain.useCase.GetCartDataUseCase
+import com.ahj.onlineshop.core.sharedData.product.domain.useCase.GetCartDataUseCase
 import com.ahj.onlineshop.feature.cart.domain.useCase.IncreaseQuantityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,14 +32,14 @@ class CartViewModel @Inject constructor(
     }
 
     fun getCartData() {
-        _uiState.update { it.copy(cartStatus = CartStatus.LOADING, message = null) }
+        _uiState.update { it.copy(cartStatus = CartStatus.LOADING, messageStatus = null) }
         getCartDataUseCase()
             .onEach { result ->
                 result.onSuccess { data ->
                     if (data.item.isEmpty()){
                         _uiState.update {
                             it.copy(
-                                message = "سبد خرید شما خالی است!",
+                                messageStatus = "سبد خرید شما خالی است!",
                                 cartStatus = CartStatus.EMPTY
                             )
                         }
@@ -60,7 +60,7 @@ class CartViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             cartStatus = CartStatus.ERROR,
-                            message = error.message
+                            messageStatus = error.message
                         )
                     }
                 }
@@ -87,5 +87,8 @@ class CartViewModel @Inject constructor(
         }
     }
 
+    fun resetSnackBar(){
+        _uiState.update { it.copy(message = null) }
+    }
 
 }

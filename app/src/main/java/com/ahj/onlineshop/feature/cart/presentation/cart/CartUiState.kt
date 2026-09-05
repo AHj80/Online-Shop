@@ -4,6 +4,7 @@ import com.ahj.onlineshop.feature.cart.domain.model.CartModel
 
 data class CartUiState(
     val cartStatus: CartStatus = CartStatus.EMPTY,
+    val messageStatus: String? = null,
     val message: String? = null,
     val data: List<CartModel> = emptyList(),
     val price: Long = 0,

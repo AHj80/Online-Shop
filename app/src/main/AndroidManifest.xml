@@ -17,6 +17,7 @@
         android:theme="@style/Theme.OnlineShop">
         <activity
             android:name=".app.base.MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.OnlineShop"

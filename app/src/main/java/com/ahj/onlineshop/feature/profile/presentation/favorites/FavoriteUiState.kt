@@ -7,6 +7,7 @@ import com.ahj.onlineshop.core.sharedData.userProfile.domain.model.UserInformati
 data class FavoriteUiState(
     val status: FavoriteStatus = FavoriteStatus.EMPTY,
     val data : List<FavoriteModel> = emptyList(),
+    val messageStatus: String? = null,
     val message: String? = null,
     val avatar : Uri? = null,
     val profile : UserInformationModel? = null

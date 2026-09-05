@@ -1,9 +1,12 @@
 package com.ahj.onlineshop.feature.product.presentation.listProduct
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
+import com.ahj.onlineshop.app.navigation.Screens
+import com.ahj.onlineshop.core.sharedData.product.domain.useCase.AddToCartUseCase
 import com.ahj.onlineshop.feature.product.domain.model.ProductModel
-import com.ahj.onlineshop.feature.product.domain.usecase.AddToCartUseCase
 import com.ahj.onlineshop.feature.product.domain.usecase.GetProductByFilterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,17 +20,31 @@ import javax.inject.Inject
 @HiltViewModel
 class ListProductViewModel @Inject constructor(
     private val getProductByFilterUseCase: GetProductByFilterUseCase,
-    private val addToCartUseCase: AddToCartUseCase
+    private val addToCartUseCase: AddToCartUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ListProductUiState())
+    private val _args = savedStateHandle.toRoute<Screens.ListProductScreen>()
+    private val _uiState = MutableStateFlow(
+        ListProductUiState(
+            selected = _args.subCategoryType,
+            parentCategory = _args.parentCategory
+        )
+    )
     val uiState: StateFlow<ListProductUiState> = _uiState.asStateFlow()
 
+    init {
+        saveStateData()
+    }
 
-    fun getData(productType: String, parentCategory: String) {
+   fun saveStateData() {
+        checkCategory(_uiState.value.selected, _uiState.value.parentCategory)
+    }
+
+    private fun getData(productType: String, parentCategory: String) {
 
         viewModelScope.launch {
-            _uiState.update { it.copy(status = ListProductStatus.LOADING, message = null) }
+            _uiState.update { it.copy(status = ListProductStatus.LOADING, messageStatus = null) }
             getProductByFilterUseCase(productType, parentCategory)
                 .onSuccess { data ->
 
@@ -44,7 +61,7 @@ class ListProductViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             status = ListProductStatus.ERROR,
-                            message = error.message
+                            messageStatus = error.message
                         )
                     }
                 }
@@ -57,18 +74,24 @@ class ListProductViewModel @Inject constructor(
         _uiState.update { it.copy(selected = subCategory) }
         getData(subCategory, parentCategory)
     }
+
     fun checkCategory(productType: String, parentCategory: String) {
 
         if (_uiState.value.selected.isBlank()) {
-            selectedItem(productType , parentCategory)
+            selectedItem(productType, parentCategory)
         } else {
             getData(_uiState.value.selected, parentCategory)
         }
     }
 
-    fun addToCart(productModel: ProductModel){
+    fun addToCart(productModel: ProductModel) {
         viewModelScope.launch {
             addToCartUseCase(productModel)
+            _uiState.update { it.copy(message = "به سبد خرید اضافه گردید") }
         }
+    }
+
+    fun resetSnackBar() {
+        _uiState.update { it.copy(message = null) }
     }
 }

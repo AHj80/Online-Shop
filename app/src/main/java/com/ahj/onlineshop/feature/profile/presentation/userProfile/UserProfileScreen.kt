@@ -86,9 +86,7 @@ fun UserProfileScreen(
                 }
             }
 
-            UserProfileStatus.LOADING -> {
-                InsertDialog({}, "در حال بررسی")
-            }
+            UserProfileStatus.LOADING -> {}
 
             else -> {
                 ErrorRefreshing(uiState.message) {

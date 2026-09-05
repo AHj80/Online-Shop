@@ -1,10 +1,9 @@
 package com.ahj.onlineshop.feature.product.data.mapper
 
-import com.ahj.onlineshop.core.sharedData.product.local.db.ProductEntity
+import com.ahj.onlineshop.core.sharedData.product.data.local.db.ProductEntity
 import com.ahj.onlineshop.feature.product.data.remote.dto.CommentDto
 import com.ahj.onlineshop.feature.product.data.remote.dto.ProductDto
 import com.ahj.onlineshop.feature.product.domain.model.CommentModel
-import com.ahj.onlineshop.feature.product.domain.model.AddCartModel
 import com.ahj.onlineshop.feature.product.domain.model.ProductModel
 
 fun ProductDto.toProductModel(): ProductModel {
@@ -45,15 +44,4 @@ fun ProductModel.toEntity(quantity: Int = 1): ProductEntity =
         finalPrice = this.finalPrice,
         discount = this.discount,
         this.categoryType
-    )
-
-fun ProductEntity.toAddCartModel(): AddCartModel =
-    AddCartModel(
-        id = this.id,
-        title = this.title,
-        image = this.image,
-        quantity = this.quantity,
-        price = this.price,
-        finalPrice = this.finalPrice,
-        discount = this.discount
     )

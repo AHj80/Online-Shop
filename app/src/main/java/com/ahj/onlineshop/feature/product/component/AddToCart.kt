@@ -17,9 +17,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ahj.onlineshop.core.common.ui.component.CustomAnimate
 import com.ahj.onlineshop.core.common.ui.component.InsertButtonSecondary
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundColor
 import com.ahj.onlineshop.core.common.utils.toPersianDigit
+import com.ahj.onlineshop.feature.cart.component.CustomOutlinedButton
 
 
 @Composable
@@ -29,8 +31,9 @@ fun AddToCart(
     discount: Int,
     statusButton: Boolean,
     addOnClick: () -> Unit,
-    /*navigateOnClick:()-> Unit*/
-    ) {
+    navigating: () -> Unit
+) {
+
 
     Row(
         modifier = Modifier
@@ -64,13 +67,21 @@ fun AddToCart(
                 )
             }
 
+            CustomAnimate(!statusButton, 80, 80) {
+                CustomOutlinedButton(
+                    "افزودن به سبد خرید"
+                ) { addOnClick() }
+            }
 
-            InsertButtonSecondary(
-                modifier = Modifier
-                    .padding(vertical = 10.dp, horizontal = 20.dp)
-                    .fillMaxWidth(),
-                text = if (statusButton)"رفتن به سبد خرید" else "افزودن به سبد خرید"
-            ) { addOnClick() }
+            CustomAnimate(statusButton, 80, 80) {
+                InsertButtonSecondary(
+                    modifier = Modifier
+                        .padding(vertical = 10.dp, horizontal = 20.dp)
+                        .fillMaxWidth(),
+                    text = "رفتن به سبد خرید"
+                ) { navigating() }
+
+            }
 
         }
     }

@@ -51,9 +51,7 @@ fun ChangePasswordScreen(
 
             when (uiState.status) {
                 ChangePasswordStatus.IDELE -> {}
-                ChangePasswordStatus.LOADING -> {
-                    InsertDialog(text = "در حال ارتباط")
-                }
+                ChangePasswordStatus.LOADING -> {}
 
                 ChangePasswordStatus.SUCCESS -> {
 

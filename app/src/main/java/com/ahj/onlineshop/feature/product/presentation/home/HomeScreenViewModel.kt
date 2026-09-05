@@ -3,7 +3,7 @@ package com.ahj.onlineshop.feature.product.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahj.onlineshop.feature.product.domain.model.ProductModel
-import com.ahj.onlineshop.feature.product.domain.usecase.AddToCartUseCase
+import com.ahj.onlineshop.core.sharedData.product.domain.useCase.AddToCartUseCase
 import com.ahj.onlineshop.feature.product.domain.usecase.GetHomeDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +31,7 @@ class HomeScreenViewModel @Inject constructor(
     fun getHomeData() {
 
         viewModelScope.launch {
-            _uiState.update { it.copy(status = HomeScreenStatus.LOADING, message = null) }
+            _uiState.update { it.copy(status = HomeScreenStatus.LOADING, messageStatus = null) }
             getHomeDataUseCase()
                 .onSuccess { data ->
                     _uiState.update {
@@ -47,7 +47,7 @@ class HomeScreenViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             status = HomeScreenStatus.ERROR,
-                            message = error.message
+                            messageStatus = error.message
                         )
                     }
                 }
@@ -68,6 +68,11 @@ class HomeScreenViewModel @Inject constructor(
     fun addToCart(productModel: ProductModel){
         viewModelScope.launch {
             addToCartUseCase(productModel)
+            _uiState.update { it.copy(message = "به سبد خرید اضافه گردید") }
         }
+    }
+
+    fun resetSnackBar(){
+        _uiState.update { it.copy(message = null) }
     }
 }

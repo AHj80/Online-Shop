@@ -1,4 +1,4 @@
-package com.ahj.onlineshop.core.sharedData.product.local.db
+package com.ahj.onlineshop.core.sharedData.product.data.local.db
 
 import androidx.room.Dao
 import androidx.room.Delete

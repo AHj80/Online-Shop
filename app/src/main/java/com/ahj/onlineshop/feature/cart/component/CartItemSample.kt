@@ -41,10 +41,10 @@ import com.ahj.onlineshop.feature.cart.domain.model.CartModel
 
 
 @Composable
-fun CartItemSample(cartModel: CartModel, increase: () -> Unit, decrease: () -> Unit) {
+fun CartItemSample(cartModel: CartModel,modifier: Modifier, increase: () -> Unit, decrease: () -> Unit) {
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .padding(10.dp)
             .clip(RoundedCornerShape(20.dp))
             .fillMaxWidth()

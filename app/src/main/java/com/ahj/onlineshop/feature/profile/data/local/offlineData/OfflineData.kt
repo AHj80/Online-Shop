@@ -24,7 +24,7 @@ object OfflineData {
         ),
         CategoryProfile(
             4,
-            "تغییر زمز عبور",
+            "تغییر رمز عبور",
             R.drawable.feature_profile_password
         ),
         CategoryProfile(

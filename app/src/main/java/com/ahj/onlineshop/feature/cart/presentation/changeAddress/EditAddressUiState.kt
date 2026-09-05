@@ -4,6 +4,7 @@ import com.ahj.onlineshop.core.sharedData.address.domain.model.AddressModel
 
 data class EditAddressUiState(
     val status: EditAddressStatus = EditAddressStatus.EMPTY,
+    val messageStatus: String? = null,
     val message: String? = null,
     val data: List<AddressModel> = emptyList(),
     val modal: Boolean = false,
@@ -11,7 +12,8 @@ data class EditAddressUiState(
     val stateAddress: String = "",
     val statePhone: String = "",
     val statePostalCode: String = "",
-    val address: AddressModel = AddressModel.defaultValue(),
+    val address: AddressModel? = null,
     val addressDefault : Int = 0,
-    val currentId : Int = 0
+    val currentId : Int = 0,
+    val enabled: Boolean = true
 )

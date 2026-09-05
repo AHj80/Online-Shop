@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -52,7 +54,8 @@ fun AddressConfirmScreen(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -91,9 +94,9 @@ fun AddressConfirmScreen(
 
                 AddressConfirmStatus.SUCCESS -> {
 
-                    uiState.address?.let {
-                        AddressItem(it)
-                    }
+
+                    AddressItem(uiState.address)
+
                     SpacerHeight(10)
                     CustomOutlinedButton("به آدرس دیگری برود") {
                         navController.navigate(Screens.EditAddressScreen)
@@ -104,6 +107,7 @@ fun AddressConfirmScreen(
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center
                     )
+                    SpacerHeight(10)
                 }
 
                 AddressConfirmStatus.LOADING -> {
@@ -118,7 +122,7 @@ fun AddressConfirmScreen(
             val data = uiState.data
             val address = uiState.address
             Spacer(Modifier.weight(1f))
-            if (data != null && address != null) {
+            if (data != null) {
                 CartDetail(
                     data.cartPrice,
                     data.cartFinalPrice,
@@ -140,9 +144,9 @@ fun AddressConfirmScreen(
         }
 
         LaunchedEffect(uiState.navigating) {
-            if (uiState.navigating){
+            if (uiState.navigating) {
                 navController.navigate(Screens.HomeScreen) {
-                    popUpTo<Screens.CartConfirmAddress> {
+                    popUpTo(0) {
                         inclusive = true
                     }
                 }

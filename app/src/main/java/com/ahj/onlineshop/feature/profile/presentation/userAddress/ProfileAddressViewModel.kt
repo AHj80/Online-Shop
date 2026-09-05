@@ -39,7 +39,11 @@ class ProfileAddressViewModel @Inject constructor(
 
     init {
         getAddressData()
+        sessionManager.defaultAddress.onEach { default ->
+            _uiState.update { it.copy(addressDefault = default ?: 0) }
+        }.launchIn(viewModelScope)
     }
+
     private fun combinedData() =
         combine(
             getHeaderDataUseCase(),
@@ -61,26 +65,26 @@ class ProfileAddressViewModel @Inject constructor(
         }
 
     fun getAddressData() {
-        _uiState.update { it.copy(status = ProfileAddressStatus.LOADING, message = null) }
+        _uiState.update { it.copy(status = ProfileAddressStatus.LOADING, messageStatus = null) }
         combinedData().onEach { result ->
             result
                 .onSuccess { data ->
-                    if (data.address.isEmpty()){
+                    if (data.address.isEmpty()) {
                         _uiState.update {
                             it.copy(
                                 status = ProfileAddressStatus.EMPTY,
                                 header = data.header,
                                 allAddress = emptyList(),
-                                message = "آدرس ثبت شده ای وجود ندارد"
+                                messageStatus = "آدرس ثبت شده ای وجود ندارد"
                             )
                         }
-                    } else{
+                    } else {
                         _uiState.update {
                             it.copy(
                                 status = ProfileAddressStatus.SUCCESS,
                                 header = data.header,
                                 allAddress = data.address,
-                                message = null
+                                messageStatus = null
                             )
                         }
                     }
@@ -89,7 +93,7 @@ class ProfileAddressViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             status = ProfileAddressStatus.ERROR,
-                            message = error.message
+                            messageStatus = error.message
                         )
                     }
 
@@ -104,6 +108,7 @@ class ProfileAddressViewModel @Inject constructor(
 
             result
                 .onSuccess { address ->
+
                     _uiState.update {
                         it.copy(
                             currentId = address.id,
@@ -114,35 +119,31 @@ class ProfileAddressViewModel @Inject constructor(
                             statePostalCode = address.postalCode
                         )
                     }
+
                 }
                 .onFailure { error ->
-                    _uiState.update { it.copy(message = error.message) }
+                    _uiState.update { it.copy(messageStatus = error.message) }
                 }
 
         }.launchIn(viewModelScope)
 
     }
 
-    fun saveAddress(
-        id: Int = 0,
-        receiver: String,
-        fullAddress: String,
-        phone: String,
-        postalCode: String
-    ) {
+    fun saveAddress() {
 
+        val state = _uiState.value
         viewModelScope.launch {
             val address = AddressModel(
-                id = id,
-                receiver = receiver,
-                postalCode = postalCode,
-                address = fullAddress,
-                phone = phone
+                id = state.currentId,
+                receiver = state.stateReceiver,
+                postalCode = state.statePostalCode,
+                address = state.stateAddress,
+                phone = state.statePhone
             )
 
-            if (id == 0) {
+            if (state.currentId == 0) {
                 insertAddressUseCase(address)
-                    .onSuccess {
+                    .onSuccess { newId->
                         _uiState.update {
                             it.copy(
                                 message = "آدرس با موفقیت اضافه گردید",
@@ -151,8 +152,9 @@ class ProfileAddressViewModel @Inject constructor(
                                 statePhone = "",
                                 statePostalCode = "",
                                 currentId = 0
-                            )
+                                )
                         }
+                        savingDefault(newId.toInt())
                     }
                     .onFailure { error ->
                         _uiState.update { it.copy(message = error.message) }
@@ -177,7 +179,7 @@ class ProfileAddressViewModel @Inject constructor(
         viewModelScope.launch {
             deleteAddressUseCase(address)
                 .onSuccess {
-                    _uiState.update { it.copy(message = "آدرس حذف گردید") }
+                    _uiState.update { it.copy(message = "آدرس حذف گردید، لطفا آدرس جدید را انتخاب یا ثبت نمایید") }
                 }
                 .onFailure { error ->
                     _uiState.update {
@@ -193,16 +195,8 @@ class ProfileAddressViewModel @Inject constructor(
         }
     }
 
-    fun getAddressDefault(id: Int): Boolean {
-        viewModelScope.launch {
-            sessionManager.defaultAddress.collect { address ->
-                address?.let { default ->
-                    _uiState.update { it.copy(addressDefault = default) }
-                }
-            }
-        }
-        return _uiState.value.addressDefault == id
-    }
+    fun getAddressDefault(id: Int): Boolean = _uiState.value.addressDefault == id
+
 
     fun resetInput() = _uiState.update {
         it.copy(
@@ -238,4 +232,6 @@ class ProfileAddressViewModel @Inject constructor(
             _uiState.value.statePostalCode.isNotBlank() && _uiState.value.statePostalCode.length == 10
         return receiver && address && phone && postalCode
     }
+
+    fun resetMessage() = _uiState.update { it.copy(message = null) }
 }

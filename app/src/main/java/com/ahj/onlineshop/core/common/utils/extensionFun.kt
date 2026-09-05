@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.net.toUri
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.ahj.onlineshop.app.navigation.Screens
 import java.text.DecimalFormat
 
@@ -57,7 +56,7 @@ fun Context.shareText(text: String ){
 
 fun NavController.singleScreen( screens: Screens){
     this.navigate(screens) {
-        popUpTo(this@singleScreen.graph.findStartDestination().id) {
+        popUpTo(Screens.HomeScreen) {
             saveState = true
         }
         launchSingleTop = true
@@ -80,4 +79,12 @@ fun Context.openUrl(url: String, packageName: String? = null) {
         }
         startActivity(fallbackIntent)
     }
+}
+
+fun String.editAutoText(): String {
+    val lowercaseText = this.lowercase().trim()
+    return if (lowercaseText.contains("name") || lowercaseText.contains("phone")
+    )
+        ""
+    else this
 }

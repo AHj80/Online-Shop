@@ -22,11 +22,11 @@ class ApiHelper @Inject constructor() {
          }
       } catch (e: Exception){
          val customException = when (e) {
-            is SocketTimeoutException -> Exception("TimeOut")
-            is IOException -> Exception("Connection Error")
+            is SocketTimeoutException -> Exception("زمان پاسخگویی سرور به پایان رسید. لطفاً دوباره تلاش کنید")
+            is IOException -> Exception("اتصال اینترنت خود را بررسی کنید")
             is HttpException -> Exception(e.code().toString())
             is SerializationException -> Exception("Malformed Json")
-            else -> Exception("UnknownError : ${e.message}")
+            else -> Exception("خطایی در برقراری ارتباط رخ داد: ${e.message}")
          }
          Result.failure(customException)
       }

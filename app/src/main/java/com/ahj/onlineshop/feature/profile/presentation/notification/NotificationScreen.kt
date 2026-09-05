@@ -30,7 +30,7 @@ fun NotificationScreen(
 
         Column {
 
-            CustomAnimate(uiState.header != null) {
+            CustomAnimate(uiState.header != null , 200 , 200) {
                 uiState.header?.profile?.let {
 
                     TopAppProfileMini(uiState.header?.avatar, it)
@@ -54,10 +54,7 @@ fun NotificationScreen(
                     }
                 }
 
-                NotificationStatus.LOADING -> {
-                    InsertDialog(text = "در حال ارتباط")
-                }
-
+                NotificationStatus.LOADING -> {}
                 NotificationStatus.SUCCESS -> {}
                 NotificationStatus.ERROR -> {
                     ErrorRefreshing(uiState.message) {

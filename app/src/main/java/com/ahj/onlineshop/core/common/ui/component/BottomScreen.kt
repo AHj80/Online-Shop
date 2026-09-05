@@ -20,7 +20,6 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,16 +27,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.app.navigation.bottomNavigation.BottomNavData
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
 
 
 @Composable
-fun BottomScreen(navController: NavController) {
+fun BottomScreen(navController: NavController, currentNav: NavDestination?) {
 
     val bottomScreens = listOf(
         BottomNavData.HomeScreen,
@@ -51,8 +49,6 @@ fun BottomScreen(navController: NavController) {
         containerColor = Color.White
     ) {
 
-        val backStackEntry by navController.currentBackStackEntryAsState()
-        val currentNav = backStackEntry?.destination
 
         bottomScreens.forEach { screen ->
 
@@ -121,14 +117,16 @@ fun BottomScreen(navController: NavController) {
                         )
                     },
                     onClick = {
-                        navController.navigate(
-                            screen.route
-                        ) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                        if (!selected){
+                            navController.navigate(
+                                screen.route
+                            ) {
+                                popUpTo(Screens.HomeScreen) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
                     }
                 )

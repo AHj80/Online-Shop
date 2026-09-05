@@ -8,7 +8,7 @@ import java.util.UUID
 data class AddressConfirmUiState(
     val status: AddressConfirmStatus = AddressConfirmStatus.EMPTY,
     val message: String? = null,
-    val address: AddressModel? = null,
+    val address: AddressModel = AddressModel.defaultValue(),
     val data: CartCalculation? = null,
     val defaultAddress: Int? = null,
     val orderCode: String = UUID.randomUUID().toString().take(5).uppercase(),

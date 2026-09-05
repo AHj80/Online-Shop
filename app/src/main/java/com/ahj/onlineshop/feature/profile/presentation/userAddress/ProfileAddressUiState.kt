@@ -6,6 +6,7 @@ import com.ahj.onlineshop.feature.profile.domain.model.HeaderDataModel
 
 data class ProfileAddressUiState(
     val status: ProfileAddressStatus = ProfileAddressStatus.EMPTY,
+    val messageStatus: String? = null,
     val message: String? = null,
     val allAddress: List<AddressModel> = emptyList(),
     val header: HeaderDataModel? = null,
@@ -14,7 +15,7 @@ data class ProfileAddressUiState(
     val stateAddress: String = "",
     val statePhone: String = "",
     val statePostalCode: String = "",
-    val address: AddressModel = AddressModel.defaultValue(),
+    val address: AddressModel? = null,
     val addressDefault : Int = 0,
     val currentId : Int = 0
 )

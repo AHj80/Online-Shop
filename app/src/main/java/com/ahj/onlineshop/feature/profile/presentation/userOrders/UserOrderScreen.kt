@@ -1,5 +1,10 @@
 package com.ahj.onlineshop.feature.profile.presentation.userOrders
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,7 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.ui.component.CustomAnimate
-import com.ahj.onlineshop.core.common.ui.component.InsertDialog
+import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
 import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
 import com.ahj.onlineshop.feature.authentication.component.InsertTitle
@@ -70,9 +76,7 @@ fun UserOrdersScreen(
                     }
                 }
 
-                UserOrdersStatus.LOADING -> {
-                    InsertDialog(text = "در حال برقراری ارتباط")
-                }
+                UserOrdersStatus.LOADING -> {}
 
                 UserOrdersStatus.SUCCESS -> {
                     InsertTitle("سفارشات من")
@@ -85,27 +89,60 @@ fun UserOrdersScreen(
                         items(
                             uiState.ordersData.size,
                             key = { uiState.ordersData[it].id?.toInt() ?: 0 }) {
-                            UserOrderItemSample(
-                                uiState.ordersData[it],
-                                navigateOnClick = { id, categoryType ->
-                                    navController.navigate(
-                                        Screens.DetailProduct(
-                                            id,
-                                            categoryType
+
+                            OrdersAnimate {
+                                UserOrderItemSample(
+                                    uiState.ordersData[it],
+                                    navigateOnClick = { id, categoryType ->
+                                        navController.navigate(
+                                            Screens.DetailProduct(
+                                                id,
+                                                categoryType
+                                            )
                                         )
-                                    )
-                                }
-                            )
+                                    }
+                                )
+                            }
                         }
                     }
+
                 }
 
-                UserOrdersStatus.ERROR -> {}
+                UserOrdersStatus.ERROR -> {
+                    ErrorRefreshing(uiState.message) { viewModel.getAllData() }
+                }
             }
 
         }
 
 
+    }
+}
+
+@Composable
+private fun OrdersAnimate(
+    content: @Composable () -> Unit
+) {
+    val stateVisible = remember {
+        MutableTransitionState(false).apply {
+            targetState = true
+        }
+    }
+
+    AnimatedVisibility(
+        visibleState = stateVisible,
+        enter =
+            expandHorizontally(
+                tween(400),
+                expandFrom = Alignment.CenterHorizontally
+            ),
+        exit =
+            shrinkHorizontally(
+                tween(400),
+                shrinkTowards = Alignment.CenterHorizontally
+            )
+    ) {
+        content()
     }
 }
 

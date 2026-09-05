@@ -146,7 +146,7 @@ fun TabProductItem(
             Comment(
                 productModel.comments,
                 stateTextComment,
-                rate = {rate(it)},
+                rate = { rate(it) },
                 { stateTextChange(it) },
                 sendComment = { sendComment() }
             )
@@ -155,7 +155,7 @@ fun TabProductItem(
         3 -> {
 
             SimilarProduct(
-                similarProduct,
+                products = similarProduct,
                 similarOnClick = {
                     similarOnClick(it)
                 }) {
@@ -236,7 +236,7 @@ private fun Features(
 private fun Comment(
     comment: List<CommentModel>,
     stateText: String,
-    rate:(Int)-> Unit,
+    rate: (Int) -> Unit,
     stateTextChange: (String) -> Unit,
     sendComment: () -> Unit = {}
 ) {
@@ -312,7 +312,7 @@ private fun Comment(
                     InsertButtonSecondary(
                         text = "ارسال",
                         fontSize = 10,
-                        enabled = stateText.isNotBlank() ,
+                        enabled = stateText.isNotBlank(),
                         modifier = Modifier.width(80.dp)
                     ) { sendComment() }
 
@@ -385,8 +385,8 @@ private fun SimilarProduct(
     ) {
         items(products.size) {
             ProductItemSample(
-                products[it],
-                onClick = { similarOnClick(products[it]) }
+                productModel = products[it],
+                onClick = { similarOnClick(products[it]) },
             ) {
                 addOnClick(products[it])
             }

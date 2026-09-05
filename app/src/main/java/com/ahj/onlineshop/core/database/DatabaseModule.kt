@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.ahj.onlineshop.core.sharedData.address.data.local.db.AddressDao
 import com.ahj.onlineshop.core.sharedData.favorite.data.local.db.FavoriteDao
-import com.ahj.onlineshop.core.sharedData.product.local.db.ProductDao
+import com.ahj.onlineshop.core.sharedData.product.data.local.db.ProductDao
 import com.ahj.onlineshop.core.sharedData.shoppingExperience.data.db.UserExperienceDao
 import com.ahj.onlineshop.core.sharedData.userOrders.data.db.dao.UserOrderDao
 import com.ahj.onlineshop.core.sharedData.userProfile.data.local.db.UserInformationDao

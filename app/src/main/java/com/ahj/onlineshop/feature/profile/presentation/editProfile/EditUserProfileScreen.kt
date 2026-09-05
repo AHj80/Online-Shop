@@ -35,7 +35,7 @@ import com.ahj.onlineshop.feature.profile.component.TopAppProfileMini
 
 @Composable
 fun EditUserProfileScreen(
-    viewModel: EditUserProfileViewModel = hiltViewModel()
+    viewModel: EditUserProfileViewModel = hiltViewModel(),
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -145,7 +145,7 @@ fun EditUserProfileScreen(
         }
 
         when (uiState.status) {
-        EditUserProfileStatus.IDELE -> {}
+            EditUserProfileStatus.IDELE -> {}
 
             EditUserProfileStatus.LOADING -> {
                 InsertDialog(text = "در حال ارتباط")
@@ -164,20 +164,29 @@ fun EditUserProfileScreen(
             }
         }
 
+        Loading(uiState.isLoading)
 
-        if (uiState.isLoading) {
-            InsertDialog(text = "در حال ارتباط")
+        ResultProcessing(uiState.alertDialog ,uiState.message) {
+            viewModel.closeAlertDialog()
         }
+    }
+}
 
-        if (uiState.alertDialog) {
+@Composable
+private fun Loading(state: Boolean) {
+    if (state) {
+        InsertDialog(text = "در حال ارتباط")
+    }
+}
 
-
-            uiState.message?.let {
-                CustomAlertDialog(it) {
-                    viewModel.closeAlertDialog()
-                }
+@Composable
+private fun ResultProcessing(state: Boolean , message: String? , onClick:()-> Unit) {
+    if (state) {
+        message?.let {
+            CustomAlertDialog(it) {
+                onClick()
             }
-
         }
+
     }
 }

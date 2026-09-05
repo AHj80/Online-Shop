@@ -36,27 +36,30 @@ class EditAddressViewModel @Inject constructor(
 
     init {
         getAllAddress()
+        sessionManager.defaultAddress.onEach { default ->
+            _uiState.update { it.copy(addressDefault = default ?: 0) }
+        }.launchIn(viewModelScope)
     }
 
     fun getAllAddress() {
-        _uiState.update { it.copy(status = EditAddressStatus.LOADING, message = null) }
+        _uiState.update { it.copy(status = EditAddressStatus.LOADING, messageStatus = null) }
         getAllAddressUseCase().onEach { result ->
             result
                 .onSuccess { address ->
-                    if (address.isEmpty()){
+                    if (address.isEmpty()) {
                         _uiState.update {
                             it.copy(
                                 status = EditAddressStatus.EMPTY,
                                 data = emptyList(),
-                                message = "آدرس ثبت شده ای وجود ندارد"
+                                messageStatus = "آدرس ثبت شده ای وجود ندارد"
                             )
                         }
-                    } else{
+                    } else {
                         _uiState.update {
                             it.copy(
                                 status = EditAddressStatus.SUCCESS,
                                 data = address,
-                                message = null
+                                messageStatus = null
                             )
                         }
                     }
@@ -66,7 +69,7 @@ class EditAddressViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             status = EditAddressStatus.ERROR,
-                            message = error.message
+                            messageStatus = error.message
                         )
                     }
 
@@ -75,26 +78,21 @@ class EditAddressViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun saveAddress(
-        id: Int = 0,
-        receiver: String,
-        fullAddress: String,
-        phone: String,
-        postalCode: String
-    ) {
+    fun saveAddress() {
 
+        val state = _uiState.value
         viewModelScope.launch {
             val address = AddressModel(
-                id = id,
-                receiver = receiver,
-                postalCode = postalCode,
-                address = fullAddress,
-                phone = phone
+                id = state.currentId,
+                receiver = state.stateReceiver,
+                postalCode = state.statePostalCode,
+                address = state.stateAddress,
+                phone = state.statePhone
             )
 
-            if (id == 0) {
+            if (state.currentId == 0) {
                 insertAddressUseCase(address)
-                    .onSuccess {
+                    .onSuccess { newId ->
                         _uiState.update {
                             it.copy(
                                 message = "آدرس با موفقیت اضافه گردید",
@@ -102,9 +100,12 @@ class EditAddressViewModel @Inject constructor(
                                 stateAddress = "",
                                 statePhone = "",
                                 statePostalCode = "",
-                                currentId = 0
+                                currentId = 0,
+                                enabled = true
                             )
                         }
+
+                        savingDefault(newId.toInt())
                     }
                     .onFailure { error ->
                         _uiState.update { it.copy(message = error.message) }
@@ -142,9 +143,10 @@ class EditAddressViewModel @Inject constructor(
                             statePostalCode = address.postalCode
                         )
                     }
+
                 }
                 .onFailure { error ->
-                    _uiState.update { it.copy(message = error.message) }
+                    _uiState.update { it.copy(messageStatus = error.message) }
                 }
 
         }.launchIn(viewModelScope)
@@ -157,7 +159,7 @@ class EditAddressViewModel @Inject constructor(
         viewModelScope.launch {
             deleteAddressUseCase(address)
                 .onSuccess {
-                    _uiState.update { it.copy(message = "آدرس حذف گردید") }
+                    _uiState.update { it.copy(message = "آدرس حذف گردید، لطفا آدرس جدید را انتخاب یا ثبت نمایید") }
                 }
                 .onFailure { error ->
                     _uiState.update {
@@ -173,16 +175,8 @@ class EditAddressViewModel @Inject constructor(
         }
     }
 
-    fun getAddressDefault(id: Int): Boolean {
-        viewModelScope.launch {
-            sessionManager.defaultAddress.collect { address ->
-                address?.let { default ->
-                    _uiState.update { it.copy(addressDefault = default) }
-                }
-            }
-        }
-        return _uiState.value.addressDefault == id
-    }
+    fun getAddressDefault(id: Int): Boolean = _uiState.value.addressDefault == id
+
 
     fun resetInput() = _uiState.update {
         it.copy(
@@ -217,5 +211,7 @@ class EditAddressViewModel @Inject constructor(
         return receiver && address && phone && postalCode
     }
 
+    fun changeEnabled(state: Boolean) = _uiState.update { it.copy(enabled = state) }
+    fun resetMessage() = _uiState.update { it.copy(message = null) }
 
 }

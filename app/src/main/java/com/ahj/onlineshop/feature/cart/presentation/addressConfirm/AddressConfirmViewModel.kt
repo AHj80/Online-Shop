@@ -9,7 +9,7 @@ import com.ahj.onlineshop.core.sharedData.address.domain.useCase.GetAddressByIdU
 import com.ahj.onlineshop.core.sharedData.userOrders.domain.model.OrderItemModel
 import com.ahj.onlineshop.core.sharedData.userOrders.domain.model.UserOrderModel
 import com.ahj.onlineshop.feature.cart.domain.model.CartAddressModel
-import com.ahj.onlineshop.feature.cart.domain.useCase.GetCartDataUseCase
+import com.ahj.onlineshop.core.sharedData.product.domain.useCase.GetCartDataUseCase
 import com.ahj.onlineshop.feature.cart.domain.useCase.PaymentProcessUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,6 +49,7 @@ class AddressConfirmViewModel @Inject constructor(
                 )
             }
             result.onSuccess { dataAddress ->
+
                 if (dataAddress.address.phone.isBlank()) {
                     _uiState.update {
                         it.copy(
@@ -65,8 +66,10 @@ class AddressConfirmViewModel @Inject constructor(
                             address = dataAddress.address,
                             message = null
                         )
+
                     }
                 }
+
             }
             result.onFailure { error ->
 

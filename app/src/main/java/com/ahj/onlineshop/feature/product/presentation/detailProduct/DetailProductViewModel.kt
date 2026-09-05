@@ -1,17 +1,16 @@
 package com.ahj.onlineshop.feature.product.presentation.detailProduct
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahj.onlineshop.core.sharedData.favorite.domain.model.FavoriteModel
 import com.ahj.onlineshop.core.sharedData.favorite.domain.useCase.AddFavoriteUseCase
 import com.ahj.onlineshop.core.sharedData.favorite.domain.useCase.CheckingFavoriteUseCase
 import com.ahj.onlineshop.core.sharedData.favorite.domain.useCase.DeleteFavoriteUseCase
+import com.ahj.onlineshop.core.sharedData.product.domain.useCase.AddToCartUseCase
+import com.ahj.onlineshop.core.sharedData.product.domain.useCase.GetCartDataByIdUseCase
 import com.ahj.onlineshop.core.sharedData.shoppingExperience.domain.model.UserExperienceModel
 import com.ahj.onlineshop.core.sharedData.shoppingExperience.domain.useCase.AddExperienceUseCase
 import com.ahj.onlineshop.feature.product.domain.model.ProductModel
-import com.ahj.onlineshop.feature.product.domain.usecase.AddToCartUseCase
-import com.ahj.onlineshop.feature.product.domain.usecase.GetCartDataByIdUseCase
 import com.ahj.onlineshop.feature.product.domain.usecase.GetDetailProductUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,7 +39,7 @@ class DetailProductViewModel @Inject constructor(
 
         viewModelScope.launch {
             checkingCartStatus(id)
-            _uiState.update { it.copy(status = DetailProductStatus.LOADING, message = null) }
+            _uiState.update { it.copy(status = DetailProductStatus.LOADING, messageStatus = null) }
             getDetailProductUseCase(id, categoryType)
                 .onSuccess { data ->
                     _uiState.update {
@@ -57,7 +56,7 @@ class DetailProductViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             status = DetailProductStatus.ERROR,
-                            message = error.message,
+                            messageStatus = error.message,
                         )
                     }
                 }
@@ -66,7 +65,7 @@ class DetailProductViewModel @Inject constructor(
 
     }
 
-    fun checkingCartStatus(id: String) {
+    private fun checkingCartStatus(id: String) {
 
         viewModelScope.launch {
             getCartDataByIdUseCase(id).collect { inCart ->
@@ -101,9 +100,9 @@ class DetailProductViewModel @Inject constructor(
     }
 
 
-    fun changeTab(index: Int) = _uiState.update { it.copy(selectedTab = index) }
+    private fun changeTab(index: Int) = _uiState.update { it.copy(selectedTab = index) }
 
-    fun isFavorite(id: Int) {
+    private fun isFavorite(id: Int) {
         viewModelScope.launch {
             checkingFavoriteUseCase(id).collect { result ->
                 result
@@ -118,7 +117,7 @@ class DetailProductViewModel @Inject constructor(
         }
     }
 
-    fun addFavorite(
+    private fun addFavorite(
         statusFavorite: Boolean,
         id: Int,
         categoryType: String,
@@ -129,12 +128,18 @@ class DetailProductViewModel @Inject constructor(
         viewModelScope.launch {
             if (statusFavorite) {
                 deleteFavoriteUseCase(FavoriteModel(id, categoryType, image, title))
+                    .onSuccess {
+                        _uiState.update { it.copy(message = "از لیست علاقه مندی ها حذف گردید") }
+                    }
                     .onFailure { error ->
                         _uiState.update { it.copy(message = error.message) }
                     }
 
             } else {
                 addFavoriteUseCase(FavoriteModel(id, categoryType, image, title))
+                    .onSuccess {
+                        _uiState.update { it.copy(message = "به لیست علاقه مندی ها اضافه گردید") }
+                    }
                     .onFailure { error ->
                         _uiState.update { it.copy(message = error.message) }
                     }
@@ -143,11 +148,11 @@ class DetailProductViewModel @Inject constructor(
 
     }
 
-    fun sendComment(id: Int, title: String, image: String, comment: String, rate: Int) {
+    private fun sendComment(id: Int, title: String, image: String, comment: String, rate: Int) {
 
         viewModelScope.launch {
 
-            addExperienceUseCase(UserExperienceModel(id, title, image, comment , rate))
+            addExperienceUseCase(UserExperienceModel(id, title, image, comment, rate))
                 .onSuccess {
                     _uiState.update {
                         it.copy(
@@ -155,11 +160,9 @@ class DetailProductViewModel @Inject constructor(
                             message = "نظر شما با موفقیت ارسال و پس از تایید نمایش داده خواهد شد"
                         )
                     }
-                    Log.i("test1" , "su")
                 }
                 .onFailure { error ->
                     _uiState.update { it.copy(message = error.message) }
-                    Log.i("test1" , "fa")
                 }
 
 
@@ -167,9 +170,53 @@ class DetailProductViewModel @Inject constructor(
 
     }
 
-    fun changeRate (rate: Int) = _uiState.update { it.copy(rate = rate) }
+    private fun changeRate(rate: Int) = _uiState.update { it.copy(rate = rate) }
 
-    fun changeStateComment(text: String) = _uiState.update { it.copy(stateTextComment = text) }
+    private fun changeStateComment(text: String) =
+        _uiState.update { it.copy(stateTextComment = text) }
 
+    fun resetMessage() = _uiState.update { it.copy(message = null) }
+
+    fun onEvent(event: DetailProductUiEvent) {
+        when (event) {
+            is DetailProductUiEvent.OnAddToCart -> {
+                addToCart(event.product)
+            }
+
+            is DetailProductUiEvent.OnSendComment -> {
+                sendComment(
+                    event.id,
+                    event.title,
+                    event.image,
+                    event.text,
+                    event.rate,
+                )
+            }
+
+            is DetailProductUiEvent.OnRateChange -> {
+                changeRate(event.rate)
+            }
+
+            is DetailProductUiEvent.OnCommentChange -> {
+                changeStateComment(event.text)
+            }
+
+            is DetailProductUiEvent.FavoriteOnClick -> {
+                addFavorite(
+                    event.isFavorite,
+                    event.productId,
+                    event.productCategoryType,
+                    event.productTitle,
+                    event.productImage
+                )
+            }
+
+            is DetailProductUiEvent.OnTabChange -> {
+                changeTab(event.index)
+            }
+
+            else -> {}
+        }
+    }
 
 }

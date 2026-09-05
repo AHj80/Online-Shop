@@ -3,6 +3,7 @@ package com.ahj.onlineshop.feature.product.presentation.subCategory
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,23 +27,25 @@ import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
 import com.ahj.onlineshop.core.common.ui.component.Progress
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
+import com.ahj.onlineshop.core.common.ui.component.StatusCustomAnimated
+import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
 import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
 import com.ahj.onlineshop.feature.authentication.component.InsertTextFieldAuth
 import com.ahj.onlineshop.feature.authentication.component.InsertTitle
 import com.ahj.onlineshop.feature.product.component.InsertCategoryGrid
 import com.ahj.onlineshop.feature.product.component.ProductItemSample
+import com.ahj.onlineshop.feature.product.component.SearchProduct
 import com.ahj.onlineshop.feature.product.component.ShowAll
 import com.ahj.onlineshop.feature.product.component.ShowBestSell
 import com.ahj.onlineshop.feature.product.component.TopCategory
-import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
-import com.ahj.onlineshop.feature.product.component.SearchProduct
+import com.ahj.onlineshop.feature.product.domain.model.ProductModel
 
 
 @Composable
 fun SubCategoryScreen(
     navController: NavController,
     viewModel: SubCategoriesViewModel = hiltViewModel(),
-    parentCategory: String
+    showSnackBar: (String) -> Unit
 ) {
 
 
@@ -50,18 +53,21 @@ fun SubCategoryScreen(
     val title = uiState.categories.find { it.categoryType == uiState.selected }
 
 
-
-
-    LaunchedEffect(parentCategory) {
-        viewModel.checkCategory(parentCategory)
+    LaunchedEffect(uiState.message) {
+        uiState.message?.let {
+            showSnackBar(it)
+        }
+        viewModel.resetSnackBar()
     }
+
+
+
 
     DrawCircleBackground(false) {
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -81,116 +87,51 @@ fun SubCategoryScreen(
             }
             SpacerHeight(20)
 
-
-
-
-
-
-            when (uiState.status) {
-                SubCategoriesStatus.LOADING -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .weight(1f),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Progress(25)
-                    }
-                }
-
-                SubCategoriesStatus.ERROR -> {
-                    ErrorRefreshing(uiState.message) {
-                        viewModel.selectedCategory(
-                            uiState.selected,
-                        )
-                    }
-                }
-
-                else -> {
-                    title?.let {
-                        InsertTitle("پوشاک ${it.title}")
-                    }
-                    SpacerHeight(20)
-                    InsertTextFieldAuth(
-                        value = uiState.stateText,
-                        onValueChange = { viewModel.updateText(it) },
-                        placeholder = "لباست رو جست و جو کن...",
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(R.drawable.search_normal),
-                                null,
-                                modifier = Modifier.size(20.dp),
-                                tint = ButtonColor_Tow
-                            )
+            StatusCustomAnimated(uiState.status) { status ->
+                when (status) {
+                    SubCategoriesStatus.LOADING -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .weight(1f),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Progress(25)
                         }
-                    )
-
-                    SearchProduct(uiState.product, uiState.stateText) { product ->
-
-                        navController.navigate(
-                            Screens.DetailProduct(
-                                product.id,
-                                product.categoryType
-                            )
-                        )
                     }
 
-                    InsertCategoryGrid(uiState.subCategories) { categoryType ->
-                        navController.navigate(
-                            Screens.ListProductScreen(
-                                categoryType.categoryType,
-                                uiState.selected,
-                            )
-                        )
+                    SubCategoriesStatus.ERROR -> {
+                        ErrorRefreshing(uiState.messageStatus) {
+                            viewModel.saveStateData()
+                        }
                     }
-                    SpacerHeight(20)
 
-                    ShowAll("پرفروش ترین ها") {
-                        viewModel.changeModalState(true)
-                    }
-                    if (uiState.showModal)
-                        ShowBestSell(
-                            data = uiState.product,
-                            { state -> viewModel.changeModalState(state) },
-                            { currentProduct ->
+                    else -> {
+                        SuccessContent(
+                            navController,
+                            title?.title,
+                            uiState,
+                            { viewModel.updateText(it) },
+                            { viewModel.changeModalState(it) },
+                            { viewModel.addToCart(it) },
+                            { product ->
                                 navController.navigate(
-                                    Screens.DetailProduct(
-                                        currentProduct.id,
-                                        currentProduct.categoryType
+                                    Screens.DetailProduct(product.id, product.categoryType)
+                                )
+                            },
+                            { categoryType ->
+                                navController.navigate(
+                                    Screens.ListProductScreen(
+                                        categoryType,
+                                        uiState.selected,
                                     )
                                 )
                             }
-                        ) {
-
-                        }
-                    SpacerHeight(20)
-
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 10.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        items(uiState.product.size) {
-                            ProductItemSample(
-                                uiState.product[it],
-                                onClick = {
-                                    navController.navigate(
-                                        Screens.DetailProduct(
-                                            uiState.product[it].id,
-                                            uiState.product[it].categoryType
-                                        )
-                                    )
-                                }
-                            ) {
-                                viewModel.addToCart(uiState.product[it])
-                            }
-                        }
+                        )
                     }
 
                 }
             }
-
         }
 
 
@@ -199,4 +140,94 @@ fun SubCategoryScreen(
 
 }
 
+
+@Composable
+private fun SuccessContent(
+    navController: NavController,
+    title: String?,
+    uiState: SubCategoriesUiState,
+    onSearchTextChanged: (String) -> Unit,
+    onModalStateChanged: (Boolean) -> Unit,
+    onAddToCart: (ProductModel) -> Unit,
+    onProductClick: (ProductModel) -> Unit,
+    onSubCategoryClick: (String) -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        title?.let { text ->
+            InsertTitle("پوشاک $text")
+        }
+        SpacerHeight(20)
+        InsertTextFieldAuth(
+            value = uiState.stateText,
+            onValueChange = { onSearchTextChanged(it) },
+            placeholder = "لباست رو جست و جو کن...",
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(R.drawable.search_normal),
+                    null,
+                    modifier = Modifier.size(20.dp),
+                    tint = ButtonColor_Tow
+                )
+            }
+        )
+
+        SearchProduct(uiState.product, uiState.stateText) { product ->
+
+            onProductClick(product)
+        }
+
+        InsertCategoryGrid(uiState.subCategories) { categoryType ->
+            onSubCategoryClick(categoryType.categoryType)
+        }
+        SpacerHeight(20)
+
+        Spacer(Modifier.weight(1f))
+        ShowAll("پرفروش ترین ها") {
+            onModalStateChanged(true)
+        }
+        if (uiState.showModal)
+            ShowBestSell(
+                data = uiState.product,
+                { state -> onModalStateChanged(state) },
+                { currentProduct ->
+                    navController.navigate(
+                        Screens.DetailProduct(
+                            currentProduct.id,
+                            currentProduct.categoryType
+                        )
+                    )
+                }
+            ) {
+                onAddToCart(it)
+            }
+        SpacerHeight(20)
+
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            items(uiState.product.size) {
+                ProductItemSample(
+                    productModel = uiState.product[it],
+                    onClick = {
+                        navController.navigate(
+                            Screens.DetailProduct(
+                                uiState.product[it].id,
+                                uiState.product[it].categoryType
+                            )
+                        )
+                    }
+                ) {
+                    onAddToCart(uiState.product[it])
+                }
+            }
+        }
+    }
+}
 

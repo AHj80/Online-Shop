@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,8 +25,8 @@ import androidx.navigation.NavController
 import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.ui.component.CustomAnimate
 import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
-import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
+import com.ahj.onlineshop.core.common.ui.component.StatusCustomAnimated
 import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
 import com.ahj.onlineshop.feature.authentication.component.InsertTitle
 import com.ahj.onlineshop.feature.profile.component.FavoriteItemSample
@@ -35,75 +36,91 @@ import com.ahj.onlineshop.feature.profile.component.TopAppProfileMini
 @Composable
 fun FavoriteScreen(
     navController: NavController,
-    viewModel: FavoriteViewModel = hiltViewModel()
+    viewModel: FavoriteViewModel = hiltViewModel(),
+    showSnackBar:(String)-> Unit
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(uiState.message) {
+        uiState.message?.let {
+            showSnackBar(it)
+        }
+        viewModel.resetSnackBar()
+    }
     DrawCircleBackground {
 
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            CustomAnimate(uiState.profile != null , 200 ,200) {
+            CustomAnimate(uiState.profile != null, 200, 200) {
 
                 uiState.profile?.let {
                     TopAppProfileMini(uiState.avatar, it)
                 }
             }
-            when(uiState.status){
-                FavoriteStatus.EMPTY -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        uiState.message?.let {
-                            Text(
-                                it,
-                                style = MaterialTheme.typography.bodyMedium,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
-                }
-                FavoriteStatus.LOADING -> {
-                    InsertDialog({} , "در حال برقراری ارتباط")
-                }
-                FavoriteStatus.SUCCESS -> {
+            StatusCustomAnimated(uiState.status) { status ->
+               Column {
+                   when (status) {
+                       FavoriteStatus.EMPTY -> {
 
-                    SpacerHeight(30)
 
-                    InsertTitle("علاقه مندی های من")
-                    SpacerHeight(10)
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        modifier = Modifier.padding(10.dp)
-                    ) {
-                        items(uiState.data.size, key = { uiState.data[it].id }) {
-                            FavoriteItemSample(
-                                uiState.data[it],
-                                modifier = Modifier.animateItem(
-                                    fadeInSpec = tween(600),
-                                    fadeOutSpec = tween(600),
-                                    placementSpec = spring(stiffness = Spring.StiffnessMedium)
-                                ),
-                                {
-                                    navController.navigate(
-                                        Screens.DetailProduct(
-                                            uiState.data[it].id.toString(),
-                                            uiState.data[it].categoryType
-                                        )
-                                    )
-                                }) {
-                                viewModel.deletedFavorite(uiState.data[it])
-                            }
-                        }
-                    }
-                }
-                FavoriteStatus.ERROR -> {
-                    ErrorRefreshing(uiState.message){
-                        viewModel.loadData()
-                    }
-                }
+                           Box(
+                               modifier = Modifier.fillMaxSize(),
+                               contentAlignment = Alignment.Center
+                           ) {
+                               uiState.messageStatus?.let {
+                                   Text(
+                                       it,
+                                       style = MaterialTheme.typography.bodyMedium,
+                                       textAlign = TextAlign.Center
+                                   )
+                               }
+                           }
+
+                       }
+
+                       FavoriteStatus.LOADING -> {}
+
+                       FavoriteStatus.SUCCESS -> {
+
+                           SpacerHeight(30)
+
+                           InsertTitle("علاقه مندی های من")
+                           SpacerHeight(10)
+                           LazyVerticalGrid(
+                               columns = GridCells.Fixed(2),
+                               modifier = Modifier.padding(10.dp)
+                           ) {
+                               items(uiState.data.size, key = { uiState.data[it].id }) {
+                                   FavoriteItemSample(
+                                       uiState.data[it],
+                                       modifier = Modifier.animateItem(
+                                           fadeInSpec = tween(600),
+                                           fadeOutSpec = tween(600),
+                                           placementSpec = spring(stiffness = Spring.StiffnessMedium)
+                                       ),
+                                       {
+                                           navController.navigate(
+                                               Screens.DetailProduct(
+                                                   uiState.data[it].id.toString(),
+                                                   uiState.data[it].categoryType
+                                               )
+                                           )
+                                       }) {
+                                       viewModel.deletedFavorite(uiState.data[it])
+                                   }
+                               }
+                           }
+                       }
+
+                       FavoriteStatus.ERROR -> {
+                           ErrorRefreshing(uiState.messageStatus) {
+                               viewModel.loadData()
+                           }
+                       }
+                   }
+               }
             }
         }
     }

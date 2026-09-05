@@ -34,7 +34,7 @@ class AddressRepositoryImpl @Inject constructor(
     override fun getAddressById(id: Int?): Flow<Result<AddressModel>> =
         addressDao.getAddressById(id).map { address ->
             runCatching.safeData {
-                address?.toDomain() ?: AddressModel.defaultValue()
+                address?.toDomain()?: AddressModel.defaultValue()
             }
         }
 

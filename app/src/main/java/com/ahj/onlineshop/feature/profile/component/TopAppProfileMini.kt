@@ -61,7 +61,7 @@ fun TopAppProfileMini(image: Uri?, profile: UserInformationModel) {
                         startAngle = -80f,
                         sweepAngle = 250f,
                         useCenter = false,
-                        style = Stroke(width = 10f),
+                        style = Stroke(width = 10f)
                     )
                 }
 
@@ -77,6 +77,7 @@ fun TopAppProfileMini(image: Uri?, profile: UserInformationModel) {
                         null,
                         modifier = Modifier
                             .size(70.dp)
+
                             .clip(CircleShape),
                         contentScale = ContentScale.Crop
                     )

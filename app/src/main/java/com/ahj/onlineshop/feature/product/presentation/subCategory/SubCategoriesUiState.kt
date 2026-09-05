@@ -9,6 +9,7 @@ data class SubCategoriesUiState(
     val categories : List<CategoryModel> = emptyList(),
     val product: List<ProductModel> = emptyList(),
     val subCategories : List<SubCategoryModel> = emptyList(),
+    val messageStatus : String? = null,
     val message : String? = null,
     val selected: String = "",
     val stateText : String = "",

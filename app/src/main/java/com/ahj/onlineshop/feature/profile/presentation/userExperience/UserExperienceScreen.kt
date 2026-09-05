@@ -31,7 +31,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.ahj.onlineshop.core.common.ui.component.CustomAnimate
 import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
-import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
 import com.ahj.onlineshop.core.common.ui.component.SpacerWith
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundCardColor
@@ -77,14 +76,12 @@ fun UserExperiencesScreen(
                     }
                 }
 
-                UserExperienceStatus.LOADING -> {
-                    InsertDialog({}, "در حال برقراری ارتباط")
-                }
+                UserExperienceStatus.LOADING -> {}
 
                 UserExperienceStatus.SUCCESS -> {
                     LazyColumn(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxSize(),
                     ) {
 
 
@@ -93,7 +90,7 @@ fun UserExperiencesScreen(
                             SpacerHeight(20)
                         }
 
-                        items(uiState.experienceData.size) {
+                        items(uiState.experienceData.size ,{uiState.experienceData[it].id}) {
                             UserExperienceItem(uiState.experienceData[it])
 
                         }
@@ -115,7 +112,7 @@ fun UserExperiencesScreen(
 }
 
 @Composable
-fun UserExperienceItem(
+private fun UserExperienceItem(
     experienceModel: UserExperienceModel
 ) {
 

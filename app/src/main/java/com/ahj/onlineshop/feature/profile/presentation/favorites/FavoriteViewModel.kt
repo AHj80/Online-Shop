@@ -56,7 +56,7 @@ class FavoriteViewModel @Inject constructor(
         }
 
     fun loadData() {
-        _uiState.update { it.copy(status = FavoriteStatus.LOADING, message = null) }
+        _uiState.update { it.copy(status = FavoriteStatus.LOADING, messageStatus = null) }
         combinedData().onEach { result ->
             result
                 .onSuccess { data ->
@@ -66,7 +66,7 @@ class FavoriteViewModel @Inject constructor(
                                 status = FavoriteStatus.EMPTY,
                                 profile = data.headerData.profile,
                                 data = emptyList(),
-                                message = "لیست علاقه مندی ها خالی میباشد",
+                                messageStatus = "لیست علاقه مندی ها خالی میباشد",
                                 avatar = data.headerData.avatar
                             )
                         }
@@ -76,7 +76,7 @@ class FavoriteViewModel @Inject constructor(
                                 status = FavoriteStatus.SUCCESS,
                                 profile = data.headerData.profile,
                                 data = data.favoriteData,
-                                message = null,
+                                messageStatus = null,
                                 avatar = data.headerData.avatar
                             )
                         }
@@ -85,7 +85,7 @@ class FavoriteViewModel @Inject constructor(
                 .onFailure { error ->
                     _uiState.update {
                         it.copy(
-                            message = error.message,
+                            messageStatus = error.message,
                             status = FavoriteStatus.ERROR
                         )
                     }
@@ -97,7 +97,13 @@ class FavoriteViewModel @Inject constructor(
     fun deletedFavorite(favorite: FavoriteModel) {
         viewModelScope.launch {
             deleteFavoriteUseCase(favorite)
+                .onSuccess {
+                    _uiState.update { it.copy(message = "یک آیتم از لیست حذف گردید") }
+                }
         }
+    }
+    fun resetSnackBar(){
+        _uiState.update { it.copy(message = null) }
     }
 
 

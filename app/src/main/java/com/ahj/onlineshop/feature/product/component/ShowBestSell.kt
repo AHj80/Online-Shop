@@ -41,7 +41,9 @@ fun ShowBestSell(
             horizontalArrangement = Arrangement.Center,
         ) {
             items(data.size) {
-                ProductItemSample(data[it], { clickable(data[it]) }) {
+                ProductItemSample(
+                    productModel = data[it], onClick = { clickable(data[it]) },
+                ) {
                     addOnClick(data[it])
                 }
             }

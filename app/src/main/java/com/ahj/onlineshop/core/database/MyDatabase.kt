@@ -6,8 +6,8 @@ import com.ahj.onlineshop.core.sharedData.address.data.local.db.AddressDao
 import com.ahj.onlineshop.core.sharedData.address.data.local.db.AddressEntity
 import com.ahj.onlineshop.core.sharedData.favorite.data.local.db.FavoriteDao
 import com.ahj.onlineshop.core.sharedData.favorite.data.local.db.FavoriteEntity
-import com.ahj.onlineshop.core.sharedData.product.local.db.ProductDao
-import com.ahj.onlineshop.core.sharedData.product.local.db.ProductEntity
+import com.ahj.onlineshop.core.sharedData.product.data.local.db.ProductDao
+import com.ahj.onlineshop.core.sharedData.product.data.local.db.ProductEntity
 import com.ahj.onlineshop.core.sharedData.shoppingExperience.data.db.UserExperienceDao
 import com.ahj.onlineshop.core.sharedData.shoppingExperience.data.db.UserExperienceEntity
 import com.ahj.onlineshop.core.sharedData.userOrders.data.db.dao.UserOrderDao

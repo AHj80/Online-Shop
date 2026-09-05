@@ -12,6 +12,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +26,7 @@ import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
 import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.component.SpacerHeight
+import com.ahj.onlineshop.core.common.ui.component.StatusCustomAnimated
 import com.ahj.onlineshop.core.common.ui.theme.ButtonColor_Tow
 import com.ahj.onlineshop.feature.authentication.component.DrawCircleBackground
 import com.ahj.onlineshop.feature.authentication.component.InsertTextFieldAuth
@@ -41,7 +43,8 @@ import com.ahj.onlineshop.feature.product.component.ShowBestSell
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: HomeScreenViewModel = hiltViewModel()
+    viewModel: HomeScreenViewModel = hiltViewModel(),
+    snackBar: (String) -> Unit
 ) {
 
 
@@ -49,141 +52,154 @@ fun HomeScreen(
     val pagerState = rememberPagerState { uiState.banner.size }
 
 
+    LaunchedEffect(uiState.message) {
+        uiState.message?.let {
+            snackBar(it)
+        }
+        viewModel.resetSnackBar()
+    }
+
 
     DrawCircleBackground(
         blur = uiState.status == HomeScreenStatus.LOADING
     ) {
 
-        when (uiState.status) {
+        StatusCustomAnimated (uiState.status) { status ->
+            when (status) {
 
-            HomeScreenStatus.LOADING -> {
-                InsertDialog({}, "در حال برقراری ارتباط")
-            }
+                HomeScreenStatus.LOADING -> {
+                    InsertDialog({}, "در حال برقراری ارتباط")
+                }
 
-            HomeScreenStatus.SUCCESS -> {
+                HomeScreenStatus.SUCCESS -> {
 
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .imePadding(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .imePadding(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
-                    item {
-                        InsertBanner(pagerState, uiState.banner)
+                        item {
+                            InsertBanner(pagerState, uiState.banner)
 
-                        SpacerHeight(20)
-                    }
-                    item {
-                        InsertTitle("تنها با یک کلیک خرید کن!")
-                        SpacerHeight(10)
-                        InsertTextFieldAuth(
-                            value = uiState.stateSearch,
-                            onValueChange = { viewModel.updateText(it) },
-                            placeholder = "لباست رو جست و جو کن...",
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(R.drawable.search_normal),
-                                    null,
-                                    modifier = Modifier.size(20.dp),
-                                    tint = ButtonColor_Tow
-                                )
-                            }
-                        )
-                        SearchProduct(uiState.data, uiState.stateSearch) { product ->
-                            navController.navigate(
-                                Screens.DetailProduct(
-                                    product.id,
-                                    product.categoryType
-                                )
+                            SpacerHeight(20)
+                        }
+                        item {
+                            InsertTitle("تنها با یک کلیک خرید کن!")
+                            SpacerHeight(10)
+                            InsertTextFieldAuth(
+                                value = uiState.stateSearch,
+                                onValueChange = { viewModel.updateText(it) },
+                                placeholder = "لباست رو جست و جو کن...",
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.search_normal),
+                                        null,
+                                        modifier = Modifier.size(20.dp),
+                                        tint = ButtonColor_Tow
+                                    )
+                                }
                             )
-                        }
-
-                        SpacerHeight(10)
-
-                    }
-
-                    item {
-                        LazyRow(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp)
-                        ) {
-                            items(uiState.categories.size) {
-                                CategoriesSample(uiState.categories[it]) {
-                                    navController.navigate(
-                                        Screens.SubCategory(
-                                            uiState.categories[it].categoryType
-                                        )
+                            SearchProduct(uiState.data, uiState.stateSearch) { product ->
+                                navController.navigate(
+                                    Screens.DetailProduct(
+                                        product.id,
+                                        product.categoryType
                                     )
-                                }
-                            }
-                        }
-                        SpacerHeight(40)
-                    }
-
-                    item {
-                        ShowAll("پرفروش ترین ها") {
-                            viewModel.changeModalState(true)
-                        }
-                        if (uiState.showModal)
-                            ShowBestSell(
-                                uiState.data,
-                                { stateVisible -> viewModel.changeModalState(stateVisible) },
-                                { currentProduct ->
-                                    viewModel.changeModalState(false)
-                                    navController.navigate(
-                                        Screens.DetailProduct(
-                                            currentProduct.id,
-                                            currentProduct.categoryType
-                                        )
-                                    )
-                                }
-                            ){ currentProduct ->
-                                viewModel.addToCart(currentProduct)
+                                )
                             }
 
-                        SpacerHeight(10)
-                    }
+                            SpacerHeight(10)
 
-                    item {
-                        LazyRow(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 20.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            val limitedItems = uiState.data.take(6)
-                            items(limitedItems.size) {
-                                ProductItemSample(
-                                    uiState.data[it],
-                                    onClick = {
+                        }
+
+                        item {
+                            LazyRow(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 20.dp, end = 20.dp)
+                            ) {
+                                items(uiState.categories.size) {
+                                    CategoriesSample(uiState.categories[it]) {
                                         navController.navigate(
-                                            Screens.DetailProduct(
-                                                uiState.data[it].id,
-                                                uiState.data[it].categoryType
+                                            Screens.SubCategory(
+                                                uiState.categories[it].categoryType
                                             )
                                         )
                                     }
-                                ) {
-                                    viewModel.addToCart(uiState.data[it])
                                 }
                             }
+                            SpacerHeight(40)
                         }
+
+                        item {
+                            ShowAll("پرفروش ترین ها") {
+                                viewModel.changeModalState(true)
+                            }
+                            if (uiState.showModal)
+                                ShowBestSell(
+                                    uiState.data,
+                                    { stateVisible -> viewModel.changeModalState(stateVisible) },
+                                    { currentProduct ->
+                                        viewModel.changeModalState(false)
+                                        navController.navigate(
+                                            Screens.DetailProduct(
+                                                currentProduct.id,
+                                                currentProduct.categoryType
+                                            )
+                                        )
+                                    }
+                                ) { currentProduct ->
+                                    viewModel.addToCart(currentProduct)
+                                }
+
+                            SpacerHeight(10)
+                        }
+
+                        item {
+                            LazyRow(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 20.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                val limitedItems = uiState.data.take(6)
+                                items(limitedItems.size) {
+
+                                    ProductItemSample(
+
+                                        uiState.data[it],
+                                        onClick = {
+                                            navController.navigate(
+                                                Screens.DetailProduct(
+                                                    uiState.data[it].id,
+                                                    uiState.data[it].categoryType
+                                                )
+                                            )
+                                        },
+                                    ) {
+                                        viewModel.addToCart(uiState.data[it])
+                                    }
+                                }
+
+                            }
+                        }
+
+
                     }
 
 
                 }
 
-
-            }
-
-            else -> {
-                ErrorRefreshing(uiState.message) {
-                    viewModel.getHomeData()
+                else -> {
+                    ErrorRefreshing(uiState.messageStatus) {
+                        viewModel.getHomeData()
+                    }
                 }
             }
+
         }
 
     }

@@ -1,4 +1,4 @@
-package com.ahj.onlineshop.feature.product.domain.model
+package com.ahj.onlineshop.core.sharedData.product.domain.model
 
 data class AddCartModel(
     val id: String = "",
