@@ -18,7 +18,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.ahj.onlineshop.app.navigation.Screens
 import com.ahj.onlineshop.core.common.ui.component.ErrorRefreshing
-import com.ahj.onlineshop.core.common.ui.component.InsertDialog
 import com.ahj.onlineshop.core.common.ui.theme.BackgroundCircleColor
 import com.ahj.onlineshop.feature.profile.component.CategorySample
 import com.ahj.onlineshop.feature.profile.component.TopAppProfileFull

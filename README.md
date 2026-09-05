@@ -1,4 +1,8 @@
 # 🛍️ Online Shop
+#
+![Kotlin](https://img.shields.io/badge/Kotlin-1.9+-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
+![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-UI-4285F4?style=for-the-badge&logo=android&logoColor=white)
+![Architecture](https://img.shields.io/badge/Architecture-Clean%20%2B%20MVVM-orange?style=for-the-badge)
 
 ## 📜 Overview
 
@@ -31,14 +35,15 @@ The authentication process was also redesigned and improved to overcome MockAPI 
 ---
 
 # 📱 Screenshots
+#
 
-More screenshots will be added soon.
-| صفحه ورود | دسته بندی ها | جزئیات محصول | صفحه پروفایل |  اجرای برنامه(دمو) |
-| :---: | :---: | :---: | :---: | :---: |
-| <img width="196" height="462" alt="1" src="https://github.com/user-attachments/assets/1b4a8a86-70fd-488e-a0ae-cdaeb83367f1" /> | <img width="196" height="462" alt="2" src="https://github.com/user-attachments/assets/7259ee68-eaae-4052-a657-6483f4549148" />| <img width="185" height="439" alt="3" src="https://github.com/user-attachments/assets/dd86b54c-a444-4bfb-a4bf-3a2ca2f8100c" /> | <img width="193" height="450" alt="4" src="https://github.com/user-attachments/assets/1154d5c1-6b8f-4e3f-87aa-51f81a5ece3a" />| https://github.com/user-attachments/assets/388c768a-3f7c-4540-822f-dad746f36020|
+|                                                             صفحه خانه                                                              |                                                              سبد خرید                                                              |                                                            جزئیات محصول                                                            |                                                            صفحه پروفایل                                                            |
+|:----------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------:|
+| <img width="196" height="462" alt="1" src="https://github.com/AHj80/Online-Shop/releases/download/OnlineShop/1788639532160.jpg" /> | <img width="196" height="462" alt="2" src="https://github.com/AHj80/Online-Shop/releases/download/OnlineShop/1788639532152.jpg" /> | <img width="185" height="439" alt="3" src="https://github.com/AHj80/Online-Shop/releases/download/OnlineShop/1788639532137.jpg" /> | <img width="193" height="450" alt="4" src="https://github.com/AHj80/Online-Shop/releases/download/OnlineShop/1788639532145.jpg" /> | 
 
+Download Apk
 
-اسکرین‌شات‌های بیشتر پس از تکمیل نهایی رابط کاربری در این بخش قرار خواهند گرفت.
+[![Download APK](https://img.shields.io/badge/Download-APK%20Release-brightgreen?style=for-the-badge&logo=android)](https://github.com/AHj80/Online-Shop/releases/download/OnlineShop/app-release.apk)
 
 ---
 
@@ -153,39 +158,7 @@ feature/
 
 ---
 
-# 🚧 Current Status
 
-### English
-
-This project is currently under active development. Most core functionalities have already been implemented.
-
-The remaining work mainly includes:
-- Final code refactoring
-- Completing the remaining features
-- Improving animations and transitions
-- Additional UI polishing
-- Performance optimization
-- General code cleanup
-
-The goal is to continuously improve the project while applying modern Android development best practices.
-
----
-
-### فارسی
-
-این پروژه در حال حاضر در **مرحله توسعه فعال** قرار دارد و اکثر قابلیت‌های اصلی آن پیاده‌سازی شده‌اند.
-
-اقدامات در حال انجام و برنامه‌های آتی:
-- بازبینی و بازنویسی نهایی کدها (Refactoring)
-- تکمیل قابلیت‌های باقی‌مانده
-- بهبود انیمیشن‌ها و جابه‌جایی بین صفحات (Transitions)
-- ارتقای جزئیات و زیبایی‌شناسی رابط کاربری
-- بهینه‌سازی عملکرد (Performance Optimization)
-- تمیزکاری کلی و رعایت دقیق‌تر تمایز لایه‌ها
-
-هدف، ارتقای مداوم پروژه با به‌کارگیری آخرین استانداردهای روز توسعه اندروید است.
-
----
 
 # 📄 License
 
@@ -198,6 +171,8 @@ This project is created for portfolio purposes.
 این پروژه صرفاً با هدف ارائه‌ به عنوان نمونه‌کار (Portfolio) توسعه داده شده است.
 
 ---
+
+
 
 # 👨‍💻 Contact
 
